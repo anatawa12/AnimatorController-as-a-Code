@@ -1,0 +1,17 @@
+{
+    "name": "com.anatawa12.animator-as-a-code.examples",
+    "references": [
+        "GUID:bb9a3357de324e7d8c642db430362dc3"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
