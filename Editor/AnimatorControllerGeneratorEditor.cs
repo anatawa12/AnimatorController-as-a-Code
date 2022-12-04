@@ -72,13 +72,13 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
             GUILayout.BeginHorizontal();
             {
                 _script = (MonoScript)EditorGUILayout.ObjectField(_script, typeof(MonoScript), false);
-                validScriptClass = _script && _script.GetClass().IsSubclassOf(typeof(ControllerGeneratorBase));
+                validScriptClass = _script && _script.GetClass().IsSubclassOf(typeof(GeneratorLayerBase));
                 
                 using (new EditorGUI.DisabledScope(!validScriptClass))
                 {
                     if (GUILayout.Button("Add Generator"))
                     {
-                        var generator = (ControllerGeneratorBase)Activator.CreateInstance(_script.GetClass());
+                        var generator = (GeneratorLayerBase)Activator.CreateInstance(_script.GetClass());
                         AssetDatabase.AddObjectToAsset(generator, target);
                         ArrayUtility.Add(ref target.generators, generator);
                     }
@@ -123,7 +123,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
 
             private static List<Type> FindSubclasses() =>
                 CompilationPipeline.GetAssemblies().SelectMany(a => Assembly.Load(a.name).ExportedTypes)
-                    .Where(t => t.IsSubclassOf(typeof(ControllerGeneratorBase))).ToList();
+                    .Where(t => t.IsSubclassOf(typeof(GeneratorLayerBase))).ToList();
 
             static SubclassHolder()
             {

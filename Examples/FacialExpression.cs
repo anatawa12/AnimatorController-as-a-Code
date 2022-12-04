@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Anatawa12.AnimatorControllerAsACode.Examples
 {
-    public class FacialExpression : ControllerGeneratorBase
+    public class FacialExpression : GeneratorLayerBase
     {
         public Motion reset;
         public Motion fist;

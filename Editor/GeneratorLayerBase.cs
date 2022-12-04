@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Anatawa12.AnimatorControllerAsACode.Editor
 {
-    public abstract class ControllerGeneratorBase : ScriptableObject
+    public abstract class GeneratorLayerBase : ScriptableObject
     {
         /// <summary>
         /// The name of Generator. This is used as a prefix of animator layers.

@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Anatawa12.AnimatorControllerAsACode.Examples
 {
-    public class MaskLayer : ControllerGeneratorBase
+    public class MaskLayer : GeneratorLayerBase
     {
         public AvatarMask mask;
 

@@ -15,7 +15,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
         public string targetPath;
 
         // generator information
-        public ControllerGeneratorBase[] generators;
+        public GeneratorLayerBase[] generators;
 
         private AnimatorController _targetResolved;
 
