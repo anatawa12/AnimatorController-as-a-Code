@@ -73,8 +73,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
             File.WriteAllText(metaPath, EmptyAnimatorControllerMeta.Replace("{GUID}", targetGuid.ToString()), Encoding.UTF8);
             AssetDatabase.Refresh(ImportAssetOptions.Default);
             _targetResolved = AssetDatabase.LoadAssetAtPath<AnimatorController>(assetPath);
-            // ReSharper disable once Unity.NoNullPropagation
-            Debug.Log($"_targetResolved generated: {_targetResolved?.ToString() ?? "null"}");
+            Debug.Assert(_targetResolved != null, "created controller cannot be loaded");
         }
 
         private const string EmptyAnimatorController =
