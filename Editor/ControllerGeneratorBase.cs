@@ -1,9 +1,9 @@
 using System;
-using Anatawa12.AnimatorAsACode.Generator;
+using Anatawa12.AnimatorControllerAsACode.Generator;
 using UnityEditor;
 using UnityEngine;
 
-namespace Anatawa12.AnimatorAsACode.Editor
+namespace Anatawa12.AnimatorControllerAsACode.Editor
 {
     public abstract class ControllerGeneratorBase : ScriptableObject
     {
@@ -17,8 +17,8 @@ namespace Anatawa12.AnimatorAsACode.Editor
         /// <summary>
         /// Generates Animator Layers.
         /// </summary>
-        /// <param name="aaac">Animator As A Code entrypoint object</param>
-        protected internal abstract void Generate(AaaC aaac);
+        /// <param name="acaac">Animator As A Code entrypoint object</param>
+        protected internal abstract void Generate(ACaaC acaac);
 
         private void OnEnable()
         {

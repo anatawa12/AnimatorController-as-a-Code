@@ -1,6 +1,8 @@
 {
-    "name": "com.anatawa12.animator-as-a-code",
-    "references": [],
+    "name": "com.anatawa12.animator-controller-as-a-code.examples",
+    "references": [
+        "GUID:bb9a3357de324e7d8c642db430362dc3"
+    ],
     "includePlatforms": [
         "Editor"
     ],

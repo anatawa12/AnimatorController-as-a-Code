@@ -5,7 +5,7 @@ using UnityEditor;
 using UnityEditor.Animations;
 using UnityEngine;
 
-namespace Anatawa12.AnimatorAsACode.Editor
+namespace Anatawa12.AnimatorControllerAsACode.Editor
 {
     public sealed class AnimatorControllerGenerator : ScriptableObject
     {

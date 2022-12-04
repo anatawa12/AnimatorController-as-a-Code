@@ -1,4 +1,4 @@
-namespace Anatawa12.AnimatorAsACode.Examples
+namespace Anatawa12.AnimatorControllerAsACode.Examples
 {
 
     public enum Hand

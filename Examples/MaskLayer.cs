@@ -1,8 +1,8 @@
-using Anatawa12.AnimatorAsACode.Editor;
-using Anatawa12.AnimatorAsACode.Generator;
+using Anatawa12.AnimatorControllerAsACode.Editor;
+using Anatawa12.AnimatorControllerAsACode.Generator;
 using UnityEngine;
 
-namespace Anatawa12.AnimatorAsACode.Examples
+namespace Anatawa12.AnimatorControllerAsACode.Examples
 {
     public class MaskLayer : ControllerGeneratorBase
     {
@@ -11,9 +11,9 @@ namespace Anatawa12.AnimatorAsACode.Examples
         // optional: GetType().Name by default
         protected override string GeneratorName => "MaskLayer";
 
-        protected override void Generate(AaaC aaac)
+        protected override void Generate(ACaaC acaac)
         {
-            aaac.AddMainLayer().WithMask(mask);
+            acaac.AddMainLayer().WithMask(mask);
         }
     }
 }

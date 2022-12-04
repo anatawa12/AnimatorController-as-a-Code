@@ -1,8 +1,8 @@
-using Anatawa12.AnimatorAsACode.Editor;
-using Anatawa12.AnimatorAsACode.Generator;
+using Anatawa12.AnimatorControllerAsACode.Editor;
+using Anatawa12.AnimatorControllerAsACode.Generator;
 using UnityEngine;
 
-namespace Anatawa12.AnimatorAsACode.Examples
+namespace Anatawa12.AnimatorControllerAsACode.Examples
 {
     public class FacialExpression : ControllerGeneratorBase
     {
@@ -16,7 +16,7 @@ namespace Anatawa12.AnimatorAsACode.Examples
         public Motion thumbsUp;
         public Hand prior;
 
-        protected override void Generate(AaaC aaac)
+        protected override void Generate(ACaaC acaac)
         {
             throw new System.NotImplementedException();
         }

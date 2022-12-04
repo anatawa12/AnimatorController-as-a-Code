@@ -2,23 +2,23 @@ using UnityEditor;
 using UnityEditor.Animations;
 using UnityEngine;
 
-namespace Anatawa12.AnimatorAsACode.Generator
+namespace Anatawa12.AnimatorControllerAsACode.Generator
 {
-    public sealed class AaaC
+    public sealed class ACaaC
     {
         private readonly string _layerBaseName;
         private readonly AnimatorController _controller;
 
-        internal AaaC(string layerBaseName, AnimatorController controller)
+        internal ACaaC(string layerBaseName, AnimatorController controller)
         {
             _layerBaseName = layerBaseName;
             _controller = controller;
         }
 
-        public AaaCLayer AddMainLayer() => DoAddLayer(_layerBaseName);
-        public AaaCLayer AddLayer(string name) => DoAddLayer($"{_layerBaseName}_{name}");
+        public ACaaCLayer AddMainLayer() => DoAddLayer(_layerBaseName);
+        public ACaaCLayer AddLayer(string name) => DoAddLayer($"{_layerBaseName}_{name}");
 
-        private AaaCLayer DoAddLayer(string layerName)
+        private ACaaCLayer DoAddLayer(string layerName)
         {
             var layer = new AnimatorControllerLayer
             {
@@ -33,7 +33,7 @@ namespace Anatawa12.AnimatorAsACode.Generator
             AssetDatabase.AddObjectToAsset(layer.stateMachine, _controller);
             _controller.AddLayer(layer);
 
-            return new AaaCLayer(layer);
+            return new ACaaCLayer(layer);
         }
     }
 }

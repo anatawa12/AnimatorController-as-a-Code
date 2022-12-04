@@ -1,9 +1,9 @@
 {
-  "name": "com.anatawa12.animator-as-a-code",
-  "displayName": "Animator as a Code",
+  "name": "com.anatawa12.animator-controller-as-a-code",
+  "displayName": "AnimatorController as a Code",
   "version": "0.0.0",
   "unity": "2019.4",
-  "description": "A small Unity Editor Library to generate animator with C# Code",
+  "description": "A small Unity Editor Library to generate AnimatorController with C# Code",
   "author": {
     "name": "anatawa12",
     "email": "anatawa12@icloud.com"

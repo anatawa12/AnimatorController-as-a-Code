@@ -7,7 +7,7 @@ using UnityEngine;
 using Assembly = System.Reflection.Assembly;
 using Object = UnityEngine.Object;
 
-namespace Anatawa12.AnimatorAsACode.Editor
+namespace Anatawa12.AnimatorControllerAsACode.Editor
 {
     [CustomEditor(typeof(AnimatorControllerGenerator))]
     public class AnimatorControllerGeneratorEditor : UnityEditor.Editor

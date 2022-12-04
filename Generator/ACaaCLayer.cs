@@ -1,18 +1,18 @@
 using UnityEditor.Animations;
 using UnityEngine;
 
-namespace Anatawa12.AnimatorAsACode.Generator
+namespace Anatawa12.AnimatorControllerAsACode.Generator
 {
-    public sealed class AaaCLayer
+    public sealed class ACaaCLayer
     {
         private readonly AnimatorControllerLayer _layer;
 
-        internal AaaCLayer(AnimatorControllerLayer layer)
+        internal ACaaCLayer(AnimatorControllerLayer layer)
         {
             _layer = layer;
         }
 
-        public AaaCLayer WithMask(AvatarMask mask)
+        public ACaaCLayer WithMask(AvatarMask mask)
         {
             _layer.avatarMask = mask;
             return this;
