@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Text;
+using Anatawa12.AnimatorControllerAsACode.Generator;
 using UnityEditor;
 using UnityEditor.Animations;
 using UnityEngine;
@@ -36,6 +37,12 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
                         DestroyImmediate(asset, true);
                 }
             }
+
+            foreach (var generator in generators)
+            {
+                generator.Generate(new ACaaC(generator.GeneratorName, _targetResolved));
+            }
+            EditorUtility.SetDirty(_targetResolved);
         }
 
         private bool TryLoadController()
