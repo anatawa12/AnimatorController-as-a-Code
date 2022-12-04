@@ -1,3 +1,4 @@
+using System.Linq;
 using Anatawa12.AnimatorControllerAsACode.Editor;
 using Anatawa12.AnimatorControllerAsACode.Generator;
 using UnityEngine;
@@ -18,7 +19,91 @@ namespace Anatawa12.AnimatorControllerAsACode.Examples
 
         protected override void Generate(ACaaC acaac)
         {
-            throw new System.NotImplementedException();
+            CreateResetFaceAlways(acaac);
+            CreateGestureLayer(acaac, prior.Opposite());
+            CreateResetFaceIfGesture(acaac, prior);
+            CreateGestureLayer(acaac, prior);
+        }
+
+        private void CreateResetFaceAlways(ACaaC acaac)
+        {
+            var layer = acaac.AddLayer("ResetAlways");
+            var resetState = layer.NewState("Reset").WithAnimation(reset);
+            layer.EntryTransitionsTo(resetState);
+        }
+
+        private void CreateResetFaceIfGesture(ACaaC acaac, Hand side)
+        {
+            var layer = acaac.AddLayer($"ResetIf{side}");
+            //TODO var gesture = layer.Av3().Gesture(side);
+            var gesture = layer.IntParameter($"Gesture{side}");
+            var lockFace = layer.BoolParameter("LockFace");
+
+            var nopState = layer.NewState("Nop");
+            var resetState = layer.NewState("Reset").WithAnimation(reset);
+
+            layer.EntryTransitionsTo(nopState);
+            // TODO nopState.TransitionsTo(resetState).When(gesture.IsNotEqualTo(AacAv3.Av3Gesture.Neutral));
+            // TODO resetState.TransitionsTo(nopState).When(gesture.IsEqualTo(AacAv3.Av3Gesture.Neutral));
+            nopState.TransitionsTo(resetState).When(gesture.IsNotEqualTo(0).And(lockFace.IsTrue()));
+            resetState.TransitionsTo(nopState).When(gesture.IsEqualTo(0).And(lockFace.IsTrue()));
+        }
+
+        private void CreateGestureLayer(ACaaC acaac, Hand side)
+        {
+            var layer = acaac.AddLayer($"{side}Hand");
+            var lockFace = layer.BoolParameter("LockFace");
+            //TODO var gesture = layer.Av3().Gesture(side);
+            //TODO var weight = layer.Av3().GestureWeight(side);
+            var gesture = layer.IntParameter($"Gesture{side}");
+            var weight = layer.FloatParameter($"Gesture{side}Weight");
+
+            var stateIdle = layer.NewState("Idle");
+            var stateFist = layer.NewState("Fist").RightOf();
+            var stateOpen = layer.NewState("Open");
+            var statePoint = layer.NewState("Point");
+            var statePeace = layer.NewState("Peace");
+            var stateRockNRoll = layer.NewState("RockNRoll");
+            var stateGun = layer.NewState("Gun");
+            var stateThumbsUp = layer.NewState("ThumbsUp");
+
+            var states = new[]
+            {
+                stateIdle,
+                stateFist,
+                stateOpen,
+                statePoint,
+                statePeace,
+                stateRockNRoll,
+                stateGun,
+                stateThumbsUp,
+            };
+
+            // setup animations
+            if (fist != null) stateFist.WithAnimation(fist);
+            if (open != null) stateOpen.WithAnimation(open);
+            if (point != null) statePoint.WithAnimation(point);
+            if (peace != null) statePeace.WithAnimation(peace);
+            if (rockNRoll != null) stateRockNRoll.WithAnimation(rockNRoll);
+            if (gun != null) stateGun.WithAnimation(gun);
+            if (thumbsUp != null) stateThumbsUp.WithAnimation(thumbsUp);
+
+            //TODO stateIdle.TrackingSets(AacFlState.TrackingElement.Eyes, VRC_AnimatorTrackingControl.TrackingType.Tracking);
+            foreach (var state in states.Skip(1))
+            {
+                state.MotionTime(weight);
+                //TODO state.TrackingSets(AacFlState.TrackingElement.Eyes, VRC_AnimatorTrackingControl.TrackingType.Animation);
+            }
+
+            // set transitions
+            layer.EntryTransitionsTo(stateIdle);
+
+            for (var i = 0; i < states.Length; i++)
+            {
+                layer.AnyTransitionsTo(states[i])
+                    .WithTransitionDurationSeconds(0.1f)
+                    .When(gesture.IsEqualTo(i).And(lockFace.IsFalse()));
+            }
         }
     }
 }
