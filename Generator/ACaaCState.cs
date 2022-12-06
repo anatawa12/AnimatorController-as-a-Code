@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using JetBrains.Annotations;
+using UnityEditor;
 using UnityEditor.Animations;
 using UnityEngine;
 
@@ -43,6 +44,14 @@ namespace Anatawa12.AnimatorControllerAsACode.Generator
         public ACaaCState WithAnimation(Motion motion)
         {
             State.motion = motion;
+            return this;
+        }
+
+        public ACaaCState WithAnimation(ACaaCClip clip)
+        {
+            clip.Clip.name = State.name;
+            EditorUtility.SetDirty(clip.Clip);
+            State.motion = clip.Clip;
             return this;
         }
 
