@@ -66,5 +66,17 @@ namespace Anatawa12.AnimatorControllerAsACode.Generator
             _controller.AddParameter(parameter);
             return new ACaaCParameter<T>(parameter, toFloat);
         }
+
+        public ACaaCClip NewClip()
+        {
+            var clip = new AnimationClip
+            {
+                hideFlags = HideFlags.HideInHierarchy
+            };
+
+            Utils.AddToFile(_controller, clip);
+
+            return new ACaaCClip(clip);
+        }
     }
 }
