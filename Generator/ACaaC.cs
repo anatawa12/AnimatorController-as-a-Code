@@ -38,13 +38,13 @@ namespace Anatawa12.AnimatorControllerAsACode.Generator
             return new ACaaCLayer(layer, this);
         }
 
-        public ACaaCParameter<float> FloatParameter(string name) => Parameter<float>(name, AnimatorControllerParameterType.Float, x => x);
-        public ACaaCParameter<int> IntParameter(string name) => Parameter<int>(name, AnimatorControllerParameterType.Int, x => x);
-        public ACaaCParameter<bool> BoolParameter(string name) => Parameter<bool>(name, AnimatorControllerParameterType.Bool, x => x ? 1f : 0f);
+        public ACaaCParameter<float> FloatParameter(string name) => Parameter(name, AnimatorControllerParameterType.Float, Utils.FloatToFloat);
+        public ACaaCParameter<int> IntParameter(string name) => Parameter(name, AnimatorControllerParameterType.Int, Utils.IntToFloat);
+        public ACaaCParameter<bool> BoolParameter(string name) => Parameter(name, AnimatorControllerParameterType.Bool, Utils.BoolToFloat);
 
         public ACaaCParameter<T> EnumParameter<T>(string name)
-            where T : Enum =>
-            Parameter<T>(name, AnimatorControllerParameterType.Int, x => Convert.ToSingle(x));
+            where T : unmanaged, Enum =>
+            Parameter(name, AnimatorControllerParameterType.Int, Utils.EnumToFloat<T>());
 
         private ACaaCParameter<T> Parameter<T>(string name, AnimatorControllerParameterType type, Func<T, float> toFloat)
         {

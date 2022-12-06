@@ -34,7 +34,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Generator
         public ACaaCParameter<bool> BoolParameter(string name) => _acaac.BoolParameter(name);
 
         public ACaaCParameter<T> EnumParameter<T>(string name)
-            where T : Enum =>
+            where T : unmanaged, Enum =>
             _acaac.EnumParameter<T>(name);
 
     }
