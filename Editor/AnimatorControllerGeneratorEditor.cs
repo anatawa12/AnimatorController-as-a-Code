@@ -72,7 +72,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
             GUILayout.BeginHorizontal();
             {
                 _script = (MonoScript)EditorGUILayout.ObjectField(_script, typeof(MonoScript), false);
-                validScriptClass = _script && _script.GetClass().IsSubclassOf(typeof(GeneratorLayerBase));
+                validScriptClass = _script && (_script.GetClass()?.IsSubclassOf(typeof(GeneratorLayerBase)) ?? false);
                 
                 using (new EditorGUI.DisabledScope(!validScriptClass))
                 {
@@ -85,7 +85,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
                 }
             }
             GUILayout.EndHorizontal();
-            if (!validScriptClass)
+            if (_script && !validScriptClass)
             {
                 GUIStyle style  = new GUIStyle();
                 style.normal.textColor  = Color.red;
