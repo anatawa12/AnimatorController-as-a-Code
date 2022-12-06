@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq.Expressions;
 using System.Reflection;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Animations;
-using VRC.SDK3.Avatars.Components;
+using Debug = System.Diagnostics.Debug;
 
 namespace Anatawa12.AnimatorControllerAsACode.Generator
 {
@@ -29,120 +29,129 @@ namespace Anatawa12.AnimatorControllerAsACode.Generator
             return (PropertyInfo)memberExpression.Member;
         }
 
-        private static readonly Dictionary<PropertyInfo, String> Mapping = MakeMapping();
-
-        private static Dictionary<PropertyInfo, String> MakeMapping()
+        // extra names mapping
+        private static readonly Dictionary<MemberInfo, String> Mapping = new Dictionary<MemberInfo, string>
         {
-            var map = new Dictionary<PropertyInfo, string>();
+            [PropertyInfo<PositionConstraint>(x => x.constraintActive)] = "m_Active",
+            [PropertyInfo<GameObject>(x => x.activeSelf)] = "m_IsActive",
+        };
 
-            void AddMPrefixed<T>(params Expression<Func<T, object>>[] functions)
-                where T: UnityEngine.Object
-            {
-                foreach (var func in functions)
-                {
-                    var prop = PropertyInfo(func);
-                    map[prop] = "m_" + char.ToUpper(prop.Name[0], CultureInfo.InvariantCulture) +
-                                prop.Name.Substring(1);
-                }
-            }
-
-            // TODO: add more types
-
-            AddMPrefixed<Transform>(
-                x => x.localPosition,
-                x => x.localRotation,
-                x => x.localScale);
-
-            AddMPrefixed<RectTransform>(
-                x => x.anchorMax,
-                x => x.anchorMin,
-                x => x.pivot,
-                x => x.sizeDelta);
-
-            map[PropertyInfo<PositionConstraint>(x => x.constraintActive)] = "m_Active";
-
-            map[PropertyInfo<GameObject>(x => x.activeSelf)] = "m_IsActive";
-
-            return map;
-        }
-
-        public static string CreatePath<TC, T>(Expression<Func<TC, T>> expression)
-            where TC : UnityEngine.Component
+        public static string CreatePath<TC, T>(TC obj, Expression<Func<TC, T>> expression)
+            where TC : UnityEngine.Object
         {
             var param = expression.Parameters[0];
-            return CreatePath(expression.Body, param);
+            var memberInfoPath = CollectMemberInfoPath(expression.Body, param);
+            using (var serialized = new SerializedObject(obj))
+            {
+                return CreatePath(serialized, memberInfoPath);
+            }
         }
 
-        private static string CreatePath(Expression expression, ParameterExpression param)
+        private static List<MemberInfo> CollectMemberInfoPath(Expression expression, ParameterExpression param)
         {
-            string result = null;
-            var root = true;
+            List<MemberInfo> result = new List<MemberInfo>();
             while (true)
             {
                 if (expression == param)
                 {
+                    if (result.Count == 0)
+                        throw new InvalidOperationException("Cannot change object itself.");
+                    result.Reverse();
                     return result;
                 }
 
-                if (!root && expression.Type.IsSubclassOf(typeof(UnityEngine.Object)))
+                // We cannot change properties of UnityEngine.Object fields.
+                // We must change UnityEngine.Object's properties directly.
+                if (result.Count != 0 && expression.Type.IsSubclassOf(typeof(UnityEngine.Object)))
                     throw new InvalidOperationException("Cannot change fields of UnityEngine.Object except root.");
 
                 if (expression.NodeType == ExpressionType.MemberAccess)
                 {
                     var access = (MemberExpression)expression;
-                    string memberName = CheckAndComputeMemberName(access.Member, root);
-
                     expression = access.Expression;
-                    result = result == null ? memberName : memberName + "." + result;
-                    root = false;
+                    result.Add(access.Member);
                     continue;
                 }
 
                 throw new InvalidOperationException($"unsupported kind of expression: {expression}");
             }
         }
-
-        private static string CheckAndComputeMemberName(MemberInfo member, bool root)
+        
+        private static string CreatePath(SerializedObject obj, List<MemberInfo> path)
         {
-            if (member is FieldInfo field)
+            string building = null;
+            SerializedProperty prop = null;
+            if (path.Count == 0)
+                throw new ArgumentException("must not empty", nameof(path));
+            foreach (var info in path)
             {
-                if (!IsSerializeField(field))
-                    throw new InvalidOperationException($"Cannot change non-serializable field {field}");
-                return field.Name;
+                building = FindPropertyPath(obj, building, info)
+                           ?? throw new InvalidOperationException($"Serialized Property not found");
+                prop = obj.FindProperty(building)
+                       ?? throw new InvalidOperationException(
+                           "BUG: FindPropertyName returns property name not exists.");
             }
 
-            var prop = (PropertyInfo)member;
+            Debug.Assert(prop != null, nameof(prop) + " != null");
+            Debug.Assert(building != null, nameof(building) + " != null");
+            if (!IsAnimatablePropertyType(prop.propertyType))
+                throw new InvalidOperationException("BUG: Specified Animation Property is not animatable");
 
-            if (root && !prop.CanWrite)
-                throw new InvalidOperationException("Cannot change get-only property");
-
-            // 1st path: try mapped builtin types
-            if (Mapping.TryGetValue(prop, out var memberName))
-                return memberName;
-
-            // 2nd: try backing field with same name
-            System.Diagnostics.Debug.Assert(prop.ReflectedType != null, "prop.ReflectedType != null");
-            var backingField = prop.ReflectedType.GetField(prop.Name,
-                BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
-
-            if (IsSerializeField(backingField) && backingField != null)
-                return backingField.Name;
-
-            // 3rd: try backing field with 'm_' prefix
-            var mFieldName = "m_" + char.ToUpper(prop.Name[0], CultureInfo.InvariantCulture) + prop.Name.Substring(1);
-            var mBackingField = prop.ReflectedType.GetField(mFieldName,
-                BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
-
-            if (IsSerializeField(mBackingField) && mBackingField != null)
-                return mBackingField.Name;
-
-            throw new InvalidOperationException($"Backing field for {prop} not found.");
+            return building;
         }
 
-        // TODO: field type check
-        private static bool IsSerializeField(FieldInfo backingField) =>
-            (backingField.IsPublic || backingField.GetCustomAttribute<SerializeField>() != null)
-            && !backingField.IsStatic
-            && !backingField.IsInitOnly;
+        private static bool IsAnimatablePropertyType(SerializedPropertyType propertyType)
+        {
+            switch (propertyType)
+            {
+                case SerializedPropertyType.Integer:
+                case SerializedPropertyType.Boolean:
+                case SerializedPropertyType.Float:
+                case SerializedPropertyType.Enum:
+                    return true;
+                case SerializedPropertyType.Generic:
+                case SerializedPropertyType.String:
+                case SerializedPropertyType.Color:
+                case SerializedPropertyType.ObjectReference:
+                case SerializedPropertyType.LayerMask:
+                case SerializedPropertyType.Vector2:
+                case SerializedPropertyType.Vector3:
+                case SerializedPropertyType.Vector4:
+                case SerializedPropertyType.Rect:
+                case SerializedPropertyType.ArraySize:
+                case SerializedPropertyType.Character:
+                case SerializedPropertyType.AnimationCurve:
+                case SerializedPropertyType.Bounds:
+                case SerializedPropertyType.Gradient:
+                case SerializedPropertyType.Quaternion:
+                case SerializedPropertyType.ExposedReference:
+                case SerializedPropertyType.FixedBufferSize:
+                case SerializedPropertyType.Vector2Int:
+                case SerializedPropertyType.Vector3Int:
+                case SerializedPropertyType.RectInt:
+                case SerializedPropertyType.BoundsInt:
+                case SerializedPropertyType.ManagedReference:
+                default: 
+                    return false;
+            }
+        }
+
+        private static string FindPropertyPath(SerializedObject obj, string building, MemberInfo info)
+        {
+            // first, find in mapping
+            if (Mapping.TryGetValue(info, out var value))
+                return ConcatPath(building, value);
+
+            // then find property with name
+            return obj.FindProperty(info.Name)?.name
+                       ?? obj.FindProperty(MPrefixedName(info.Name))?.name;
+        }
+
+        private static string ConcatPath(string a, string b) => a == null ? b : b == null ? a : a + '.' + b;
+
+        private static string MPrefixedName(string name)
+        {
+            return "m_" + char.ToUpperInvariant(name[0]) + name.Substring(1);
+        }
     }
 }
