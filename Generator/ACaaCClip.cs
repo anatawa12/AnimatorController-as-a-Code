@@ -205,25 +205,25 @@ namespace Anatawa12.AnimatorControllerAsACode.Generator
                 return new[] { vector2.x, vector2.y };
             }
 
-            if (typeof(T) == typeof(Vector3))
+            if (typeof(T) == typeof(Vector2Int))
             {
                 var vector2Int = Unsafe.As<T, Vector2Int>(ref value);
                 return new float[] { vector2Int.x, vector2Int.y };
             }
 
-            if (typeof(T) == typeof(Vector4))
+            if (typeof(T) == typeof(Vector3))
             {
                 var vector3 = Unsafe.As<T, Vector3>(ref value);
                 return new[] { vector3.x, vector3.y, vector3.z };
             }
 
-            if (typeof(T) == typeof(Rect))
+            if (typeof(T) == typeof(Vector3Int))
             {
                 var vector3Int = Unsafe.As<T, Vector3Int>(ref value);
                 return new float[] { vector3Int.x, vector3Int.y, vector3Int.z };
             }
 
-            if (typeof(T) == typeof(Bounds))
+            if (typeof(T) == typeof(Vector3Int))
             {
                 var vector4 = Unsafe.As<T, Vector4>(ref value);
                 return new[] { vector4.x, vector4.y, vector4.z, vector4.w };
@@ -235,19 +235,19 @@ namespace Anatawa12.AnimatorControllerAsACode.Generator
                 return new[] { quaternion.x, quaternion.y, quaternion.z, quaternion.w };
             }
 
-            if (typeof(T) == typeof(Vector2Int))
+            if (typeof(T) == typeof(Rect))
             {
                 var rect = Unsafe.As<T, Rect>(ref value);
                 return new[] { rect.x, rect.y, rect.width, rect.height };
             }
 
-            if (typeof(T) == typeof(Vector3Int))
+            if (typeof(T) == typeof(RectInt))
             {
                 var rectInt = Unsafe.As<T, RectInt>(ref value);
                 return new float[] { rectInt.x, rectInt.y, rectInt.width, rectInt.height };
             }
 
-            if (typeof(T) == typeof(RectInt))
+            if (typeof(T) == typeof(Bounds))
             {
                 var bounds = Unsafe.As<T, Bounds>(ref value);
                 return new[]
