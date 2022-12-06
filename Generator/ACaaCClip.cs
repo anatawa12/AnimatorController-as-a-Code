@@ -38,20 +38,22 @@ namespace Anatawa12.AnimatorControllerAsACode.Generator
         internal static string ResolveRelativePath(Transform transform)
         {
             var elements = new List<string>();
-            for(;;)
+            for (;;)
             {
                 elements.Add(transform.name);
                 transform = transform.parent;
                 if (transform == null) break;
                 //TODO: if (transform == root.transform) break;
             }
+
             elements.Reverse();
             return string.Join("/", elements);
         }
 
         internal static AnimationCurve OneFrame(float value) => ConstantSeconds(1 / 60f, value);
 
-        internal static AnimationCurve ConstantSeconds(float seconds, float desiredValue) => AnimationCurve.Constant(0f, seconds, desiredValue);
+        internal static AnimationCurve ConstantSeconds(float seconds, float desiredValue) =>
+            AnimationCurve.Constant(0f, seconds, desiredValue);
 
         public ACaaCClip Animating(Action<ACaaCEditClip> action)
         {
@@ -71,7 +73,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Generator
         }
 
         public ACaaCSettingCurve<T> Animates<T>(string path, Type type, string propertyName)
-        where T : struct
+            where T : struct
         {
             var binding = new EditorCurveBinding
             {
@@ -83,18 +85,20 @@ namespace Anatawa12.AnimatorControllerAsACode.Generator
         }
 
         public ACaaCSettingCurve<T> Animates<T>(Transform transform, Type type, string propertyName)
-         where T : struct => 
+            where T : struct =>
             Animates<T>(ACaaCClip.ResolveRelativePath(transform), type, propertyName);
-        public ACaaCSettingCurve<bool> Animates(GameObject gameObject) => 
+
+        public ACaaCSettingCurve<bool> Animates(GameObject gameObject) =>
             Animates<bool>(gameObject.transform, typeof(GameObject), "m_IsActive");
 
         public ACaaCSettingCurve<T> Animates<T>(Component component, string property)
-         where T : struct =>
+            where T : struct =>
             Animates<T>(ACaaCClip.ResolveRelativePath(component.transform), component.GetType(), property);
-        
-        public ACaaCSettingCurve<T> Animates<TComponent, T>(TComponent component, Expression<Func<TComponent, T>> property)
+
+        public ACaaCSettingCurve<T> Animates<TComponent, T>(TComponent component,
+            Expression<Func<TComponent, T>> property)
             where TComponent : Component
-            where T : struct=>
+            where T : struct =>
             Animates<T>(component, ClipExpressionSupport.CreatePath(component, property));
 
         public ACaaCSettingCurve<T> AnimatesAnimator<T>(ACaaCParameter<T> floatParameter)
@@ -125,62 +129,63 @@ namespace Anatawa12.AnimatorControllerAsACode.Generator
             if (typeof(T) == typeof(Color))
                 return new[]
                 {
-                    SubBinding(binding, "r"),
-                    SubBinding(binding, "g"),
-                    SubBinding(binding, "b"),
-                    SubBinding(binding, "a"),
+                    ACaaCSettingCurveGenericsSupportUtils.SubBinding(binding, "r"),
+                    ACaaCSettingCurveGenericsSupportUtils.SubBinding(binding, "g"),
+                    ACaaCSettingCurveGenericsSupportUtils.SubBinding(binding, "b"),
+                    ACaaCSettingCurveGenericsSupportUtils.SubBinding(binding, "a"),
                 };
             if (typeof(T) == typeof(Vector2) || typeof(T) == typeof(Vector2Int))
                 return new[]
                 {
-                    SubBinding(binding, "x"),
-                    SubBinding(binding, "y"),
+                    ACaaCSettingCurveGenericsSupportUtils.SubBinding(binding, "x"),
+                    ACaaCSettingCurveGenericsSupportUtils.SubBinding(binding, "y"),
                 };
             if (typeof(T) == typeof(Vector3) || typeof(T) == typeof(Vector3Int))
                 return new[]
                 {
-                    SubBinding(binding, "x"),
-                    SubBinding(binding, "y"),
-                    SubBinding(binding, "z"),
+                    ACaaCSettingCurveGenericsSupportUtils.SubBinding(binding, "x"),
+                    ACaaCSettingCurveGenericsSupportUtils.SubBinding(binding, "y"),
+                    ACaaCSettingCurveGenericsSupportUtils.SubBinding(binding, "z"),
                 };
             if (typeof(T) == typeof(Vector4) || typeof(T) == typeof(Quaternion))
                 return new[]
                 {
-                    SubBinding(binding, "x"),
-                    SubBinding(binding, "y"),
-                    SubBinding(binding, "z"),
-                    SubBinding(binding, "w"),
+                    ACaaCSettingCurveGenericsSupportUtils.SubBinding(binding, "x"),
+                    ACaaCSettingCurveGenericsSupportUtils.SubBinding(binding, "y"),
+                    ACaaCSettingCurveGenericsSupportUtils.SubBinding(binding, "z"),
+                    ACaaCSettingCurveGenericsSupportUtils.SubBinding(binding, "w"),
                 };
             if (typeof(T) == typeof(Rect) || typeof(T) == typeof(RectInt))
                 return new[]
                 {
-                    SubBinding(binding, "x"),
-                    SubBinding(binding, "y"),
-                    SubBinding(binding, "height"),
-                    SubBinding(binding, "width"),
+                    ACaaCSettingCurveGenericsSupportUtils.SubBinding(binding, "x"),
+                    ACaaCSettingCurveGenericsSupportUtils.SubBinding(binding, "y"),
+                    ACaaCSettingCurveGenericsSupportUtils.SubBinding(binding, "height"),
+                    ACaaCSettingCurveGenericsSupportUtils.SubBinding(binding, "width"),
                 };
             if (typeof(T) == typeof(Bounds))
                 return new[]
                 {
-                    SubBinding(binding, "m_Center.x"),
-                    SubBinding(binding, "m_Center.y"),
-                    SubBinding(binding, "m_Center.z"),
-                    SubBinding(binding, "m_Extent.x"),
-                    SubBinding(binding, "m_Extent.y"),
-                    SubBinding(binding, "m_Extent.z"),
+                    ACaaCSettingCurveGenericsSupportUtils.SubBinding(binding, "m_Center.x"),
+                    ACaaCSettingCurveGenericsSupportUtils.SubBinding(binding, "m_Center.y"),
+                    ACaaCSettingCurveGenericsSupportUtils.SubBinding(binding, "m_Center.z"),
+                    ACaaCSettingCurveGenericsSupportUtils.SubBinding(binding, "m_Extent.x"),
+                    ACaaCSettingCurveGenericsSupportUtils.SubBinding(binding, "m_Extent.y"),
+                    ACaaCSettingCurveGenericsSupportUtils.SubBinding(binding, "m_Extent.z"),
                 };
             if (typeof(T) == typeof(BoundsInt))
                 return new[]
                 {
-                    SubBinding(binding, "m_Position.x"),
-                    SubBinding(binding, "m_Position.y"),
-                    SubBinding(binding, "m_Position.z"),
-                    SubBinding(binding, "m_Size.x"),
-                    SubBinding(binding, "m_Size.y"),
-                    SubBinding(binding, "m_Size.z"),
+                    ACaaCSettingCurveGenericsSupportUtils.SubBinding(binding, "m_Position.x"),
+                    ACaaCSettingCurveGenericsSupportUtils.SubBinding(binding, "m_Position.y"),
+                    ACaaCSettingCurveGenericsSupportUtils.SubBinding(binding, "m_Position.z"),
+                    ACaaCSettingCurveGenericsSupportUtils.SubBinding(binding, "m_Size.x"),
+                    ACaaCSettingCurveGenericsSupportUtils.SubBinding(binding, "m_Size.y"),
+                    ACaaCSettingCurveGenericsSupportUtils.SubBinding(binding, "m_Size.z"),
                 };
 
-            throw new ArgumentException(typeof(T).Name + " is not valid animator value type.");
+            ThrowInvalidValueType();
+            return Array.Empty<EditorCurveBinding>();
         }
 
         public static float[] ToFloats(T value)
@@ -267,15 +272,19 @@ namespace Anatawa12.AnimatorControllerAsACode.Generator
                 };
             }
 
-            return ThrowInvalidValueType<float[]>();
+            ThrowInvalidValueType();
+            return Array.Empty<float>();
         }
 
-        private static TReturns ThrowInvalidValueType<TReturns>()
+        private static void ThrowInvalidValueType()
         {
             throw new ArgumentException(typeof(T).Name + " is not valid animator value type.");
         }
+    }
 
-        private static EditorCurveBinding SubBinding(EditorCurveBinding binding, string prop)
+    internal class ACaaCSettingCurveGenericsSupportUtils
+    {
+        public static EditorCurveBinding SubBinding(EditorCurveBinding binding, string prop)
         {
             return new EditorCurveBinding
             {
@@ -340,7 +349,8 @@ namespace Anatawa12.AnimatorControllerAsACode.Generator
 
     public enum ACaaCUnit
     {
-        Seconds, Frames
+        Seconds,
+        Frames
     }
 
     public sealed class ACaaCSettingKeyframes<T> where T : struct
@@ -422,7 +432,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Generator
     internal static class ClipExpressionSupport
     {
         private static PropertyInfo PropertyInfo<T>(Expression<Func<T, object>> func)
-            where T: UnityEngine.Object
+            where T : UnityEngine.Object
         {
             var expr = (func.Body as UnaryExpression)?.Operand ?? func.Body;
             var memberExpression = (MemberExpression)expr;
@@ -475,7 +485,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Generator
                 throw new InvalidOperationException($"unsupported kind of expression: {expression}");
             }
         }
-        
+
         private static string CreatePath(SerializedObject obj, List<MemberInfo> path)
         {
             string building = null;
@@ -530,7 +540,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Generator
                 case SerializedPropertyType.ExposedReference:
                 case SerializedPropertyType.FixedBufferSize:
                 case SerializedPropertyType.ManagedReference:
-                default: 
+                default:
                     return false;
             }
         }
@@ -543,7 +553,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Generator
 
             // then find property with name
             return obj.FindProperty(info.Name)?.name
-                       ?? obj.FindProperty(MPrefixedName(info.Name))?.name;
+                   ?? obj.FindProperty(MPrefixedName(info.Name))?.name;
         }
 
         private static string ConcatPath(string a, string b) => a == null ? b : b == null ? a : a + '.' + b;
