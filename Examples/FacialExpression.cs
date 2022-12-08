@@ -3,6 +3,7 @@ using Anatawa12.AnimatorControllerAsACode.Editor;
 using Anatawa12.AnimatorControllerAsACode.Generator;
 using Anatawa12.AnimatorControllerAsACode.VRCAvatars3;
 using UnityEngine;
+using VRC.SDKBase;
 
 namespace Anatawa12.AnimatorControllerAsACode.Examples
 {
@@ -86,11 +87,11 @@ namespace Anatawa12.AnimatorControllerAsACode.Examples
             if (gun != null) stateGun.WithAnimation(gun);
             if (thumbsUp != null) stateThumbsUp.WithAnimation(thumbsUp);
 
-            //TODO stateIdle.TrackingSets(AacFlState.TrackingElement.Eyes, VRC_AnimatorTrackingControl.TrackingType.Tracking);
+            stateIdle.TrackingSets(TrackingElement.Eyes, VRC_AnimatorTrackingControl.TrackingType.Tracking);
             foreach (var state in states.Skip(1))
             {
                 state.MotionTime(weight);
-                //TODO state.TrackingSets(AacFlState.TrackingElement.Eyes, VRC_AnimatorTrackingControl.TrackingType.Animation);
+                state.TrackingSets(TrackingElement.Eyes, VRC_AnimatorTrackingControl.TrackingType.Animation);
             }
 
             // set transitions

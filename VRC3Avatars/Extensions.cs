@@ -1,5 +1,7 @@
+using System;
 using Anatawa12.AnimatorControllerAsACode.Generator;
 using JetBrains.Annotations;
+using VRC.SDKBase;
 
 namespace Anatawa12.AnimatorControllerAsACode.VRCAvatars3
 {
@@ -7,6 +9,46 @@ namespace Anatawa12.AnimatorControllerAsACode.VRCAvatars3
     {
         public static Av3ParameterHolder Av3(this IACaaCParameterHolder self) => new Av3ParameterHolder(self);
 
+        public static void TrackingSets(this ACaaCState self, TrackingElement element, VRC_AnimatorTrackingControl.TrackingType target)
+        {
+            var tracking = self.AddOrFindStateMachineBehaviour<VRC_AnimatorTrackingControl>();
+            
+            switch (element)
+            {
+                case TrackingElement.Head:
+                    tracking.trackingHead = target;
+                    break;
+                case TrackingElement.LeftHand:
+                    tracking.trackingLeftHand = target;
+                    break;
+                case TrackingElement.RightHand:
+                    tracking.trackingRightHand = target;
+                    break;
+                case TrackingElement.Hip:
+                    tracking.trackingHip = target;
+                    break;
+                case TrackingElement.LeftFoot:
+                    tracking.trackingLeftFoot = target;
+                    break;
+                case TrackingElement.RightFoot:
+                    tracking.trackingRightFoot = target;
+                    break;
+                case TrackingElement.LeftFingers:
+                    tracking.trackingLeftFingers = target;
+                    break;
+                case TrackingElement.RightFingers:
+                    tracking.trackingRightFingers = target;
+                    break;
+                case TrackingElement.Eyes:
+                    tracking.trackingEyes = target;
+                    break;
+                case TrackingElement.Mouth:
+                    tracking.trackingMouth = target;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(element), element, "invalid TrackingElement");
+            }
+        }
         
         // ReSharper disable once BitwiseOperatorOnEnumWithoutFlags
         public static Hand Opposite(this Hand hand) => hand ^ (Hand)1;
@@ -47,5 +89,19 @@ namespace Anatawa12.AnimatorControllerAsACode.VRCAvatars3
     {
         Left = 0,
         Right = 1,
+    }
+
+    public enum TrackingElement
+    {
+        Head,
+        LeftHand,
+        RightHand,
+        Hip,
+        LeftFoot,
+        RightFoot,
+        LeftFingers,
+        RightFingers,
+        Eyes,
+        Mouth
     }
 }
