@@ -7,14 +7,19 @@
         "Editor"
     ],
     "excludePlatforms": [],
-    "allowUnsafeCode": true,
+    "allowUnsafeCode": false,
     "overrideReferences": false,
     "precompiledReferences": [],
     "autoReferenced": true,
     "defineConstraints": [
-        "VRC_SDK_VRCSDK3",
-        "!UDON"
+        "ANATAWA12_VRCSDK_AVATARS"
     ],
-    "versionDefines": [],
+    "versionDefines": [
+        {
+            "name": "com.vrchat.avatars",
+            "expression": "",
+            "define": "ANATAWA12_VRCSDK_AVATARS"
+        }
+    ],
     "noEngineReferences": false
 }
