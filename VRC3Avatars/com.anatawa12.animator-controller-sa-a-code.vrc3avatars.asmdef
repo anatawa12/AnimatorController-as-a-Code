@@ -1,18 +1,20 @@
 {
-    "name": "com.anatawa12.animator-controller-as-a-code.examples",
+    "name": "com.anatawa12.animator-controller-sa-a-code.vrc3avatars",
     "references": [
-        "GUID:fb7ce51554254d2eb187447695a99f47",
         "GUID:bb9a3357de324e7d8c642db430362dc3"
     ],
     "includePlatforms": [
         "Editor"
     ],
     "excludePlatforms": [],
-    "allowUnsafeCode": false,
+    "allowUnsafeCode": true,
     "overrideReferences": false,
     "precompiledReferences": [],
     "autoReferenced": true,
-    "defineConstraints": [],
+    "defineConstraints": [
+        "VRC_SDK_VRCSDK3",
+        "!UDON"
+    ],
     "versionDefines": [],
     "noEngineReferences": false
 }

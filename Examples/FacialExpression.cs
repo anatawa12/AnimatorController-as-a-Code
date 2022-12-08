@@ -1,6 +1,7 @@
 using System.Linq;
 using Anatawa12.AnimatorControllerAsACode.Editor;
 using Anatawa12.AnimatorControllerAsACode.Generator;
+using Anatawa12.AnimatorControllerAsACode.VRCAvatars3;
 using UnityEngine;
 
 namespace Anatawa12.AnimatorControllerAsACode.Examples
@@ -35,16 +36,15 @@ namespace Anatawa12.AnimatorControllerAsACode.Examples
         private void CreateResetFaceIfGesture(ACaaC acaac, Hand side)
         {
             var layer = acaac.AddLayer($"ResetIf{side}");
-            //TODO var gesture = layer.Av3().Gesture(side);
-            var gesture = layer.IntParameter($"Gesture{side}");
+            var gesture = layer.Av3().Gesture(side);
             var lockFace = layer.BoolParameter("LockFace");
 
             var nopState = layer.NewState("Nop");
             var resetState = layer.NewState("Reset").WithAnimation(reset);
 
             layer.EntryTransitionsTo(nopState);
-            // TODO nopState.TransitionsTo(resetState).When(gesture.IsNotEqualTo(AacAv3.Av3Gesture.Neutral));
-            // TODO resetState.TransitionsTo(nopState).When(gesture.IsEqualTo(AacAv3.Av3Gesture.Neutral));
+            nopState.TransitionsTo(resetState).When(gesture.IsNotEqualTo(Gesture.Neutral));
+            resetState.TransitionsTo(nopState).When(gesture.IsEqualTo(Gesture.Neutral));
             nopState.TransitionsTo(resetState).When(gesture.IsNotEqualTo(0).And(lockFace.IsTrue()));
             resetState.TransitionsTo(nopState).When(gesture.IsEqualTo(0).And(lockFace.IsTrue()));
         }
@@ -53,10 +53,8 @@ namespace Anatawa12.AnimatorControllerAsACode.Examples
         {
             var layer = acaac.AddLayer($"{side}Hand");
             var lockFace = layer.BoolParameter("LockFace");
-            //TODO var gesture = layer.Av3().Gesture(side);
-            //TODO var weight = layer.Av3().GestureWeight(side);
-            var gesture = layer.IntParameter($"Gesture{side}");
-            var weight = layer.FloatParameter($"Gesture{side}Weight");
+            var gesture = layer.Av3().Gesture(side);
+            var weight = layer.Av3().GestureWeight(side);
 
             var stateIdle = layer.NewState("Idle");
             var stateFist = layer.NewState("Fist").RightOf();
@@ -102,7 +100,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Examples
             {
                 layer.AnyTransitionsTo(states[i])
                     .WithTransitionDurationSeconds(0.1f)
-                    .When(gesture.IsEqualTo(i).And(lockFace.IsFalse()));
+                    .When(gesture.IsEqualTo((Gesture)i).And(lockFace.IsFalse()));
             }
         }
     }

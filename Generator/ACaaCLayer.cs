@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Anatawa12.AnimatorControllerAsACode.Generator
 {
-    public sealed class ACaaCLayer : IACaaCStateMachine
+    public sealed class ACaaCLayer : IACaaCStateMachine, IACaaCParameterHolder
     {
         private readonly AnimatorControllerLayer _layer;
         private readonly ACaaCStateMachine _machine;

@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Anatawa12.AnimatorControllerAsACode.Generator
 {
-    public sealed class ACaaC
+    public sealed class ACaaC : IACaaCParameterHolder
     {
         private readonly string _layerBaseName;
         private readonly AnimatorController _controller;
@@ -78,5 +78,14 @@ namespace Anatawa12.AnimatorControllerAsACode.Generator
 
             return new ACaaCClip(clip);
         }
+    }
+
+    public interface IACaaCParameterHolder
+    {
+        ACaaCParameter<float> FloatParameter(string name);
+        ACaaCParameter<int> IntParameter(string name);
+        ACaaCParameter<bool> BoolParameter(string name);
+        ACaaCParameter<T> EnumParameter<T>(string name)
+            where T : unmanaged, Enum;
     }
 }
