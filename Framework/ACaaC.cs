@@ -9,12 +9,12 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
     public sealed class ACaaC : IACaaCParameterHolder
     {
         private readonly string _layerBaseName;
-        private readonly AnimatorController _controller;
+        public readonly AnimatorController Controller;
 
         internal ACaaC(string layerBaseName, AnimatorController controller)
         {
             _layerBaseName = layerBaseName;
-            _controller = controller;
+            Controller = controller;
         }
 
         public ACaaCLayer AddMainLayer() => DoAddLayer(_layerBaseName);
@@ -32,8 +32,8 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
                 }
             };
 
-            AssetDatabase.AddObjectToAsset(layer.stateMachine, _controller);
-            _controller.AddLayer(layer);
+            AssetDatabase.AddObjectToAsset(layer.stateMachine, Controller);
+            Controller.AddLayer(layer);
 
             return new ACaaCLayer(layer, this);
         }
@@ -48,7 +48,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
 
         private ACaaCParameter<T> Parameter<T>(string name, AnimatorControllerParameterType type, Func<T, float> toFloat)
         {
-            var found = _controller.parameters.FirstOrDefault(x => x.name == name);
+            var found = Controller.parameters.FirstOrDefault(x => x.name == name);
             if (found != null)
             {
                 if (found.type != type)
@@ -63,7 +63,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
                 name = name,
                 type = type
             };
-            _controller.AddParameter(parameter);
+            Controller.AddParameter(parameter);
             return new ACaaCParameter<T>(parameter, toFloat);
         }
 
@@ -74,7 +74,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
                 hideFlags = HideFlags.HideInHierarchy
             };
 
-            Utils.AddToFile(_controller, clip);
+            Utils.AddToFile(Controller, clip);
 
             return new ACaaCClip(clip);
         }

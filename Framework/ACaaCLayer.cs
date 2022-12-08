@@ -6,20 +6,20 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
 {
     public sealed class ACaaCLayer : IACaaCStateMachine, IACaaCParameterHolder
     {
-        private readonly AnimatorControllerLayer _layer;
+        public readonly AnimatorControllerLayer Layer;
         private readonly ACaaCStateMachine _machine;
         private readonly ACaaC _acaac;
 
         internal ACaaCLayer(AnimatorControllerLayer layer, ACaaC acaac)
         {
-            _layer = layer;
+            Layer = layer;
             _machine = new ACaaCStateMachine(layer.stateMachine);
             _acaac = acaac;
         }
 
         public ACaaCLayer WithMask(AvatarMask mask)
         {
-            _layer.avatarMask = mask;
+            Layer.avatarMask = mask;
             return this;
         }
 
