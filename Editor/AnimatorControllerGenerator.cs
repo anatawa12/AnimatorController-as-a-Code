@@ -1,7 +1,7 @@
 using System;
 using System.IO;
 using System.Text;
-using Anatawa12.AnimatorControllerAsACode.Generator;
+using Anatawa12.AnimatorControllerAsACode.Framework;
 using UnityEditor;
 using UnityEditor.Animations;
 using UnityEngine;

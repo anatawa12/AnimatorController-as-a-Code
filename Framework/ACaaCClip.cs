@@ -9,7 +9,7 @@ using UnityEngine;
 using UnityEngine.Animations;
 using Debug = System.Diagnostics.Debug;
 
-namespace Anatawa12.AnimatorControllerAsACode.Generator
+namespace Anatawa12.AnimatorControllerAsACode.Framework
 {
     public class ACaaCClip
     {

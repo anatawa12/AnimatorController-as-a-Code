@@ -1,5 +1,5 @@
 using Anatawa12.AnimatorControllerAsACode.Editor;
-using Anatawa12.AnimatorControllerAsACode.Generator;
+using Anatawa12.AnimatorControllerAsACode.Framework;
 using UnityEngine;
 
 namespace Anatawa12.AnimatorControllerAsACode.Examples

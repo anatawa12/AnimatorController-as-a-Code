@@ -1,5 +1,5 @@
 using System;
-using Anatawa12.AnimatorControllerAsACode.Generator;
+using Anatawa12.AnimatorControllerAsACode.Framework;
 using JetBrains.Annotations;
 using VRC.SDKBase;
 

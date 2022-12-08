@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 using UnityEditor;
 using Object = UnityEngine.Object;
 
-namespace Anatawa12.AnimatorControllerAsACode.Generator
+namespace Anatawa12.AnimatorControllerAsACode.Framework
 {
     internal static class Utils
     {

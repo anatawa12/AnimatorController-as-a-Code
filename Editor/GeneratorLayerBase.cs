@@ -1,6 +1,4 @@
-using System;
-using Anatawa12.AnimatorControllerAsACode.Generator;
-using UnityEditor;
+using Anatawa12.AnimatorControllerAsACode.Framework;
 using UnityEngine;
 
 namespace Anatawa12.AnimatorControllerAsACode.Editor

@@ -4,7 +4,7 @@ using UnityEditor;
 using UnityEditor.Animations;
 using UnityEngine;
 
-namespace Anatawa12.AnimatorControllerAsACode.Generator
+namespace Anatawa12.AnimatorControllerAsACode.Framework
 {
     public sealed class ACaaC : IACaaCParameterHolder
     {

@@ -1,6 +1,6 @@
 using System.Linq;
 using Anatawa12.AnimatorControllerAsACode.Editor;
-using Anatawa12.AnimatorControllerAsACode.Generator;
+using Anatawa12.AnimatorControllerAsACode.Framework;
 using Anatawa12.AnimatorControllerAsACode.VRCAvatars3;
 using UnityEngine;
 using VRC.SDKBase;

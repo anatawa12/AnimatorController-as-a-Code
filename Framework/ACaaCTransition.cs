@@ -1,6 +1,6 @@
 using UnityEditor.Animations;
 
-namespace Anatawa12.AnimatorControllerAsACode.Generator
+namespace Anatawa12.AnimatorControllerAsACode.Framework
 {
     public abstract class ACaaCTransitionBase<T>
         where T : AnimatorTransitionBase
