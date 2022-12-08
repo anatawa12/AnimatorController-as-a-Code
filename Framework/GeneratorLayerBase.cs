@@ -1,7 +1,6 @@
-using Anatawa12.AnimatorControllerAsACode.Framework;
 using UnityEngine;
 
-namespace Anatawa12.AnimatorControllerAsACode.Editor
+namespace Anatawa12.AnimatorControllerAsACode.Framework
 {
     public abstract class GeneratorLayerBase : ScriptableObject
     {
