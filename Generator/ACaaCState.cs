@@ -55,6 +55,38 @@ namespace Anatawa12.AnimatorControllerAsACode.Generator
             return this;
         }
 
+        /// <summary>
+        /// Find or add StateMachineBehaviour with type T and run action with it.
+        /// This may not add StateMachineBehaviour. To add new one, use  <see cref="WithNewBehaviour{T}"/>..
+        /// </summary>
+        /// <param name="action">The action run with the StateMachineBehaviour</param>
+        /// <typeparam name="T">The type of StateMachineBehaviour</typeparam>
+        /// <returns></returns>
+        public ACaaCState WithBehaviour<T>(Action<T> action)
+            where T : StateMachineBehaviour
+        {
+            action(AddOrFindStateMachineBehaviour<T>());
+            return this;
+        }
+
+        /// <summary>
+        /// Add StateMachineBehaviour with type T and run action with it.
+        /// This always not add StateMachineBehaviour. To reuse already added one, use <see cref="WithBehaviour{T}"/>.
+        /// </summary>
+        /// <param name="action">The action run with the StateMachineBehaviour</param>
+        /// <typeparam name="T">The type of StateMachineBehaviour</typeparam>
+        /// <returns></returns>
+        public ACaaCState WithNewBehaviour<T>(Action<T> action)
+            where T : StateMachineBehaviour
+        {
+            action(State.AddStateMachineBehaviour<T>());
+            return this;
+        }
+
+        public T AddOrFindStateMachineBehaviour<T>() where T : StateMachineBehaviour =>
+            (T) State.behaviours.FirstOrDefault(x => x.GetType() == typeof(T)) 
+            ?? State.AddStateMachineBehaviour<T>();
+
         #region position
 
         public ACaaCState LeftOf(ACaaCState of = null) => Offset(of, -1, 0);
