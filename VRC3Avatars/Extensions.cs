@@ -1,6 +1,7 @@
 using System;
 using Anatawa12.AnimatorControllerAsACode.Framework;
 using JetBrains.Annotations;
+using VRC.SDK3.Avatars.Components;
 using VRC.SDKBase;
 
 namespace Anatawa12.AnimatorControllerAsACode.VRCAvatars3
@@ -11,7 +12,7 @@ namespace Anatawa12.AnimatorControllerAsACode.VRCAvatars3
 
         public static void TrackingSets(this ACaaCState self, TrackingElement element, VRC_AnimatorTrackingControl.TrackingType target)
         {
-            var tracking = self.AddOrFindStateMachineBehaviour<VRC_AnimatorTrackingControl>();
+            var tracking = self.AddOrFindStateMachineBehaviour<VRCAnimatorTrackingControl>();
             
             switch (element)
             {
