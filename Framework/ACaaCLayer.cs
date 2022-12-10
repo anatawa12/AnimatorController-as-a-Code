@@ -4,38 +4,38 @@ using UnityEngine;
 
 namespace Anatawa12.AnimatorControllerAsACode.Framework
 {
-    public sealed class ACaaCLayer : IACaaCStateMachine, IACaaCParameterHolder
+    public sealed class ACCLayer : IACCStateMachine, IACCParameterHolder
     {
         public readonly AnimatorControllerLayer Layer;
-        private readonly ACaaCStateMachine _machine;
-        private readonly ACaaC _acaac;
+        private readonly ACCStateMachine _machine;
+        private readonly ACC _acc;
 
-        internal ACaaCLayer(AnimatorControllerLayer layer, ACaaC acaac)
+        internal ACCLayer(AnimatorControllerLayer layer, ACC acc)
         {
             Layer = layer;
-            _machine = new ACaaCStateMachine(layer.stateMachine);
-            _acaac = acaac;
+            _machine = new ACCStateMachine(layer.stateMachine);
+            _acc = acc;
         }
 
-        public ACaaCLayer WithMask(AvatarMask mask)
+        public ACCLayer WithMask(AvatarMask mask)
         {
             Layer.avatarMask = mask;
             return this;
         }
 
-        #region IACaaCStateMachine delegateion
-        public ACaaCState NewState(string name) => _machine.NewState(name);
-        public ACaaCEntryTransition EntryTransitionsTo(ACaaCState state) => _machine.EntryTransitionsTo(state);
-        public ACaaCTransition AnyTransitionsTo(ACaaCState state) => _machine.AnyTransitionsTo(state);
+        #region IACCStateMachine delegateion
+        public ACCState NewState(string name) => _machine.NewState(name);
+        public ACCEntryTransition EntryTransitionsTo(ACCState state) => _machine.EntryTransitionsTo(state);
+        public ACCTransition AnyTransitionsTo(ACCState state) => _machine.AnyTransitionsTo(state);
         #endregion
 
-        public ACaaCParameter<float> FloatParameter(string name) => _acaac.FloatParameter(name);
-        public ACaaCParameter<int> IntParameter(string name) => _acaac.IntParameter(name);
-        public ACaaCParameter<bool> BoolParameter(string name) => _acaac.BoolParameter(name);
+        public ACCParameter<float> FloatParameter(string name) => _acc.FloatParameter(name);
+        public ACCParameter<int> IntParameter(string name) => _acc.IntParameter(name);
+        public ACCParameter<bool> BoolParameter(string name) => _acc.BoolParameter(name);
 
-        public ACaaCParameter<T> EnumParameter<T>(string name)
+        public ACCParameter<T> EnumParameter<T>(string name)
             where T : unmanaged, Enum =>
-            _acaac.EnumParameter<T>(name);
+            _acc.EnumParameter<T>(name);
 
     }
 }

@@ -18,24 +18,24 @@ namespace Anatawa12.AnimatorControllerAsACode.Examples
         public Motion thumbsUp;
         public Hand prior;
 
-        protected override void Generate(ACaaC acaac)
+        protected override void Generate(ACC acc)
         {
-            CreateResetFaceAlways(acaac);
-            CreateGestureLayer(acaac, prior.Opposite());
-            CreateResetFaceIfGesture(acaac, prior);
-            CreateGestureLayer(acaac, prior);
+            CreateResetFaceAlways(acc);
+            CreateGestureLayer(acc, prior.Opposite());
+            CreateResetFaceIfGesture(acc, prior);
+            CreateGestureLayer(acc, prior);
         }
 
-        private void CreateResetFaceAlways(ACaaC acaac)
+        private void CreateResetFaceAlways(ACC acc)
         {
-            var layer = acaac.AddLayer("ResetAlways");
+            var layer = acc.AddLayer("ResetAlways");
             var resetState = layer.NewState("Reset").WithAnimation(reset);
             layer.EntryTransitionsTo(resetState);
         }
 
-        private void CreateResetFaceIfGesture(ACaaC acaac, Hand side)
+        private void CreateResetFaceIfGesture(ACC acc, Hand side)
         {
-            var layer = acaac.AddLayer($"ResetIf{side}");
+            var layer = acc.AddLayer($"ResetIf{side}");
             var gesture = layer.Av3().Gesture(side);
             var lockFace = layer.BoolParameter("LockFace");
 
@@ -49,9 +49,9 @@ namespace Anatawa12.AnimatorControllerAsACode.Examples
             resetState.TransitionsTo(nopState).When(gesture.IsEqualTo(0).And(lockFace.IsTrue()));
         }
 
-        private void CreateGestureLayer(ACaaC acaac, Hand side)
+        private void CreateGestureLayer(ACC acc, Hand side)
         {
-            var layer = acaac.AddLayer($"{side}Hand");
+            var layer = acc.AddLayer($"{side}Hand");
             var lockFace = layer.BoolParameter("LockFace");
             var gesture = layer.Av3().Gesture(side);
             var weight = layer.Av3().GestureWeight(side);

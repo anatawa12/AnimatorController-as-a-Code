@@ -2,40 +2,40 @@ using UnityEditor.Animations;
 
 namespace Anatawa12.AnimatorControllerAsACode.Framework
 {
-    public abstract class ACaaCTransitionBase<T>
+    public abstract class ACCTransitionBase<T>
         where T : AnimatorTransitionBase
     {
         private protected readonly T Transition;
-        private protected readonly ACaaCStateMachine StateMachine;
+        private protected readonly ACCStateMachine StateMachine;
 
-        private protected ACaaCTransitionBase(T transition, ACaaCStateMachine stateMachine)
+        private protected ACCTransitionBase(T transition, ACCStateMachine stateMachine)
         {
             Transition = transition;
             StateMachine = stateMachine;
         }
     }
 
-    public class ACaaCTransition : ACaaCTransitionBase<AnimatorStateTransition>
+    public class ACCTransition : ACCTransitionBase<AnimatorStateTransition>
     {
-        internal ACaaCTransition(AnimatorStateTransition transition, ACaaCStateMachine stateMachine) : base(transition, stateMachine)
+        internal ACCTransition(AnimatorStateTransition transition, ACCStateMachine stateMachine) : base(transition, stateMachine)
         {
         }
 
-        public ACaaCTransition WithTransitionDurationSeconds(float seconds)
+        public ACCTransition WithTransitionDurationSeconds(float seconds)
         {
             Transition.duration = seconds;
             return this;
         }
 
         // TODO: continuation
-        public void When(ACaaCParameterCondition condition)
+        public void When(ACCParameterCondition condition)
         {
             condition.ApplyTo(Transition);
         }
     }
 
-    public class ACaaCEntryTransition : ACaaCTransitionBase<AnimatorTransition>
+    public class ACCEntryTransition : ACCTransitionBase<AnimatorTransition>
     {
-        public ACaaCEntryTransition(AnimatorTransition transition, ACaaCStateMachine stateMachine) : base(transition, stateMachine) {}
+        public ACCEntryTransition(AnimatorTransition transition, ACCStateMachine stateMachine) : base(transition, stateMachine) {}
     }
 }

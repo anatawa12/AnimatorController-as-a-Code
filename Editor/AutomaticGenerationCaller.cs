@@ -36,9 +36,9 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
         private const string StateJsonPath = "Temp/com.anatawa12.animator-as-a-code.state.json";
 
         /// <summary>
-        /// List name of ACaaC core modules. If those modules are reloaded, All AnimatorController will be regenerated.
+        /// List name of ACC core modules. If those modules are reloaded, All AnimatorController will be regenerated.
         /// </summary>
-        private static readonly ReadOnlyCollection<string> ACaaCCoreModules = new List<string>
+        private static readonly ReadOnlyCollection<string> ACCCoreModules = new List<string>
         {
             "com.anatawa12.animator-controller-as-a-code.editor",
             "com.anatawa12.animator-controller-as-a-code.framework",
@@ -135,14 +135,14 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
 
         private static void FindAndGenerate()
         {
-            var regenerateAll = ACaaCCoreModules.Any(CompiledAssemblies.Contains);
+            var regenerateAll = ACCCoreModules.Any(CompiledAssemblies.Contains);
             var generatorPaths = AssetDatabase.FindAssets($"t:{typeof(AnimatorControllerGenerator).FullName}");
             var generators = generatorPaths.Select(guid => AssetDatabase.LoadAssetAtPath<AnimatorControllerGenerator>(AssetDatabase.GUIDToAssetPath(guid)));
             var regeneratedCount = 0;
 
             if (regenerateAll)
             {
-                Debug.Log("Compiling ACaaC core modules detected! All AnimatorControllers are regenerated.");
+                Debug.Log("Compiling ACC core modules detected! All AnimatorControllers are regenerated.");
                 // any assemblies of Generator type is reloaded
                 foreach (var generator in generators)
                 {

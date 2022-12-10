@@ -6,21 +6,21 @@ using UnityEngine;
 
 namespace Anatawa12.AnimatorControllerAsACode.Framework
 {
-    public sealed class ACaaC : IACaaCParameterHolder
+    public sealed class ACC : IACCParameterHolder
     {
         private readonly string _layerBaseName;
         public readonly AnimatorController Controller;
 
-        internal ACaaC(string layerBaseName, AnimatorController controller)
+        internal ACC(string layerBaseName, AnimatorController controller)
         {
             _layerBaseName = layerBaseName;
             Controller = controller;
         }
 
-        public ACaaCLayer AddMainLayer() => DoAddLayer(_layerBaseName);
-        public ACaaCLayer AddLayer(string name) => DoAddLayer($"{_layerBaseName}_{name}");
+        public ACCLayer AddMainLayer() => DoAddLayer(_layerBaseName);
+        public ACCLayer AddLayer(string name) => DoAddLayer($"{_layerBaseName}_{name}");
 
-        private ACaaCLayer DoAddLayer(string layerName)
+        private ACCLayer DoAddLayer(string layerName)
         {
             var layer = new AnimatorControllerLayer
             {
@@ -35,18 +35,18 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
             AssetDatabase.AddObjectToAsset(layer.stateMachine, Controller);
             Controller.AddLayer(layer);
 
-            return new ACaaCLayer(layer, this);
+            return new ACCLayer(layer, this);
         }
 
-        public ACaaCParameter<float> FloatParameter(string name) => Parameter(name, AnimatorControllerParameterType.Float, Utils.FloatToFloat);
-        public ACaaCParameter<int> IntParameter(string name) => Parameter(name, AnimatorControllerParameterType.Int, Utils.IntToFloat);
-        public ACaaCParameter<bool> BoolParameter(string name) => Parameter(name, AnimatorControllerParameterType.Bool, Utils.BoolToFloat);
+        public ACCParameter<float> FloatParameter(string name) => Parameter(name, AnimatorControllerParameterType.Float, Utils.FloatToFloat);
+        public ACCParameter<int> IntParameter(string name) => Parameter(name, AnimatorControllerParameterType.Int, Utils.IntToFloat);
+        public ACCParameter<bool> BoolParameter(string name) => Parameter(name, AnimatorControllerParameterType.Bool, Utils.BoolToFloat);
 
-        public ACaaCParameter<T> EnumParameter<T>(string name)
+        public ACCParameter<T> EnumParameter<T>(string name)
             where T : unmanaged, Enum =>
             Parameter(name, AnimatorControllerParameterType.Int, Utils.EnumToFloat<T>());
 
-        private ACaaCParameter<T> Parameter<T>(string name, AnimatorControllerParameterType type, Func<T, float> toFloat)
+        private ACCParameter<T> Parameter<T>(string name, AnimatorControllerParameterType type, Func<T, float> toFloat)
         {
             var found = Controller.parameters.FirstOrDefault(x => x.name == name);
             if (found != null)
@@ -54,7 +54,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
                 if (found.type != type)
                     throw new InvalidOperationException(
                         $"Parameter named {name} found but type is {found.type} which is not expected type, {type}");
-                return new ACaaCParameter<T>(found, toFloat);
+                return new ACCParameter<T>(found, toFloat);
             }
 
             // add
@@ -64,10 +64,10 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
                 type = type
             };
             Controller.AddParameter(parameter);
-            return new ACaaCParameter<T>(parameter, toFloat);
+            return new ACCParameter<T>(parameter, toFloat);
         }
 
-        public ACaaCClip NewClip()
+        public ACCClip NewClip()
         {
             var clip = new AnimationClip
             {
@@ -76,16 +76,16 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
 
             Utils.AddToFile(Controller, clip);
 
-            return new ACaaCClip(clip);
+            return new ACCClip(clip);
         }
     }
 
-    public interface IACaaCParameterHolder
+    public interface IACCParameterHolder
     {
-        ACaaCParameter<float> FloatParameter(string name);
-        ACaaCParameter<int> IntParameter(string name);
-        ACaaCParameter<bool> BoolParameter(string name);
-        ACaaCParameter<T> EnumParameter<T>(string name)
+        ACCParameter<float> FloatParameter(string name);
+        ACCParameter<int> IntParameter(string name);
+        ACCParameter<bool> BoolParameter(string name);
+        ACCParameter<T> EnumParameter<T>(string name)
             where T : unmanaged, Enum;
     }
 }

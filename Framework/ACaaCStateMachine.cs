@@ -5,18 +5,18 @@ using UnityEngine;
 
 namespace Anatawa12.AnimatorControllerAsACode.Framework
 {
-    public sealed class ACaaCStateMachine : IACaaCStateMachine
+    public sealed class ACCStateMachine : IACCStateMachine
     {
-        private ACaaCState _currentState;
-        [CanBeNull] internal ACaaCState LastState;
+        private ACCState _currentState;
+        [CanBeNull] internal ACCState LastState;
         internal readonly AnimatorStateMachine StateMachine;
 
-        internal ACaaCStateMachine(AnimatorStateMachine stateMachine)
+        internal ACCStateMachine(AnimatorStateMachine stateMachine)
         {
             StateMachine = stateMachine;
         }
 
-        public ACaaCState NewState(string name)
+        public ACCState NewState(string name)
         {
             var animatorState = new AnimatorState
             {
@@ -34,24 +34,24 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
             StateMachine.states = states;
 
             LastState = _currentState;
-            return _currentState = new ACaaCState(this, animatorState).Under();
+            return _currentState = new ACCState(this, animatorState).Under();
         }
 
-        public ACaaCEntryTransition EntryTransitionsTo(ACaaCState state)
+        public ACCEntryTransition EntryTransitionsTo(ACCState state)
         {
-            return new ACaaCEntryTransition(StateMachine.AddEntryTransition(state.State), this);
+            return new ACCEntryTransition(StateMachine.AddEntryTransition(state.State), this);
         }
 
-        public ACaaCTransition AnyTransitionsTo(ACaaCState state)
+        public ACCTransition AnyTransitionsTo(ACCState state)
         {
-            return new ACaaCTransition(StateMachine.AddAnyStateTransition(state.State), this);
+            return new ACCTransition(StateMachine.AddAnyStateTransition(state.State), this);
         }
     }
 
-    interface IACaaCStateMachine
+    interface IACCStateMachine
     {
-        ACaaCState NewState(string name);
-        ACaaCEntryTransition EntryTransitionsTo(ACaaCState state);
-        ACaaCTransition AnyTransitionsTo(ACaaCState state);
+        ACCState NewState(string name);
+        ACCEntryTransition EntryTransitionsTo(ACCState state);
+        ACCTransition AnyTransitionsTo(ACCState state);
     }
 }

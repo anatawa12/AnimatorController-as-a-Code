@@ -11,16 +11,16 @@ using Debug = System.Diagnostics.Debug;
 
 namespace Anatawa12.AnimatorControllerAsACode.Framework
 {
-    public class ACaaCClip
+    public class ACCClip
     {
         internal readonly AnimationClip Clip;
 
-        public ACaaCClip(AnimationClip clip)
+        public ACCClip(AnimationClip clip)
         {
             Clip = clip;
         }
 
-        public ACaaCClip Toggling(GameObject gameObject, bool value)
+        public ACCClip Toggling(GameObject gameObject, bool value)
         {
             var binding = Binding(gameObject.transform, typeof(GameObject), "m_IsActive");
             AnimationUtility.SetEditorCurve(Clip, binding, OneFrame(value ? 1f : 0f));
@@ -55,24 +55,24 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
         internal static AnimationCurve ConstantSeconds(float seconds, float desiredValue) =>
             AnimationCurve.Constant(0f, seconds, desiredValue);
 
-        public ACaaCClip Animating(Action<ACaaCEditClip> action)
+        public ACCClip Animating(Action<ACCEditClip> action)
         {
-            action.Invoke(new ACaaCEditClip(Clip));
+            action.Invoke(new ACCEditClip(Clip));
             return this;
         }
     }
 
 
-    public readonly struct ACaaCEditClip
+    public readonly struct ACCEditClip
     {
         private readonly AnimationClip _clip;
 
-        public ACaaCEditClip(AnimationClip clip)
+        public ACCEditClip(AnimationClip clip)
         {
             _clip = clip;
         }
 
-        public ACaaCSettingCurve<T> Animates<T>(string path, Type type, string propertyName)
+        public ACCSettingCurve<T> Animates<T>(string path, Type type, string propertyName)
             where T : struct
         {
             var binding = new EditorCurveBinding
@@ -81,27 +81,27 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
                 type = type,
                 propertyName = propertyName
             };
-            return new ACaaCSettingCurve<T>(_clip, binding);
+            return new ACCSettingCurve<T>(_clip, binding);
         }
 
-        public ACaaCSettingCurve<T> Animates<T>(Transform transform, Type type, string propertyName)
+        public ACCSettingCurve<T> Animates<T>(Transform transform, Type type, string propertyName)
             where T : struct =>
-            Animates<T>(ACaaCClip.ResolveRelativePath(transform), type, propertyName);
+            Animates<T>(ACCClip.ResolveRelativePath(transform), type, propertyName);
 
-        public ACaaCSettingCurve<bool> Animates(GameObject gameObject) =>
+        public ACCSettingCurve<bool> Animates(GameObject gameObject) =>
             Animates<bool>(gameObject.transform, typeof(GameObject), "m_IsActive");
 
-        public ACaaCSettingCurve<T> Animates<T>(Component component, string property)
+        public ACCSettingCurve<T> Animates<T>(Component component, string property)
             where T : struct =>
-            Animates<T>(ACaaCClip.ResolveRelativePath(component.transform), component.GetType(), property);
+            Animates<T>(ACCClip.ResolveRelativePath(component.transform), component.GetType(), property);
 
-        public ACaaCSettingCurve<T> Animates<TComponent, T>(TComponent component,
+        public ACCSettingCurve<T> Animates<TComponent, T>(TComponent component,
             Expression<Func<TComponent, T>> property)
             where TComponent : Component
             where T : struct =>
             Animates<T>(component, ClipExpressionSupport.CreatePath(component, property));
 
-        public ACaaCSettingCurve<T> AnimatesAnimator<T>(ACaaCParameter<T> floatParameter)
+        public ACCSettingCurve<T> AnimatesAnimator<T>(ACCParameter<T> floatParameter)
             where T : struct
         {
             var binding = new EditorCurveBinding
@@ -110,16 +110,16 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
                 type = typeof(Animator),
                 propertyName = floatParameter.Name
             };
-            return new ACaaCSettingCurve<T>(_clip, binding);
+            return new ACCSettingCurve<T>(_clip, binding);
         }
 
         public EditorCurveBinding BindingFromComponent(Component anyComponent, string propertyName)
         {
-            return ACaaCClip.Binding(anyComponent.transform, anyComponent.GetType(), propertyName);
+            return ACCClip.Binding(anyComponent.transform, anyComponent.GetType(), propertyName);
         }
     }
 
-    internal static class ACaaCSettingCurveGenericsSupport<T> where T : struct
+    internal static class ACCSettingCurveGenericsSupport<T> where T : struct
     {
         public static EditorCurveBinding[] CreateBindings(EditorCurveBinding binding)
         {
@@ -129,59 +129,59 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
             if (typeof(T) == typeof(Color))
                 return new[]
                 {
-                    ACaaCSettingCurveGenericsSupportUtils.SubBinding(binding, "r"),
-                    ACaaCSettingCurveGenericsSupportUtils.SubBinding(binding, "g"),
-                    ACaaCSettingCurveGenericsSupportUtils.SubBinding(binding, "b"),
-                    ACaaCSettingCurveGenericsSupportUtils.SubBinding(binding, "a"),
+                    ACCSettingCurveGenericsSupportUtils.SubBinding(binding, "r"),
+                    ACCSettingCurveGenericsSupportUtils.SubBinding(binding, "g"),
+                    ACCSettingCurveGenericsSupportUtils.SubBinding(binding, "b"),
+                    ACCSettingCurveGenericsSupportUtils.SubBinding(binding, "a"),
                 };
             if (typeof(T) == typeof(Vector2) || typeof(T) == typeof(Vector2Int))
                 return new[]
                 {
-                    ACaaCSettingCurveGenericsSupportUtils.SubBinding(binding, "x"),
-                    ACaaCSettingCurveGenericsSupportUtils.SubBinding(binding, "y"),
+                    ACCSettingCurveGenericsSupportUtils.SubBinding(binding, "x"),
+                    ACCSettingCurveGenericsSupportUtils.SubBinding(binding, "y"),
                 };
             if (typeof(T) == typeof(Vector3) || typeof(T) == typeof(Vector3Int))
                 return new[]
                 {
-                    ACaaCSettingCurveGenericsSupportUtils.SubBinding(binding, "x"),
-                    ACaaCSettingCurveGenericsSupportUtils.SubBinding(binding, "y"),
-                    ACaaCSettingCurveGenericsSupportUtils.SubBinding(binding, "z"),
+                    ACCSettingCurveGenericsSupportUtils.SubBinding(binding, "x"),
+                    ACCSettingCurveGenericsSupportUtils.SubBinding(binding, "y"),
+                    ACCSettingCurveGenericsSupportUtils.SubBinding(binding, "z"),
                 };
             if (typeof(T) == typeof(Vector4) || typeof(T) == typeof(Quaternion))
                 return new[]
                 {
-                    ACaaCSettingCurveGenericsSupportUtils.SubBinding(binding, "x"),
-                    ACaaCSettingCurveGenericsSupportUtils.SubBinding(binding, "y"),
-                    ACaaCSettingCurveGenericsSupportUtils.SubBinding(binding, "z"),
-                    ACaaCSettingCurveGenericsSupportUtils.SubBinding(binding, "w"),
+                    ACCSettingCurveGenericsSupportUtils.SubBinding(binding, "x"),
+                    ACCSettingCurveGenericsSupportUtils.SubBinding(binding, "y"),
+                    ACCSettingCurveGenericsSupportUtils.SubBinding(binding, "z"),
+                    ACCSettingCurveGenericsSupportUtils.SubBinding(binding, "w"),
                 };
             if (typeof(T) == typeof(Rect) || typeof(T) == typeof(RectInt))
                 return new[]
                 {
-                    ACaaCSettingCurveGenericsSupportUtils.SubBinding(binding, "x"),
-                    ACaaCSettingCurveGenericsSupportUtils.SubBinding(binding, "y"),
-                    ACaaCSettingCurveGenericsSupportUtils.SubBinding(binding, "height"),
-                    ACaaCSettingCurveGenericsSupportUtils.SubBinding(binding, "width"),
+                    ACCSettingCurveGenericsSupportUtils.SubBinding(binding, "x"),
+                    ACCSettingCurveGenericsSupportUtils.SubBinding(binding, "y"),
+                    ACCSettingCurveGenericsSupportUtils.SubBinding(binding, "height"),
+                    ACCSettingCurveGenericsSupportUtils.SubBinding(binding, "width"),
                 };
             if (typeof(T) == typeof(Bounds))
                 return new[]
                 {
-                    ACaaCSettingCurveGenericsSupportUtils.SubBinding(binding, "m_Center.x"),
-                    ACaaCSettingCurveGenericsSupportUtils.SubBinding(binding, "m_Center.y"),
-                    ACaaCSettingCurveGenericsSupportUtils.SubBinding(binding, "m_Center.z"),
-                    ACaaCSettingCurveGenericsSupportUtils.SubBinding(binding, "m_Extent.x"),
-                    ACaaCSettingCurveGenericsSupportUtils.SubBinding(binding, "m_Extent.y"),
-                    ACaaCSettingCurveGenericsSupportUtils.SubBinding(binding, "m_Extent.z"),
+                    ACCSettingCurveGenericsSupportUtils.SubBinding(binding, "m_Center.x"),
+                    ACCSettingCurveGenericsSupportUtils.SubBinding(binding, "m_Center.y"),
+                    ACCSettingCurveGenericsSupportUtils.SubBinding(binding, "m_Center.z"),
+                    ACCSettingCurveGenericsSupportUtils.SubBinding(binding, "m_Extent.x"),
+                    ACCSettingCurveGenericsSupportUtils.SubBinding(binding, "m_Extent.y"),
+                    ACCSettingCurveGenericsSupportUtils.SubBinding(binding, "m_Extent.z"),
                 };
             if (typeof(T) == typeof(BoundsInt))
                 return new[]
                 {
-                    ACaaCSettingCurveGenericsSupportUtils.SubBinding(binding, "m_Position.x"),
-                    ACaaCSettingCurveGenericsSupportUtils.SubBinding(binding, "m_Position.y"),
-                    ACaaCSettingCurveGenericsSupportUtils.SubBinding(binding, "m_Position.z"),
-                    ACaaCSettingCurveGenericsSupportUtils.SubBinding(binding, "m_Size.x"),
-                    ACaaCSettingCurveGenericsSupportUtils.SubBinding(binding, "m_Size.y"),
-                    ACaaCSettingCurveGenericsSupportUtils.SubBinding(binding, "m_Size.z"),
+                    ACCSettingCurveGenericsSupportUtils.SubBinding(binding, "m_Position.x"),
+                    ACCSettingCurveGenericsSupportUtils.SubBinding(binding, "m_Position.y"),
+                    ACCSettingCurveGenericsSupportUtils.SubBinding(binding, "m_Position.z"),
+                    ACCSettingCurveGenericsSupportUtils.SubBinding(binding, "m_Size.x"),
+                    ACCSettingCurveGenericsSupportUtils.SubBinding(binding, "m_Size.y"),
+                    ACCSettingCurveGenericsSupportUtils.SubBinding(binding, "m_Size.z"),
                 };
 
             ThrowInvalidValueType();
@@ -282,7 +282,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
         }
     }
 
-    internal class ACaaCSettingCurveGenericsSupportUtils
+    internal class ACCSettingCurveGenericsSupportUtils
     {
         public static EditorCurveBinding SubBinding(EditorCurveBinding binding, string prop)
         {
@@ -295,98 +295,98 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
         }
     }
 
-    public sealed class ACaaCSettingCurve<T> where T : struct
+    public sealed class ACCSettingCurve<T> where T : struct
     {
         private readonly AnimationClip _clip;
         private readonly EditorCurveBinding[] _bindings;
 
-        public ACaaCSettingCurve(AnimationClip clip, EditorCurveBinding binding)
+        public ACCSettingCurve(AnimationClip clip, EditorCurveBinding binding)
         {
             _clip = clip;
-            _bindings = ACaaCSettingCurveGenericsSupport<T>.CreateBindings(binding);
+            _bindings = ACCSettingCurveGenericsSupport<T>.CreateBindings(binding);
         }
 
         public void WithOneFrame(T desiredValue)
         {
-            var floats = ACaaCSettingCurveGenericsSupport<T>.ToFloats(desiredValue);
+            var floats = ACCSettingCurveGenericsSupport<T>.ToFloats(desiredValue);
             for (var i = 0; i < _bindings.Length; i++)
-                AnimationUtility.SetEditorCurve(_clip, _bindings[i], ACaaCClip.OneFrame(floats[i]));
+                AnimationUtility.SetEditorCurve(_clip, _bindings[i], ACCClip.OneFrame(floats[i]));
         }
 
         public void WithFixedSeconds(float seconds, T desiredValue)
         {
-            var floats = ACaaCSettingCurveGenericsSupport<T>.ToFloats(desiredValue);
+            var floats = ACCSettingCurveGenericsSupport<T>.ToFloats(desiredValue);
             for (var i = 0; i < _bindings.Length; i++)
-                AnimationUtility.SetEditorCurve(_clip, _bindings[i], ACaaCClip.ConstantSeconds(seconds, floats[i]));
+                AnimationUtility.SetEditorCurve(_clip, _bindings[i], ACCClip.ConstantSeconds(seconds, floats[i]));
         }
 
-        public void WithSecondsUnit(Action<ACaaCSettingKeyframes<T>> action)
+        public void WithSecondsUnit(Action<ACCSettingKeyframes<T>> action)
         {
-            InternalWithUnit(ACaaCUnit.Seconds, action);
+            InternalWithUnit(ACCUnit.Seconds, action);
         }
 
-        public void WithFrameCountUnit(Action<ACaaCSettingKeyframes<T>> action)
+        public void WithFrameCountUnit(Action<ACCSettingKeyframes<T>> action)
         {
-            InternalWithUnit(ACaaCUnit.Frames, action);
+            InternalWithUnit(ACCUnit.Frames, action);
         }
 
-        public void WithUnit(ACaaCUnit unit, Action<ACaaCSettingKeyframes<T>> action)
+        public void WithUnit(ACCUnit unit, Action<ACCSettingKeyframes<T>> action)
         {
             InternalWithUnit(unit, action);
         }
 
-        private void InternalWithUnit(ACaaCUnit unit, Action<ACaaCSettingKeyframes<T>> action)
+        private void InternalWithUnit(ACCUnit unit, Action<ACCSettingKeyframes<T>> action)
         {
             var mutatedKeyframes = new List<Keyframe>[_bindings.Length];
             for (var i = 0; i < mutatedKeyframes.Length; i++)
                 mutatedKeyframes[i] = new List<Keyframe>();
-            var builder = new ACaaCSettingKeyframes<T>(unit, mutatedKeyframes);
+            var builder = new ACCSettingKeyframes<T>(unit, mutatedKeyframes);
             action(builder);
             for (var i = 0; i < _bindings.Length; i++)
                 AnimationUtility.SetEditorCurve(_clip, _bindings[i], new AnimationCurve(mutatedKeyframes[i].ToArray()));
         }
     }
 
-    public enum ACaaCUnit
+    public enum ACCUnit
     {
         Seconds,
         Frames
     }
 
-    public sealed class ACaaCSettingKeyframes<T> where T : struct
+    public sealed class ACCSettingKeyframes<T> where T : struct
     {
-        private readonly ACaaCUnit _unit;
+        private readonly ACCUnit _unit;
         private readonly List<Keyframe>[] _mutatedKeyframes;
 
-        public ACaaCSettingKeyframes(ACaaCUnit unit, List<Keyframe>[] mutatedKeyframes)
+        public ACCSettingKeyframes(ACCUnit unit, List<Keyframe>[] mutatedKeyframes)
         {
             _unit = unit;
             _mutatedKeyframes = mutatedKeyframes;
         }
 
-        public ACaaCSettingKeyframes<T> Easing(float timeInUnit, T value)
+        public ACCSettingKeyframes<T> Easing(float timeInUnit, T value)
         {
-            var floats = ACaaCSettingCurveGenericsSupport<T>.ToFloats(value);
+            var floats = ACCSettingCurveGenericsSupport<T>.ToFloats(value);
             for (var i = 0; i < _mutatedKeyframes.Length; i++)
                 _mutatedKeyframes[i].Add(new Keyframe(AsSeconds(timeInUnit), floats[i], 0, 0));
             return this;
         }
 
-        public ACaaCSettingKeyframes<T> Constant(float timeInUnit, T value)
+        public ACCSettingKeyframes<T> Constant(float timeInUnit, T value)
         {
-            var floats = ACaaCSettingCurveGenericsSupport<T>.ToFloats(value);
+            var floats = ACCSettingCurveGenericsSupport<T>.ToFloats(value);
             for (var i = 0; i < _mutatedKeyframes.Length; i++)
                 _mutatedKeyframes[i].Add(new Keyframe(AsSeconds(timeInUnit), floats[i], 0, float.PositiveInfinity));
 
             return this;
         }
 
-        public ACaaCSettingKeyframes<T> Linear(float timeInUnit, T value)
+        public ACCSettingKeyframes<T> Linear(float timeInUnit, T value)
         {
             var timeEnd = AsSeconds(timeInUnit);
             var timeStart = _mutatedKeyframes[0].Count == 0 ? timeEnd : _mutatedKeyframes[0].Last().time;
 
-            var floats = ACaaCSettingCurveGenericsSupport<T>.ToFloats(value);
+            var floats = ACCSettingCurveGenericsSupport<T>.ToFloats(value);
             for (var i = 0; i < _mutatedKeyframes.Length; i++)
             {
                 var mutatedKeyframes = _mutatedKeyframes[i];
@@ -419,9 +419,9 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
         {
             switch (_unit)
             {
-                case ACaaCUnit.Frames:
+                case ACCUnit.Frames:
                     return timeInUnit / 60f;
-                case ACaaCUnit.Seconds:
+                case ACCUnit.Seconds:
                     return timeInUnit;
                 default:
                     throw new ArgumentOutOfRangeException();

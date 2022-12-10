@@ -5,12 +5,12 @@ using UnityEngine;
 
 namespace Anatawa12.AnimatorControllerAsACode.Framework
 {
-    public class ACaaCParameter<T>
+    public class ACCParameter<T>
     {
         private readonly AnimatorControllerParameter _parameter;
         private readonly Func<T, float> _toFloat;
 
-        public ACaaCParameter(AnimatorControllerParameter parameter, Func<T, float> toFloat)
+        public ACCParameter(AnimatorControllerParameter parameter, Func<T, float> toFloat)
         {
             _parameter = parameter;
             _toFloat = toFloat;
@@ -18,30 +18,30 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
 
         public string Name => _parameter.name;
 
-        public ACaaCParameterCondition IsEqualTo(T value)
+        public ACCParameterCondition IsEqualTo(T value)
         {
-            return new ACaaCParameterCondition(
-                new ACaaCParameterSingleCondition(AnimatorConditionMode.Equals, _toFloat(value), Name));
+            return new ACCParameterCondition(
+                new ACCParameterSingleCondition(AnimatorConditionMode.Equals, _toFloat(value), Name));
         }
 
-        public ACaaCParameterCondition IsNotEqualTo(T value)
+        public ACCParameterCondition IsNotEqualTo(T value)
         {
-            return new ACaaCParameterCondition(
-                new ACaaCParameterSingleCondition(AnimatorConditionMode.NotEqual, _toFloat(value), Name));
+            return new ACCParameterCondition(
+                new ACCParameterSingleCondition(AnimatorConditionMode.NotEqual, _toFloat(value), Name));
         }
     }
 
-    public static class ACaaCTypeSpecificMethods
+    public static class ACCTypeSpecificMethods
     {
-        public static ACaaCParameterCondition IsFalse(this ACaaCParameter<bool> self) => self.IsEqualTo(false);
-        public static ACaaCParameterCondition IsTrue(this ACaaCParameter<bool> self) => self.IsEqualTo(true);
+        public static ACCParameterCondition IsFalse(this ACCParameter<bool> self) => self.IsEqualTo(false);
+        public static ACCParameterCondition IsTrue(this ACCParameter<bool> self) => self.IsEqualTo(true);
     }
 
-    public readonly struct ACaaCParameterCondition
+    public readonly struct ACCParameterCondition
     {
-        private readonly ACaaCParameterSingleCondition[] _conditions;
+        private readonly ACCParameterSingleCondition[] _conditions;
 
-        internal ACaaCParameterCondition(ACaaCParameterSingleCondition condition)
+        internal ACCParameterCondition(ACCParameterSingleCondition condition)
         {
             _conditions = new[]
             {
@@ -49,21 +49,21 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
             };
         }
 
-        private ACaaCParameterCondition(ACaaCParameterSingleCondition[] conditions)
+        private ACCParameterCondition(ACCParameterSingleCondition[] conditions)
         {
             _conditions = conditions;
         }
 
-        public ACaaCParameterCondition And(ACaaCParameterCondition other)
+        public ACCParameterCondition And(ACCParameterCondition other)
         {
             if (other._conditions == null || other._conditions.Length == 0)
                 return this;
             if (_conditions == null || _conditions.Length == 0)
                 return other;
-            var result = new ACaaCParameterSingleCondition[_conditions.Length + other._conditions.Length];
+            var result = new ACCParameterSingleCondition[_conditions.Length + other._conditions.Length];
             Array.Copy(_conditions, result, _conditions.Length);
             Array.Copy(other._conditions, 0, result, _conditions.Length, other._conditions.Length);
-            return new ACaaCParameterCondition(result);
+            return new ACCParameterCondition(result);
         }
 
         public void ApplyTo(AnimatorStateTransition transition)
@@ -77,13 +77,13 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
         }
     }
 
-    internal readonly struct ACaaCParameterSingleCondition
+    internal readonly struct ACCParameterSingleCondition
     {
         internal readonly AnimatorConditionMode Mode;
         internal readonly float Threshold;
         internal readonly string Parameter;
 
-        public ACaaCParameterSingleCondition(AnimatorConditionMode mode, float threshold, string parameter)
+        public ACCParameterSingleCondition(AnimatorConditionMode mode, float threshold, string parameter)
         {
             Mode = mode;
             Threshold = threshold;

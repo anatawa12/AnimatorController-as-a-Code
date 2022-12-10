@@ -16,7 +16,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Examples
 
         protected override IEnumerable<Object> WatchingObjects => new[] { controller };
 
-        protected override void Generate(ACaaC acaac)
+        protected override void Generate(ACC acc)
         {
             foreach (var layerName in layerNames)
             {
@@ -27,7 +27,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Examples
                     continue;
                 }
 
-                var newLayer = acaac.AddLayer(layer.name);
+                var newLayer = acc.AddLayer(layer.name);
                 newLayer.Layer.avatarMask = layer.avatarMask;
                 // m_Motions and m_Behaviours are copied via CopyOverrides
                 newLayer.Layer.blendingMode = layer.blendingMode;

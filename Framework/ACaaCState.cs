@@ -7,10 +7,10 @@ using UnityEngine;
 
 namespace Anatawa12.AnimatorControllerAsACode.Framework
 {
-    public sealed class ACaaCState
+    public sealed class ACCState
     {
         private static readonly Vector2 Grid = new Vector2(250, 70);
-        private readonly ACaaCStateMachine _stateMachine;
+        private readonly ACCStateMachine _stateMachine;
         internal readonly AnimatorState State;
 
         private Vector3 Positon
@@ -35,19 +35,19 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
             }
         }
 
-        public ACaaCState([NotNull] ACaaCStateMachine aCaaCStateMachine, AnimatorState state)
+        public ACCState([NotNull] ACCStateMachine accStateMachine, AnimatorState state)
         {
-            _stateMachine = aCaaCStateMachine;
+            _stateMachine = accStateMachine;
             State = state;
         }
 
-        public ACaaCState WithAnimation(Motion motion)
+        public ACCState WithAnimation(Motion motion)
         {
             State.motion = motion;
             return this;
         }
 
-        public ACaaCState WithAnimation(ACaaCClip clip)
+        public ACCState WithAnimation(ACCClip clip)
         {
             clip.Clip.name = State.name;
             EditorUtility.SetDirty(clip.Clip);
@@ -62,7 +62,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
         /// <param name="action">The action run with the StateMachineBehaviour</param>
         /// <typeparam name="T">The type of StateMachineBehaviour</typeparam>
         /// <returns></returns>
-        public ACaaCState WithBehaviour<T>(Action<T> action)
+        public ACCState WithBehaviour<T>(Action<T> action)
             where T : StateMachineBehaviour
         {
             action(AddOrFindStateMachineBehaviour<T>());
@@ -76,7 +76,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
         /// <param name="action">The action run with the StateMachineBehaviour</param>
         /// <typeparam name="T">The type of StateMachineBehaviour</typeparam>
         /// <returns></returns>
-        public ACaaCState WithNewBehaviour<T>(Action<T> action)
+        public ACCState WithNewBehaviour<T>(Action<T> action)
             where T : StateMachineBehaviour
         {
             action(State.AddStateMachineBehaviour<T>());
@@ -89,12 +89,12 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
 
         #region position
 
-        public ACaaCState LeftOf(ACaaCState of = null) => Offset(of, -1, 0);
-        public ACaaCState RightOf(ACaaCState of = null) => Offset(of, 1, 0);
-        public ACaaCState Over(ACaaCState of = null) => Offset(of, 0, -1);
-        public ACaaCState Under(ACaaCState of = null) => Offset(of, 0, 1);
+        public ACCState LeftOf(ACCState of = null) => Offset(of, -1, 0);
+        public ACCState RightOf(ACCState of = null) => Offset(of, 1, 0);
+        public ACCState Over(ACCState of = null) => Offset(of, 0, -1);
+        public ACCState Under(ACCState of = null) => Offset(of, 0, 1);
 
-        public ACaaCState Offset(ACaaCState of, int offsetX, int offsetY)
+        public ACCState Offset(ACCState of, int offsetX, int offsetY)
         {
             var position = of?.Positon ?? _stateMachine.LastState?.Positon ?? Vector3.zero;
             Positon = position + new Vector3(offsetX * Grid.x, offsetY * Grid.y, 0);
@@ -102,13 +102,13 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
         }
         #endregion
 
-        public ACaaCState MotionTime(ACaaCParameter<float> weight)
+        public ACCState MotionTime(ACCParameter<float> weight)
         {
             State.timeParameter = weight.Name;
             State.timeParameterActive = true;
             return this;
         }
 
-        public ACaaCTransition TransitionsTo(ACaaCState target) => new ACaaCTransition(State.AddTransition(target.State), _stateMachine);
+        public ACCTransition TransitionsTo(ACCState target) => new ACCTransition(State.AddTransition(target.State), _stateMachine);
     }
 }
