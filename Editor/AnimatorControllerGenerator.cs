@@ -8,17 +8,30 @@ using UnityEngine;
 
 namespace Anatawa12.AnimatorControllerAsACode.Editor
 {
+    [CreateAssetMenu]
     public sealed class AnimatorControllerGenerator : ScriptableObject
     {
         // target information
         public GUID targetGuid;
         // must be relative to generator asset
-        public string targetPath;
+        // if empty, fallback to $"{name}.generated.controller"
+        [SerializeField]
+        private string targetPath;
+
+        public string TargetPath => string.IsNullOrEmpty(targetPath) ? $"{name}.generated.controller" : targetPath;
 
         // generator information
         public GeneratorLayerBase[] generators;
 
         private AnimatorController _targetResolved;
+
+        private void OnEnable()
+        {
+            if (targetGuid.Empty())
+                targetGuid = GUID.Generate();
+            if (generators == null)
+                generators = Array.Empty<GeneratorLayerBase>();
+        }
 
         public void DoGenerate()
         {
@@ -74,7 +87,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
             if (string.IsNullOrEmpty(path))
                 throw new InvalidOperationException($"AnimatorControllerGenerator must be saved on disk to generate animator");
             var baseDir = path.Substring(0, path.LastIndexOf('/') + 1);
-            var assetPath = baseDir + targetPath;
+            var assetPath = baseDir + TargetPath;
             var metaPath = $"{assetPath}.meta";
             File.WriteAllText(assetPath, EmptyAnimatorController, Encoding.UTF8);
             File.WriteAllText(metaPath, EmptyAnimatorControllerMeta.Replace("{GUID}", targetGuid.ToString()), Encoding.UTF8);
