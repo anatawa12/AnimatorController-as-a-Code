@@ -13,12 +13,17 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
     {
         // target information
         public GUID targetGuid;
+        /*
+        // TODO: reimplement this field.
+        // TODO: We need to implement watch renaming generated controller, move generated on move this
         // must be relative to generator asset
         // if empty, fallback to $"{name}.generated.controller"
         [SerializeField]
         private string targetPath;
 
         public string TargetPath => string.IsNullOrEmpty(targetPath) ? $"{name}.generated.controller" : targetPath;
+        */
+        public string TargetPath => $"{name}.generated.controller";
 
         // generator information
         public GeneratorLayerBase[] generators;
