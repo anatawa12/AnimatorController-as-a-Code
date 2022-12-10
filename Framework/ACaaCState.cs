@@ -97,7 +97,6 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
         public ACaaCState Offset(ACaaCState of, int offsetX, int offsetY)
         {
             var position = of?.Positon ?? _stateMachine.LastState?.Positon ?? Vector3.zero;
-            Debug.Log($"_stateMachine.LastState: {_stateMachine.LastState?.Positon}");
             Positon = position + new Vector3(offsetX * Grid.x, offsetY * Grid.y, 0);
             return this;
         }
