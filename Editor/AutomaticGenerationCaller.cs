@@ -54,6 +54,12 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
         /// </summary>
         private static readonly Dictionary<string, string> GeneratedToGeneratorMap = new Dictionary<string, string>();
 
+        /// <summary>
+        /// Set of AnimatorControllerGenerator that will be generated in next Update.
+        /// </summary>
+        private static readonly HashSet<AnimatorControllerGenerator> willGenerate =
+            new HashSet<AnimatorControllerGenerator>();
+
         private static State _state = State.Initialized;
         private const string StateJsonPath = "Temp/com.anatawa12.animator-as-a-code.state.json";
 
@@ -73,6 +79,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
             CompilationPipeline.assemblyCompilationFinished += AssemblyCompilationFinished;
             AssemblyReloadEvents.beforeAssemblyReload += BeforeAssemblyReload;
             AssemblyReloadEvents.afterAssemblyReload += AfterAssemblyReload;
+            EditorApplication.update += Update;
         }
 
         internal class AssetPostprocessorImpl : AssetPostprocessor
@@ -122,7 +129,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
                          .Where(x => x.generator != null))
             {
                 // first, regenerate
-                DoGenerateWithErrorCheck(generator);
+                willGenerate.Add(generator);
                 // then, update generator watching target
                 var watchingTarget = generator.WatchingObjects.Select(AssetDatabase.GetAssetPath)
                     .Where(x => !string.IsNullOrEmpty(x)).ToImmutableHashSet();
@@ -186,6 +193,12 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
                       $"movedFromAssetPaths: {string.Join(", ", movedFromAssetPaths)}");
         }
 
+        private static void Update()
+        {
+            foreach (var generator in willGenerate)
+                DoGenerateWithErrorCheck(generator);
+            willGenerate.Clear();
+        }
 
         private static void CompilationStarted(object obj)
         {
