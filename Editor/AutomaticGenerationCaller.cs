@@ -57,8 +57,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
         /// <summary>
         /// Set of AnimatorControllerGenerator that will be generated in next Update.
         /// </summary>
-        private static readonly HashSet<AnimatorControllerGenerator> willGenerate =
-            new HashSet<AnimatorControllerGenerator>();
+        private static readonly Queue<Action> RunNextUpdate = new Queue<Action>();
 
         private static State _state = State.Initialized;
         private const string StateJsonPath = "Temp/com.anatawa12.animator-as-a-code.state.json";
@@ -129,7 +128,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
                          .Where(x => x.generator != null))
             {
                 // first, regenerate
-                willGenerate.Add(generator);
+                RunNextUpdate.Enqueue(() => DoGenerateWithErrorCheck(generator));
                 // then, update generator watching target
                 SaveGeneratorInfoToMap(generator);
             }
@@ -156,6 +155,12 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
                     proceedGenerators.Add(foundGeneratorPath);
                     var actualGeneratorPath = moveMapping.GetOrKey(foundGeneratorPath);
                     var generator = AssetDatabase.LoadAssetAtPath<AnimatorControllerGenerator>(actualGeneratorPath);
+                    if (generator == null)
+                    {
+                        Debug.LogWarning($"generator asset for {moveFrom} (moved to {moveTo}) is not found. should be at {actualGeneratorPath} (or {actualGeneratorPath})");
+                        continue;
+                    }
+                    generator.UpdateNameIfNeeded();
                     generator.UpdateTargetPath(moveTo);
 
                     GeneratedToGeneratorMap.Remove(moveFrom);
@@ -172,9 +177,17 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
                 if (GeneratorToGeneratedMap.TryGetValue(moveFrom, out var generatedPath))
                 {
                     var generator = AssetDatabase.LoadAssetAtPath<AnimatorControllerGenerator>(moveTo);
-                    AssetDatabase.MoveAsset(generatedPath, generator.TargetPath);
-                    GeneratedToGeneratorMap[generator.TargetPath] = moveTo;
-                    GeneratorToGeneratedMap[moveTo] = generator.TargetPath;
+                    generator.UpdateNameIfNeeded();
+                    var targetPath = generator.TargetPath;
+                    RunNextUpdate.Enqueue(() =>
+                    {
+                        AssetDatabase.MoveAsset(generatedPath, targetPath);
+                        AssetDatabase.Refresh();
+                    });
+                    GeneratedToGeneratorMap.Remove(generatedPath);
+                    GeneratorToGeneratedMap.Remove(moveFrom);
+                    GeneratedToGeneratorMap[targetPath] = moveTo;
+                    GeneratorToGeneratedMap[moveTo] = targetPath;
                 }
             }
 
@@ -187,9 +200,8 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
 
         private static void Update()
         {
-            foreach (var generator in willGenerate)
-                DoGenerateWithErrorCheck(generator);
-            willGenerate.Clear();
+            while (RunNextUpdate.Count != 0)
+                RunNextUpdate.Dequeue()?.Invoke();
         }
 
         private static void CompilationStarted(object obj)

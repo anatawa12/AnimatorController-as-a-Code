@@ -25,13 +25,22 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
         [SerializeField]
         private string targetPath;
 
-        private string ThisAssetFolder
+        private string ThisAssetPath
         {
             get
             {
                 var path = AssetDatabase.GetAssetPath(this);
                 if (string.IsNullOrEmpty(path))
                     throw new InvalidOperationException($"AnimatorControllerGenerator must be saved on disk to generate animator");
+                return path;
+            }
+        }
+
+        private string ThisAssetFolder
+        {
+            get
+            {
+                var path = ThisAssetPath;
                 return path.Substring(0, path.LastIndexOf('/') + 1);
             }
         }
@@ -198,6 +207,17 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
                 buildingPath.Append("../");
             buildingPath.Append(string.Join(",", newTargetPathComponents.Skip(commonComponentsCount)));
             targetPath = buildingPath.ToString();
+        }
+
+        public void UpdateNameIfNeeded()
+        {
+            var path = ThisAssetPath;
+            var actualName = Path.GetFileNameWithoutExtension(path);
+            if (name != actualName)
+            {
+                name = actualName;
+                EditorUtility.SetDirty(this);
+            }
         }
     }
 }
