@@ -18,7 +18,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
         private Vector2 _selectorScroll = Vector2.zero;
         private MonoScript _script;
 
-        private void OnDestroy() => Debug.Log("OnDestroy");
+        private void OnDestroy() => ((AnimatorControllerGenerator)target).DoGenerate();
 
         public override void OnInspectorGUI()
         {
