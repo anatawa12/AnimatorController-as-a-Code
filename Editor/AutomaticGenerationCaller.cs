@@ -33,26 +33,20 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
         /// </summary>
         private static readonly HashSet<string> CompileErrorAssemblies = new HashSet<string>();
 
-        // TODO: consider rewrite with GUID instead of paths to avoid move before & move after confusion?
         /// <summary>
-        /// Key: Path to watching target asset, Value: List of watching generator path
+        /// Key: watching target asset, Value: List of watching generator
         /// </summary>
-        private static readonly Dictionary<string, ImmutableHashSet<string>> WatchingToGeneratorMap = new Dictionary<string, ImmutableHashSet<string>>();
+        private static readonly Dictionary<GUID, ImmutableHashSet<GUID>> WatchingToGeneratorMap = new Dictionary<GUID, ImmutableHashSet<GUID>>();
 
         /// <summary>
-        /// Key: Path to generator, Value: List of watching asset path
+        /// Key: generator, Value: List of watching asset
         /// </summary>
-        private static readonly Dictionary<string, ImmutableHashSet<string>> GeneratorToWatchingMap = new Dictionary<string, ImmutableHashSet<string>>();
+        private static readonly Dictionary<GUID, ImmutableHashSet<GUID>> GeneratorToWatchingMap = new Dictionary<GUID, ImmutableHashSet<GUID>>();
 
         /// <summary>
-        /// Key: Path to generator, Value: Path to generated AnimatorController
+        /// Key: generated AnimatorController, Value: generator
         /// </summary>
-        private static readonly Dictionary<string, string> GeneratorToGeneratedMap = new Dictionary<string, string>();
-
-        /// <summary>
-        /// Key: Path to generated AnimatorController, Value: Path to generator
-        /// </summary>
-        private static readonly Dictionary<string, string> GeneratedToGeneratorMap = new Dictionary<string, string>();
+        private static readonly Dictionary<GUID, GUID> GeneratedToGeneratorMap = new Dictionary<GUID, GUID>();
 
         /// <summary>
         /// Set of AnimatorControllerGenerator that will be generated in next Update.
@@ -94,38 +88,44 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
         private static void OnPostprocessAllAssets(string[] importedAssets, string[] deletedAssets,
             string[] movedAssets, string[] movedFromAssetPaths)
         {
-            var moveMapping = movedFromAssetPaths.Zip(movedAssets, (k, v) => new KeyValuePair<string, string>(k, v)).ToImmutableDictionary();
+            var importedGuids = importedAssets.Select(Utils.AssetPathToGUID).ToArray();
+            var movedGuids = movedAssets.Select(Utils.AssetPathToGUID).ToArray();
+            var deletedGuids = deletedAssets.Select(Utils.AssetPathToGUID).ToArray();
+
             // if generator is imported, it's modified
-            var modifiedGenerators = new HashSet<string>(importedAssets);
+            var modifiedGenerators = new HashSet<GUID>(importedGuids);
 
             // if watching asset is updated, the generator is modified
-            foreach (var importedPath in importedAssets.Concat(movedFromAssetPaths))
+            foreach (var importedPath in importedGuids.Concat(movedGuids))
             {
                 if (WatchingToGeneratorMap.TryGetValue(importedPath, out var generators))
-                {
-                    modifiedGenerators.UnionWith(generators.Select(moveMapping.GetOrKey));
-                }
+                    modifiedGenerators.UnionWith(generators);
             }
 
             // if watching target or generator is moved or removed, remove from watching mapping.
-            foreach (var deleted in movedFromAssetPaths.Concat(deletedAssets))
+            foreach (var deleted in deletedGuids)
             {
+                // if watching asset is removed, the generator is modified
+                if (WatchingToGeneratorMap.TryGetValue(deleted, out var generators))
+                {
+                    modifiedGenerators.UnionWith(generators);
+                    WatchingToGeneratorMap.Remove(deleted);
+                }
                 // remove the asset from watching mapping
-                WatchingToGeneratorMap.Remove(deleted);
                 if (GeneratorToWatchingMap.TryGetValue(deleted, out var watchingAssets))
                 {
                     foreach (var watchingAsset in watchingAssets)
                     {
-                        // maybe removed in this foreach 
+                        // maybe removed in this foreach so use TryGet
                         if (WatchingToGeneratorMap.TryGetValue(watchingAsset, out var watchingGenerators))
-                            watchingGenerators.Remove(deleted);
+                            WatchingToGeneratorMap[watchingAsset] = watchingGenerators.Remove(deleted);
                     }
                 }
             }
 
-            foreach (var (path, generator) in modifiedGenerators
-                         .Select(path => (path, generator: AssetDatabase.LoadAssetAtPath<AnimatorControllerGenerator>(path)))
-                         .Where(x => x.generator != null))
+            foreach (var generator in modifiedGenerators
+                         .Select(Utils.LoadAssetAtGUID<AnimatorControllerGenerator>)
+                         .Where(x => x != null))
             {
                 // first, regenerate
                 RunNextUpdate.Enqueue(() => DoGenerateWithErrorCheck(generator));
@@ -134,68 +134,45 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
             }
 
             ///////////////////////////////////
-            // Process Generator move and deletion
-            foreach (var deleted in deletedAssets)
-            {
-                // if generator is actually deleted, remove from mapping
-                if (GeneratorToGeneratedMap.TryGetValue(deleted, out var generated))
-                {
-                    GeneratorToGeneratedMap.Remove(deleted);
-                    GeneratedToGeneratorMap.Remove(generated);
-                }
-            }
-
-            var proceedGenerators = new HashSet<string>();
+            var proceedGenerators = new HashSet<GUID>();
 
             // if generate target is moved, update target path
-            foreach (var (moveFrom, moveTo) in moveMapping)
+            for (var i = 0; i < movedGuids.Length; i++)
             {
-                if (GeneratedToGeneratorMap.TryGetValue(moveFrom, out var foundGeneratorPath))
+                var movedGuid = movedGuids[i];
+                var movedToPath = movedAssets[i];
+                if (GeneratedToGeneratorMap.TryGetValue(movedGuid, out var generatorGuid))
                 {
-                    proceedGenerators.Add(foundGeneratorPath);
-                    var actualGeneratorPath = moveMapping.GetOrKey(foundGeneratorPath);
-                    var generator = AssetDatabase.LoadAssetAtPath<AnimatorControllerGenerator>(actualGeneratorPath);
+                    proceedGenerators.Add(generatorGuid);
+                    var generator = Utils.LoadAssetAtGUID<AnimatorControllerGenerator>(generatorGuid);
                     if (generator == null)
                     {
-                        Debug.LogWarning($"generator asset for {moveFrom} (moved to {moveTo}) is not found. should be at {actualGeneratorPath} (or {actualGeneratorPath})");
+                        // Generator is removed. remove from mapping and continue;
+                        GeneratedToGeneratorMap.Remove(movedGuid);
                         continue;
                     }
                     generator.UpdateNameIfNeeded();
-                    generator.UpdateTargetPath(moveTo);
-
-                    GeneratedToGeneratorMap.Remove(moveFrom);
-                    GeneratedToGeneratorMap[moveTo] = actualGeneratorPath;
-                    GeneratorToGeneratedMap[actualGeneratorPath] = moveTo;
+                    generator.UpdateTargetPath(movedToPath);
                 }
             }
             
-            foreach (var (moveFrom, moveTo) in moveMapping)
+            foreach (var movedGuid in movedGuids)
             {
                 // it's already updated
-                if (proceedGenerators.Contains(moveFrom)) continue;
+                if (proceedGenerators.Contains(movedGuid)) continue;
                 // if generator is moved, move generated
-                if (GeneratorToGeneratedMap.TryGetValue(moveFrom, out var generatedPath))
+                var generator = Utils.LoadAssetAtGUID<AnimatorControllerGenerator>(movedGuid);
+                if (generator != null)
                 {
-                    var generator = AssetDatabase.LoadAssetAtPath<AnimatorControllerGenerator>(moveTo);
                     generator.UpdateNameIfNeeded();
                     var targetPath = generator.TargetPath;
                     RunNextUpdate.Enqueue(() =>
                     {
-                        AssetDatabase.MoveAsset(generatedPath, targetPath);
+                        AssetDatabase.MoveAsset(AssetDatabase.GUIDToAssetPath(generator.targetGuid.ToString()), targetPath);
                         AssetDatabase.Refresh();
                     });
-                    GeneratedToGeneratorMap.Remove(generatedPath);
-                    GeneratorToGeneratedMap.Remove(moveFrom);
-                    GeneratedToGeneratorMap[targetPath] = moveTo;
-                    GeneratorToGeneratedMap[moveTo] = targetPath;
                 }
             }
-
-            Debug.Log($"OnPostprocessAllAssets:\n" +
-                      $"importedAssets: {string.Join(", ", importedAssets)}\n" +
-                      $"deletedAssets: {string.Join(", ", deletedAssets)}\n" +
-                      $"movedAssets: {string.Join(", ", movedAssets)}\n" +
-                      $"movedFromAssetPaths: {string.Join(", ", movedFromAssetPaths)}");
         }
 
         private static void Update()
@@ -285,27 +262,24 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
         }
 
         private static IEnumerable<AnimatorControllerGenerator> FindAllAnimatorControllerGenerator() =>
-            AssetDatabase.FindAssets($"t:{typeof(AnimatorControllerGenerator).FullName}").Select(guid =>
-                AssetDatabase.LoadAssetAtPath<AnimatorControllerGenerator>(AssetDatabase.GUIDToAssetPath(guid)));
+            AssetDatabase.FindAssets($"t:{typeof(AnimatorControllerGenerator).FullName}")
+                .Select(Utils.LoadAssetAtGUID<AnimatorControllerGenerator>);
 
         private static void SaveGeneratorInfoToMap(AnimatorControllerGenerator generator)
         {
-            var path = AssetDatabase.GetAssetPath(generator);
-            var watchingTarget = generator.WatchingObjects.Select(AssetDatabase.GetAssetPath)
-                .Where(x => !string.IsNullOrEmpty(x)).ToImmutableHashSet();
+            var guid = Utils.GetAssetGUID(generator);
+            var watchingTarget = generator.WatchingObjects.Select(Utils.GetAssetGUID).ToImmutableHashSet();
             if (watchingTarget.Count != 0)
             {
                 foreach (var target in watchingTarget)
                 {
                     WatchingToGeneratorMap[target] =
-                        (WatchingToGeneratorMap.GetOrDefault(target) ?? ImmutableHashSet<string>.Empty).Add(path);
+                        (WatchingToGeneratorMap.GetOrDefault(target) ?? ImmutableHashSet<GUID>.Empty).Add(guid);
                 }
-                GeneratorToWatchingMap[path] = watchingTarget;
+                GeneratorToWatchingMap[guid] = watchingTarget;
             }
 
-            var targetPath = generator.TargetPath;
-            GeneratedToGeneratorMap[targetPath] = path;
-            GeneratorToGeneratedMap[path] = targetPath;
+            GeneratedToGeneratorMap[generator.targetGuid] = guid;
         }
 
         private static void FindAndGenerate()
