@@ -197,6 +197,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
             for (var i = 0; i < thisAssetFolderComponents.Length - commonComponentsCount; i++)
                 buildingPath.Append("../");
             buildingPath.Append(string.Join(",", newTargetPathComponents.Skip(commonComponentsCount)));
+            targetPath = buildingPath.ToString();
         }
     }
 }
