@@ -131,17 +131,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
                 // first, regenerate
                 willGenerate.Add(generator);
                 // then, update generator watching target
-                var watchingTarget = generator.WatchingObjects.Select(AssetDatabase.GetAssetPath)
-                    .Where(x => !string.IsNullOrEmpty(x)).ToImmutableHashSet();
-                if (watchingTarget.Count != 0)
-                {
-                    foreach (var target in watchingTarget)
-                    {
-                        WatchingToGeneratorMap[target] =
-                            (WatchingToGeneratorMap.GetOrDefault(target) ?? ImmutableHashSet<string>.Empty).Add(path);
-                    }
-                    GeneratorToWatchingMap[path] = watchingTarget;
-                }
+                SaveGeneratorInfoToMap(generator);
             }
 
             ///////////////////////////////////
@@ -183,6 +173,8 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
                 {
                     var generator = AssetDatabase.LoadAssetAtPath<AnimatorControllerGenerator>(moveTo);
                     AssetDatabase.MoveAsset(generatedPath, generator.TargetPath);
+                    GeneratedToGeneratorMap[generator.TargetPath] = moveTo;
+                    GeneratorToGeneratedMap[moveTo] = generator.TargetPath;
                 }
             }
 
@@ -280,11 +272,34 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
             FindAndGenerate();
         }
 
+        private static IEnumerable<AnimatorControllerGenerator> FindAllAnimatorControllerGenerator() =>
+            AssetDatabase.FindAssets($"t:{typeof(AnimatorControllerGenerator).FullName}").Select(guid =>
+                AssetDatabase.LoadAssetAtPath<AnimatorControllerGenerator>(AssetDatabase.GUIDToAssetPath(guid)));
+
+        private static void SaveGeneratorInfoToMap(AnimatorControllerGenerator generator)
+        {
+            var path = AssetDatabase.GetAssetPath(generator);
+            var watchingTarget = generator.WatchingObjects.Select(AssetDatabase.GetAssetPath)
+                .Where(x => !string.IsNullOrEmpty(x)).ToImmutableHashSet();
+            if (watchingTarget.Count != 0)
+            {
+                foreach (var target in watchingTarget)
+                {
+                    WatchingToGeneratorMap[target] =
+                        (WatchingToGeneratorMap.GetOrDefault(target) ?? ImmutableHashSet<string>.Empty).Add(path);
+                }
+                GeneratorToWatchingMap[path] = watchingTarget;
+            }
+
+            var targetPath = generator.TargetPath;
+            GeneratedToGeneratorMap[targetPath] = path;
+            GeneratorToGeneratedMap[path] = targetPath;
+        }
+
         private static void FindAndGenerate()
         {
             var regenerateAll = ACCCoreModules.Any(CompiledAssemblies.Contains);
-            var generatorPaths = AssetDatabase.FindAssets($"t:{typeof(AnimatorControllerGenerator).FullName}");
-            var generators = generatorPaths.Select(guid => AssetDatabase.LoadAssetAtPath<AnimatorControllerGenerator>(AssetDatabase.GUIDToAssetPath(guid)));
+            var generators = FindAllAnimatorControllerGenerator();
             var regeneratedCount = 0;
 
             if (regenerateAll)
@@ -293,6 +308,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
                 // any assemblies of Generator type is reloaded
                 foreach (var generator in generators)
                 {
+                    SaveGeneratorInfoToMap(generator);
                     DoGenerateWithErrorCheck(generator);
                     regeneratedCount++;
                 }
@@ -301,6 +317,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
             {
                 foreach (var generator in generators)
                 {
+                    SaveGeneratorInfoToMap(generator);
                     // any assemblies of Generator type is reloaded
                     if (generator.generators.Any(x => IsAssemblyCompiled(x.GetType().Assembly)))
                     {
