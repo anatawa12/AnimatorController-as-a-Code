@@ -123,7 +123,8 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
             File.WriteAllText(metaPath, EmptyAnimatorControllerMeta.Replace("{GUID}", targetGuid.ToString()), Encoding.UTF8);
             AssetDatabase.Refresh(ImportAssetOptions.Default);
             _targetResolved = AssetDatabase.LoadAssetAtPath<AnimatorController>(assetPath);
-            Debug.Assert(_targetResolved != null, "created controller cannot be loaded");
+            if (_targetResolved == null)
+                throw new InvalidOperationException("created controller cannot be loaded");
         }
 
         private const string EmptyAnimatorController =
