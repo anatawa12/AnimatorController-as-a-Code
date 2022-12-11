@@ -18,6 +18,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
         private Vector2 _selectorScroll = Vector2.zero;
         private MonoScript _script;
 
+        // TODO: this will be called when name is specified and will case exception "created controller cannot be loaded"
         private void OnDestroy() => ((AnimatorControllerGenerator)target).DoGenerate();
 
         public override void OnInspectorGUI()

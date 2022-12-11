@@ -14,7 +14,6 @@ using Assembly = System.Reflection.Assembly;
 
 namespace Anatawa12.AnimatorControllerAsACode.Editor
 {
-    // TODO: Implement watch for assets
     [InitializeOnLoad]
     internal static class AutomaticGenerationCaller
     {
