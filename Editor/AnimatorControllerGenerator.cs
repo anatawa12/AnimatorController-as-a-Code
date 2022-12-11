@@ -1,10 +1,13 @@
 using System;
+using System.Collections.Immutable;
 using System.IO;
+using System.Linq;
 using System.Text;
 using Anatawa12.AnimatorControllerAsACode.Framework;
 using UnityEditor;
 using UnityEditor.Animations;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace Anatawa12.AnimatorControllerAsACode.Editor
 {
@@ -13,22 +16,48 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
     {
         // target information
         public GUID targetGuid;
-        /*
-        // TODO: reimplement this field.
-        // TODO: We need to implement watch renaming generated controller, move generated on move this
-        // must be relative to generator asset
-        // if empty, fallback to $"{name}.generated.controller"
+
+        /// <summary>
+        /// The path to target asset. Relative to this asset if not starting with '/' and
+        /// Relative to project root if starting with '/'.
+        /// If empty, default value $"{name}.generated.controller" should be used.
+        /// </summary>
         [SerializeField]
         private string targetPath;
 
-        public string TargetPath => string.IsNullOrEmpty(targetPath) ? $"{name}.generated.controller" : targetPath;
-        */
-        public string TargetPath => $"{name}.generated.controller";
+        private string ThisAssetFolder
+        {
+            get
+            {
+                var path = AssetDatabase.GetAssetPath(this);
+                if (string.IsNullOrEmpty(path))
+                    throw new InvalidOperationException($"AnimatorControllerGenerator must be saved on disk to generate animator");
+                return path.Substring(0, path.LastIndexOf('/') + 1);
+            }
+        }
+
+        /// <summary>
+        /// The path to target asset. Always relative to project root
+        /// </summary>
+        /// <exception cref="InvalidOperationException"></exception>
+        public string TargetPath
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(targetPath))
+                    return ThisAssetFolder + $"{name}.generated.controller";
+                if (targetPath.StartsWith("/"))
+                    return targetPath.Substring(1);
+                return ThisAssetFolder + targetPath;
+            }
+        }
 
         // generator information
         public GeneratorLayerBase[] generators;
 
         private AnimatorController _targetResolved;
+
+        public ImmutableHashSet<Object> WatchingObjects => generators.SelectMany(x => x.WatchingObjects).ToImmutableHashSet();
 
         private void OnEnable()
         {
@@ -88,11 +117,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
                 targetGuid = GUID.Generate();
                 EditorUtility.SetDirty(this);
             }
-            var path = AssetDatabase.GetAssetPath(this);
-            if (string.IsNullOrEmpty(path))
-                throw new InvalidOperationException($"AnimatorControllerGenerator must be saved on disk to generate animator");
-            var baseDir = path.Substring(0, path.LastIndexOf('/') + 1);
-            var assetPath = baseDir + TargetPath;
+            var assetPath = TargetPath;
             var metaPath = $"{assetPath}.meta";
             File.WriteAllText(assetPath, EmptyAnimatorController, Encoding.UTF8);
             File.WriteAllText(metaPath, EmptyAnimatorControllerMeta.Replace("{GUID}", targetGuid.ToString()), Encoding.UTF8);
@@ -125,5 +150,52 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
             + "  userData:\n"
             + "  assetBundleName:\n"
             + "  assetBundleVariant:\n";
+
+        internal void UpdateTargetPath(string newTargetPath)
+        {
+            // nothing to do if newTargetPath is same as TargetPath
+            // this happens if 
+            if (newTargetPath == TargetPath)
+                return;
+            if (targetPath?.StartsWith("/") ?? false)
+            {
+                // if current target path is absolute, update as absolute 
+                targetPath = "/" + newTargetPath;
+                return;
+            }
+
+            var thisAssetFolderComponents = ThisAssetFolder.Split('/');
+            var newTargetPathComponents = newTargetPath.Split('/');
+            if (thisAssetFolderComponents[0] != newTargetPathComponents[0])
+            {
+                // the first path component (e.g. Assets, Library, Packages) is not same, use absolute
+                targetPath = "/" + newTargetPath;
+                return;
+            }
+
+            // otherwise, use relative
+            var commonComponentsCount = -1;
+            for (var i = 0;
+                 i < thisAssetFolderComponents.Length &&
+                 i < newTargetPathComponents.Length;
+                 i++)
+            {
+                if (thisAssetFolderComponents[i] != newTargetPathComponents[i])
+                {
+                    commonComponentsCount = i;
+                    break;
+                }
+            }
+
+            if (commonComponentsCount == -1)
+                commonComponentsCount = Math.Min(thisAssetFolderComponents.Length, newTargetPath.Length);
+            // <scc>
+            // A/B/C/E/F/this.asset
+            // A/B/C/D/target.asset
+            var buildingPath = new StringBuilder();
+            for (var i = 0; i < thisAssetFolderComponents.Length - commonComponentsCount; i++)
+                buildingPath.Append("../");
+            buildingPath.Append(string.Join(",", newTargetPathComponents.Skip(commonComponentsCount)));
+        }
     }
 }

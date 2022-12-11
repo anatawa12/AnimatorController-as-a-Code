@@ -18,6 +18,8 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
         private Vector2 _selectorScroll = Vector2.zero;
         private MonoScript _script;
 
+        private void OnDestroy() => Debug.Log("OnDestroy");
+
         public override void OnInspectorGUI()
         {
             // ReSharper disable once LocalVariableHidesMember
