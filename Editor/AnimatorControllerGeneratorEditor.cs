@@ -6,7 +6,6 @@ using UnityEditor;
 using UnityEditor.Compilation;
 using UnityEngine;
 using Assembly = System.Reflection.Assembly;
-using Object = UnityEngine.Object;
 
 namespace Anatawa12.AnimatorControllerAsACode.Editor
 {
@@ -18,8 +17,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
         private Vector2 _selectorScroll = Vector2.zero;
         private MonoScript _script;
 
-        // TODO: this will be called when name is specified and will case exception "created controller cannot be loaded"
-        private void OnDestroy() => ((AnimatorControllerGenerator)target).DoGenerate();
+        private void OnDestroy() => AssetDatabase.SaveAssets();
 
         public override void OnInspectorGUI()
         {
@@ -82,9 +80,10 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
                 {
                     if (GUILayout.Button("Add Generator"))
                     {
-                        var generator = (GeneratorLayerBase)Activator.CreateInstance(_script.GetClass());
+                        var generator = (GeneratorLayerBase)CreateInstance(_script.GetClass());
                         AssetDatabase.AddObjectToAsset(generator, target);
                         ArrayUtility.Add(ref target.generators, generator);
+                        EditorUtility.SetDirty(target);
                     }
                 }
             }
