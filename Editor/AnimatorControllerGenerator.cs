@@ -174,8 +174,8 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
                 return;
             }
 
-            var thisAssetFolderComponents = ThisAssetFolder.Split('/');
-            var newTargetPathComponents = newTargetPath.Split('/');
+            var thisAssetFolderComponents = ThisAssetFolder.Split('/').Where(x => !string.IsNullOrEmpty(x)).ToArray();
+            var newTargetPathComponents = newTargetPath.Split('/').Where(x => !string.IsNullOrEmpty(x)).ToArray();
             if (thisAssetFolderComponents[0] != newTargetPathComponents[0])
             {
                 // the first path component (e.g. Assets, Library, Packages) is not same, use absolute
@@ -205,7 +205,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
             var buildingPath = new StringBuilder();
             for (var i = 0; i < thisAssetFolderComponents.Length - commonComponentsCount; i++)
                 buildingPath.Append("../");
-            buildingPath.Append(string.Join(",", newTargetPathComponents.Skip(commonComponentsCount)));
+            buildingPath.Append(string.Join("/", newTargetPathComponents.Skip(commonComponentsCount)));
             targetPath = buildingPath.ToString();
         }
 
