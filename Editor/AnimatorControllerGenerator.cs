@@ -96,7 +96,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
 
             foreach (var generator in generators)
             {
-                generator.Generate(new ACC(generator.GeneratorName, _targetResolved));
+                generator.Generate(new Acc(generator.GeneratorName, _targetResolved));
             }
             EditorUtility.SetDirty(_targetResolved);
         }

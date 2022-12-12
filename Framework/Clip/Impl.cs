@@ -29,32 +29,32 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework.Clip
         {
             var floats = default(TInfo).ToFloats(desiredValue);
             for (var i = 0; i < _bindings.Length; i++)
-                AnimationUtility.SetEditorCurve(_clip, _bindings[i], ACCClip.OneFrame(floats[i]));
+                AnimationUtility.SetEditorCurve(_clip, _bindings[i], AccClip.OneFrame(floats[i]));
         }
 
         internal void WithFixedSeconds(float seconds, T desiredValue)
         {
             var floats = default(TInfo).ToFloats(desiredValue);
             for (var i = 0; i < _bindings.Length; i++)
-                AnimationUtility.SetEditorCurve(_clip, _bindings[i], ACCClip.ConstantSeconds(seconds, floats[i]));
+                AnimationUtility.SetEditorCurve(_clip, _bindings[i], AccClip.ConstantSeconds(seconds, floats[i]));
         }
 
         internal void WithSecondsUnit(Action<SettingKeyframesImpl<T, TInfo, TBindingArray, TFloatArray, TKeyframeListArray>> action)
         {
-            InternalWithUnit(ACCUnit.Seconds, action);
+            InternalWithUnit(AccUnit.Seconds, action);
         }
 
         internal void WithFrameCountUnit(Action<SettingKeyframesImpl<T, TInfo, TBindingArray, TFloatArray, TKeyframeListArray>> action)
         {
-            InternalWithUnit(ACCUnit.Frames, action);
+            InternalWithUnit(AccUnit.Frames, action);
         }
 
-        internal void WithUnit(ACCUnit unit, Action<SettingKeyframesImpl<T, TInfo, TBindingArray, TFloatArray, TKeyframeListArray>> action)
+        internal void WithUnit(AccUnit unit, Action<SettingKeyframesImpl<T, TInfo, TBindingArray, TFloatArray, TKeyframeListArray>> action)
         {
             InternalWithUnit(unit, action);
         }
 
-        private void InternalWithUnit(ACCUnit unit, Action<SettingKeyframesImpl<T, TInfo, TBindingArray, TFloatArray, TKeyframeListArray>> action)
+        private void InternalWithUnit(AccUnit unit, Action<SettingKeyframesImpl<T, TInfo, TBindingArray, TFloatArray, TKeyframeListArray>> action)
         {
             var mutatedKeyframes = default(TInfo).CreateKeyframeLists();
             var builder = new SettingKeyframesImpl<T, TInfo, TBindingArray, TFloatArray, TKeyframeListArray>(unit, mutatedKeyframes);
@@ -70,10 +70,10 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework.Clip
         where TFloatArray: struct, IFixedArray<float>
         where TKeyframeListArray: struct, IFixedArray<List<Keyframe>>
     {
-        private readonly ACCUnit _unit;
+        private readonly AccUnit _unit;
         private readonly TKeyframeListArray _mutatedKeyframes;
 
-        internal SettingKeyframesImpl(ACCUnit unit, TKeyframeListArray mutatedKeyframes)
+        internal SettingKeyframesImpl(AccUnit unit, TKeyframeListArray mutatedKeyframes)
         {
             _unit = unit;
             _mutatedKeyframes = mutatedKeyframes;
@@ -130,9 +130,9 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework.Clip
         {
             switch (_unit)
             {
-                case ACCUnit.Frames:
+                case AccUnit.Frames:
                     return timeInUnit / 60f;
-                case ACCUnit.Seconds:
+                case AccUnit.Seconds:
                     return timeInUnit;
                 default:
                     throw new ArgumentOutOfRangeException();

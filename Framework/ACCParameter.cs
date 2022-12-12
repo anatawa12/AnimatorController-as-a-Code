@@ -5,12 +5,12 @@ using UnityEngine;
 
 namespace Anatawa12.AnimatorControllerAsACode.Framework
 {
-    public class ACCParameter<T>
+    public class AccParameter<T>
     {
         private readonly AnimatorControllerParameter _parameter;
         private readonly Func<T, float> _toFloat;
 
-        public ACCParameter(AnimatorControllerParameter parameter, Func<T, float> toFloat)
+        public AccParameter(AnimatorControllerParameter parameter, Func<T, float> toFloat)
         {
             _parameter = parameter;
             _toFloat = toFloat;
@@ -18,30 +18,30 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
 
         public string Name => _parameter.name;
 
-        public ACCParameterCondition IsEqualTo(T value)
+        public AccParameterCondition IsEqualTo(T value)
         {
-            return new ACCParameterCondition(
-                new ACCParameterSingleCondition(AnimatorConditionMode.Equals, _toFloat(value), Name));
+            return new AccParameterCondition(
+                new AccParameterSingleCondition(AnimatorConditionMode.Equals, _toFloat(value), Name));
         }
 
-        public ACCParameterCondition IsNotEqualTo(T value)
+        public AccParameterCondition IsNotEqualTo(T value)
         {
-            return new ACCParameterCondition(
-                new ACCParameterSingleCondition(AnimatorConditionMode.NotEqual, _toFloat(value), Name));
+            return new AccParameterCondition(
+                new AccParameterSingleCondition(AnimatorConditionMode.NotEqual, _toFloat(value), Name));
         }
     }
 
-    public static class ACCTypeSpecificMethods
+    public static class AccTypeSpecificMethods
     {
-        public static ACCParameterCondition IsFalse(this ACCParameter<bool> self) => self.IsEqualTo(false);
-        public static ACCParameterCondition IsTrue(this ACCParameter<bool> self) => self.IsEqualTo(true);
+        public static AccParameterCondition IsFalse(this AccParameter<bool> self) => self.IsEqualTo(false);
+        public static AccParameterCondition IsTrue(this AccParameter<bool> self) => self.IsEqualTo(true);
     }
 
-    public readonly struct ACCParameterCondition
+    public readonly struct AccParameterCondition
     {
-        private readonly ACCParameterSingleCondition[] _conditions;
+        private readonly AccParameterSingleCondition[] _conditions;
 
-        internal ACCParameterCondition(ACCParameterSingleCondition condition)
+        internal AccParameterCondition(AccParameterSingleCondition condition)
         {
             _conditions = new[]
             {
@@ -49,21 +49,21 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
             };
         }
 
-        private ACCParameterCondition(ACCParameterSingleCondition[] conditions)
+        private AccParameterCondition(AccParameterSingleCondition[] conditions)
         {
             _conditions = conditions;
         }
 
-        public ACCParameterCondition And(ACCParameterCondition other)
+        public AccParameterCondition And(AccParameterCondition other)
         {
             if (other._conditions == null || other._conditions.Length == 0)
                 return this;
             if (_conditions == null || _conditions.Length == 0)
                 return other;
-            var result = new ACCParameterSingleCondition[_conditions.Length + other._conditions.Length];
+            var result = new AccParameterSingleCondition[_conditions.Length + other._conditions.Length];
             Array.Copy(_conditions, result, _conditions.Length);
             Array.Copy(other._conditions, 0, result, _conditions.Length, other._conditions.Length);
-            return new ACCParameterCondition(result);
+            return new AccParameterCondition(result);
         }
 
         public void ApplyTo(AnimatorStateTransition transition)
@@ -77,13 +77,13 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
         }
     }
 
-    internal readonly struct ACCParameterSingleCondition
+    internal readonly struct AccParameterSingleCondition
     {
         internal readonly AnimatorConditionMode Mode;
         internal readonly float Threshold;
         internal readonly string Parameter;
 
-        public ACCParameterSingleCondition(AnimatorConditionMode mode, float threshold, string parameter)
+        public AccParameterSingleCondition(AnimatorConditionMode mode, float threshold, string parameter)
         {
             Mode = mode;
             Threshold = threshold;

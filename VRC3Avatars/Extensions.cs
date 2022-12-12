@@ -10,7 +10,7 @@ namespace Anatawa12.AnimatorControllerAsACode.VRCAvatars3
     {
         public static Av3ParameterHolder Av3(this IACCParameterHolder self) => new Av3ParameterHolder(self);
 
-        public static void TrackingSets(this ACCState self, TrackingElement element, VRC_AnimatorTrackingControl.TrackingType target)
+        public static void TrackingSets(this AccState self, TrackingElement element, VRC_AnimatorTrackingControl.TrackingType target)
         {
             var tracking = self.AddOrFindStateMachineBehaviour<VRCAnimatorTrackingControl>();
             
@@ -64,13 +64,13 @@ namespace Anatawa12.AnimatorControllerAsACode.VRCAvatars3
             _holder = holder;
         }
 
-        public ACCParameter<Gesture> GestureLeft => Gesture(Hand.Left);
-        public ACCParameter<Gesture> GestureRight => Gesture(Hand.Right);
-        public ACCParameter<Gesture> Gesture(Hand hand) => _holder.EnumParameter<Gesture>($"Gesture{hand}");
+        public AccParameter<Gesture> GestureLeft => Gesture(Hand.Left);
+        public AccParameter<Gesture> GestureRight => Gesture(Hand.Right);
+        public AccParameter<Gesture> Gesture(Hand hand) => _holder.EnumParameter<Gesture>($"Gesture{hand}");
 
-        public ACCParameter<float> GestureWeightLeft => GestureWeight(Hand.Left);
-        public ACCParameter<float> GestureWeightRight => GestureWeight(Hand.Right);
-        public ACCParameter<float> GestureWeight(Hand hand) => _holder.FloatParameter($"Gesture{hand}Weight");
+        public AccParameter<float> GestureWeightLeft => GestureWeight(Hand.Left);
+        public AccParameter<float> GestureWeightRight => GestureWeight(Hand.Right);
+        public AccParameter<float> GestureWeight(Hand hand) => _holder.FloatParameter($"Gesture{hand}Weight");
     }
 
     public enum Gesture

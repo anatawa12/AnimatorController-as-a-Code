@@ -16,7 +16,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Examples
 
         protected override IEnumerable<Object> WatchingObjects => new[] { controller };
 
-        protected override void Generate(ACC acc)
+        protected override void Generate(Acc acc)
         {
             foreach (var layerName in layerNames)
             {

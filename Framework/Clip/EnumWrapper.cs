@@ -45,7 +45,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
             return this;
         }
 
-        public EnumSettingCurve<T> WithUnit(ACCUnit unit, Action<EnumSettingKeyframes<T>> action)
+        public EnumSettingCurve<T> WithUnit(AccUnit unit, Action<EnumSettingKeyframes<T>> action)
         {
             _impl.WithUnit(unit, impl => action(new EnumSettingKeyframes<T>(impl)));
             return this;
@@ -84,7 +84,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
         }
     }
 
-    public partial struct ACCEditClip
+    public partial struct AccEditClip
     {
         public EnumSettingCurve<T> AnimatesEnum<T>(string path, Type type, string propertyName)
             where T : Enum
@@ -101,10 +101,10 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
         }
 
         public EnumSettingCurve<T> AnimatesEnum<T>(Transform transform, Type type, string propertyName)
-            where T : Enum => AnimatesEnum<T>(ACCClip.ResolveRelativePath(transform), type, propertyName);
+            where T : Enum => AnimatesEnum<T>(AccClip.ResolveRelativePath(transform), type, propertyName);
 
         public EnumSettingCurve<T> AnimatesEnum<T>(Component component, string property)
-            where T : Enum => AnimatesEnum<T>(ACCClip.ResolveRelativePath(component.transform), component.GetType(),
+            where T : Enum => AnimatesEnum<T>(AccClip.ResolveRelativePath(component.transform), component.GetType(),
             property);
 
         public EnumSettingCurve<T> Animates<TComponent, T>(TComponent component, Expression<Func<TComponent, int>> property)

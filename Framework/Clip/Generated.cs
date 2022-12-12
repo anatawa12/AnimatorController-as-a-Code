@@ -217,7 +217,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
             return this;
         }
 
-        public IntSettingCurve WithUnit(ACCUnit unit, Action<IntSettingKeyframes> action)
+        public IntSettingCurve WithUnit(AccUnit unit, Action<IntSettingKeyframes> action)
         {
             _impl.WithUnit(unit, impl => action(new IntSettingKeyframes(impl)));
             return this;
@@ -287,7 +287,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
             return this;
         }
 
-        public BoolSettingCurve WithUnit(ACCUnit unit, Action<BoolSettingKeyframes> action)
+        public BoolSettingCurve WithUnit(AccUnit unit, Action<BoolSettingKeyframes> action)
         {
             _impl.WithUnit(unit, impl => action(new BoolSettingKeyframes(impl)));
             return this;
@@ -357,7 +357,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
             return this;
         }
 
-        public FloatSettingCurve WithUnit(ACCUnit unit, Action<FloatSettingKeyframes> action)
+        public FloatSettingCurve WithUnit(AccUnit unit, Action<FloatSettingKeyframes> action)
         {
             _impl.WithUnit(unit, impl => action(new FloatSettingKeyframes(impl)));
             return this;
@@ -427,7 +427,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
             return this;
         }
 
-        public ColorSettingCurve WithUnit(ACCUnit unit, Action<ColorSettingKeyframes> action)
+        public ColorSettingCurve WithUnit(AccUnit unit, Action<ColorSettingKeyframes> action)
         {
             _impl.WithUnit(unit, impl => action(new ColorSettingKeyframes(impl)));
             return this;
@@ -497,7 +497,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
             return this;
         }
 
-        public Vector2SettingCurve WithUnit(ACCUnit unit, Action<Vector2SettingKeyframes> action)
+        public Vector2SettingCurve WithUnit(AccUnit unit, Action<Vector2SettingKeyframes> action)
         {
             _impl.WithUnit(unit, impl => action(new Vector2SettingKeyframes(impl)));
             return this;
@@ -567,7 +567,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
             return this;
         }
 
-        public Vector2IntSettingCurve WithUnit(ACCUnit unit, Action<Vector2IntSettingKeyframes> action)
+        public Vector2IntSettingCurve WithUnit(AccUnit unit, Action<Vector2IntSettingKeyframes> action)
         {
             _impl.WithUnit(unit, impl => action(new Vector2IntSettingKeyframes(impl)));
             return this;
@@ -637,7 +637,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
             return this;
         }
 
-        public Vector3SettingCurve WithUnit(ACCUnit unit, Action<Vector3SettingKeyframes> action)
+        public Vector3SettingCurve WithUnit(AccUnit unit, Action<Vector3SettingKeyframes> action)
         {
             _impl.WithUnit(unit, impl => action(new Vector3SettingKeyframes(impl)));
             return this;
@@ -707,7 +707,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
             return this;
         }
 
-        public Vector3IntSettingCurve WithUnit(ACCUnit unit, Action<Vector3IntSettingKeyframes> action)
+        public Vector3IntSettingCurve WithUnit(AccUnit unit, Action<Vector3IntSettingKeyframes> action)
         {
             _impl.WithUnit(unit, impl => action(new Vector3IntSettingKeyframes(impl)));
             return this;
@@ -777,7 +777,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
             return this;
         }
 
-        public Vector4SettingCurve WithUnit(ACCUnit unit, Action<Vector4SettingKeyframes> action)
+        public Vector4SettingCurve WithUnit(AccUnit unit, Action<Vector4SettingKeyframes> action)
         {
             _impl.WithUnit(unit, impl => action(new Vector4SettingKeyframes(impl)));
             return this;
@@ -847,7 +847,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
             return this;
         }
 
-        public QuaternionSettingCurve WithUnit(ACCUnit unit, Action<QuaternionSettingKeyframes> action)
+        public QuaternionSettingCurve WithUnit(AccUnit unit, Action<QuaternionSettingKeyframes> action)
         {
             _impl.WithUnit(unit, impl => action(new QuaternionSettingKeyframes(impl)));
             return this;
@@ -917,7 +917,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
             return this;
         }
 
-        public RectSettingCurve WithUnit(ACCUnit unit, Action<RectSettingKeyframes> action)
+        public RectSettingCurve WithUnit(AccUnit unit, Action<RectSettingKeyframes> action)
         {
             _impl.WithUnit(unit, impl => action(new RectSettingKeyframes(impl)));
             return this;
@@ -987,7 +987,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
             return this;
         }
 
-        public RectIntSettingCurve WithUnit(ACCUnit unit, Action<RectIntSettingKeyframes> action)
+        public RectIntSettingCurve WithUnit(AccUnit unit, Action<RectIntSettingKeyframes> action)
         {
             _impl.WithUnit(unit, impl => action(new RectIntSettingKeyframes(impl)));
             return this;
@@ -1057,7 +1057,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
             return this;
         }
 
-        public BoundsSettingCurve WithUnit(ACCUnit unit, Action<BoundsSettingKeyframes> action)
+        public BoundsSettingCurve WithUnit(AccUnit unit, Action<BoundsSettingKeyframes> action)
         {
             _impl.WithUnit(unit, impl => action(new BoundsSettingKeyframes(impl)));
             return this;
@@ -1127,7 +1127,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
             return this;
         }
 
-        public BoundsIntSettingCurve WithUnit(ACCUnit unit, Action<BoundsIntSettingKeyframes> action)
+        public BoundsIntSettingCurve WithUnit(AccUnit unit, Action<BoundsIntSettingKeyframes> action)
         {
             _impl.WithUnit(unit, impl => action(new BoundsIntSettingKeyframes(impl)));
             return this;
@@ -1167,9 +1167,9 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
 
     #endregion wrapper types
 
-    #region ACCEditClip Animates function
+    #region AccEditClip Animates function
 
-    public partial struct ACCEditClip
+    public partial struct AccEditClip
     {
 
         public IntSettingCurve AnimatesInt(string path, Type type, string propertyName)
@@ -1184,10 +1184,10 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
         }
 
         public IntSettingCurve AnimatesInt(Transform transform, Type type, string propertyName) =>
-            AnimatesInt(ACCClip.ResolveRelativePath(transform), type, propertyName);
+            AnimatesInt(AccClip.ResolveRelativePath(transform), type, propertyName);
 
         public IntSettingCurve AnimatesInt(Component component, string property) =>
-            AnimatesInt(ACCClip.ResolveRelativePath(component.transform), component.GetType(), property);
+            AnimatesInt(AccClip.ResolveRelativePath(component.transform), component.GetType(), property);
 
         public IntSettingCurve Animates<TComponent>(TComponent component, Expression<Func<TComponent, int>> property)
             where TComponent : Component =>
@@ -1206,10 +1206,10 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
         }
 
         public BoolSettingCurve AnimatesBool(Transform transform, Type type, string propertyName) =>
-            AnimatesBool(ACCClip.ResolveRelativePath(transform), type, propertyName);
+            AnimatesBool(AccClip.ResolveRelativePath(transform), type, propertyName);
 
         public BoolSettingCurve AnimatesBool(Component component, string property) =>
-            AnimatesBool(ACCClip.ResolveRelativePath(component.transform), component.GetType(), property);
+            AnimatesBool(AccClip.ResolveRelativePath(component.transform), component.GetType(), property);
 
         public BoolSettingCurve Animates<TComponent>(TComponent component, Expression<Func<TComponent, bool>> property)
             where TComponent : Component =>
@@ -1228,10 +1228,10 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
         }
 
         public FloatSettingCurve AnimatesFloat(Transform transform, Type type, string propertyName) =>
-            AnimatesFloat(ACCClip.ResolveRelativePath(transform), type, propertyName);
+            AnimatesFloat(AccClip.ResolveRelativePath(transform), type, propertyName);
 
         public FloatSettingCurve AnimatesFloat(Component component, string property) =>
-            AnimatesFloat(ACCClip.ResolveRelativePath(component.transform), component.GetType(), property);
+            AnimatesFloat(AccClip.ResolveRelativePath(component.transform), component.GetType(), property);
 
         public FloatSettingCurve Animates<TComponent>(TComponent component, Expression<Func<TComponent, float>> property)
             where TComponent : Component =>
@@ -1250,10 +1250,10 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
         }
 
         public ColorSettingCurve AnimatesColor(Transform transform, Type type, string propertyName) =>
-            AnimatesColor(ACCClip.ResolveRelativePath(transform), type, propertyName);
+            AnimatesColor(AccClip.ResolveRelativePath(transform), type, propertyName);
 
         public ColorSettingCurve AnimatesColor(Component component, string property) =>
-            AnimatesColor(ACCClip.ResolveRelativePath(component.transform), component.GetType(), property);
+            AnimatesColor(AccClip.ResolveRelativePath(component.transform), component.GetType(), property);
 
         public ColorSettingCurve Animates<TComponent>(TComponent component, Expression<Func<TComponent, Color>> property)
             where TComponent : Component =>
@@ -1272,10 +1272,10 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
         }
 
         public Vector2SettingCurve AnimatesVector2(Transform transform, Type type, string propertyName) =>
-            AnimatesVector2(ACCClip.ResolveRelativePath(transform), type, propertyName);
+            AnimatesVector2(AccClip.ResolveRelativePath(transform), type, propertyName);
 
         public Vector2SettingCurve AnimatesVector2(Component component, string property) =>
-            AnimatesVector2(ACCClip.ResolveRelativePath(component.transform), component.GetType(), property);
+            AnimatesVector2(AccClip.ResolveRelativePath(component.transform), component.GetType(), property);
 
         public Vector2SettingCurve Animates<TComponent>(TComponent component, Expression<Func<TComponent, Vector2>> property)
             where TComponent : Component =>
@@ -1294,10 +1294,10 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
         }
 
         public Vector2IntSettingCurve AnimatesVector2Int(Transform transform, Type type, string propertyName) =>
-            AnimatesVector2Int(ACCClip.ResolveRelativePath(transform), type, propertyName);
+            AnimatesVector2Int(AccClip.ResolveRelativePath(transform), type, propertyName);
 
         public Vector2IntSettingCurve AnimatesVector2Int(Component component, string property) =>
-            AnimatesVector2Int(ACCClip.ResolveRelativePath(component.transform), component.GetType(), property);
+            AnimatesVector2Int(AccClip.ResolveRelativePath(component.transform), component.GetType(), property);
 
         public Vector2IntSettingCurve Animates<TComponent>(TComponent component, Expression<Func<TComponent, Vector2Int>> property)
             where TComponent : Component =>
@@ -1316,10 +1316,10 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
         }
 
         public Vector3SettingCurve AnimatesVector3(Transform transform, Type type, string propertyName) =>
-            AnimatesVector3(ACCClip.ResolveRelativePath(transform), type, propertyName);
+            AnimatesVector3(AccClip.ResolveRelativePath(transform), type, propertyName);
 
         public Vector3SettingCurve AnimatesVector3(Component component, string property) =>
-            AnimatesVector3(ACCClip.ResolveRelativePath(component.transform), component.GetType(), property);
+            AnimatesVector3(AccClip.ResolveRelativePath(component.transform), component.GetType(), property);
 
         public Vector3SettingCurve Animates<TComponent>(TComponent component, Expression<Func<TComponent, Vector3>> property)
             where TComponent : Component =>
@@ -1338,10 +1338,10 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
         }
 
         public Vector3IntSettingCurve AnimatesVector3Int(Transform transform, Type type, string propertyName) =>
-            AnimatesVector3Int(ACCClip.ResolveRelativePath(transform), type, propertyName);
+            AnimatesVector3Int(AccClip.ResolveRelativePath(transform), type, propertyName);
 
         public Vector3IntSettingCurve AnimatesVector3Int(Component component, string property) =>
-            AnimatesVector3Int(ACCClip.ResolveRelativePath(component.transform), component.GetType(), property);
+            AnimatesVector3Int(AccClip.ResolveRelativePath(component.transform), component.GetType(), property);
 
         public Vector3IntSettingCurve Animates<TComponent>(TComponent component, Expression<Func<TComponent, Vector3Int>> property)
             where TComponent : Component =>
@@ -1360,10 +1360,10 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
         }
 
         public Vector4SettingCurve AnimatesVector4(Transform transform, Type type, string propertyName) =>
-            AnimatesVector4(ACCClip.ResolveRelativePath(transform), type, propertyName);
+            AnimatesVector4(AccClip.ResolveRelativePath(transform), type, propertyName);
 
         public Vector4SettingCurve AnimatesVector4(Component component, string property) =>
-            AnimatesVector4(ACCClip.ResolveRelativePath(component.transform), component.GetType(), property);
+            AnimatesVector4(AccClip.ResolveRelativePath(component.transform), component.GetType(), property);
 
         public Vector4SettingCurve Animates<TComponent>(TComponent component, Expression<Func<TComponent, Vector4>> property)
             where TComponent : Component =>
@@ -1382,10 +1382,10 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
         }
 
         public QuaternionSettingCurve AnimatesQuaternion(Transform transform, Type type, string propertyName) =>
-            AnimatesQuaternion(ACCClip.ResolveRelativePath(transform), type, propertyName);
+            AnimatesQuaternion(AccClip.ResolveRelativePath(transform), type, propertyName);
 
         public QuaternionSettingCurve AnimatesQuaternion(Component component, string property) =>
-            AnimatesQuaternion(ACCClip.ResolveRelativePath(component.transform), component.GetType(), property);
+            AnimatesQuaternion(AccClip.ResolveRelativePath(component.transform), component.GetType(), property);
 
         public QuaternionSettingCurve Animates<TComponent>(TComponent component, Expression<Func<TComponent, Quaternion>> property)
             where TComponent : Component =>
@@ -1404,10 +1404,10 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
         }
 
         public RectSettingCurve AnimatesRect(Transform transform, Type type, string propertyName) =>
-            AnimatesRect(ACCClip.ResolveRelativePath(transform), type, propertyName);
+            AnimatesRect(AccClip.ResolveRelativePath(transform), type, propertyName);
 
         public RectSettingCurve AnimatesRect(Component component, string property) =>
-            AnimatesRect(ACCClip.ResolveRelativePath(component.transform), component.GetType(), property);
+            AnimatesRect(AccClip.ResolveRelativePath(component.transform), component.GetType(), property);
 
         public RectSettingCurve Animates<TComponent>(TComponent component, Expression<Func<TComponent, Rect>> property)
             where TComponent : Component =>
@@ -1426,10 +1426,10 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
         }
 
         public RectIntSettingCurve AnimatesRectInt(Transform transform, Type type, string propertyName) =>
-            AnimatesRectInt(ACCClip.ResolveRelativePath(transform), type, propertyName);
+            AnimatesRectInt(AccClip.ResolveRelativePath(transform), type, propertyName);
 
         public RectIntSettingCurve AnimatesRectInt(Component component, string property) =>
-            AnimatesRectInt(ACCClip.ResolveRelativePath(component.transform), component.GetType(), property);
+            AnimatesRectInt(AccClip.ResolveRelativePath(component.transform), component.GetType(), property);
 
         public RectIntSettingCurve Animates<TComponent>(TComponent component, Expression<Func<TComponent, RectInt>> property)
             where TComponent : Component =>
@@ -1448,10 +1448,10 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
         }
 
         public BoundsSettingCurve AnimatesBounds(Transform transform, Type type, string propertyName) =>
-            AnimatesBounds(ACCClip.ResolveRelativePath(transform), type, propertyName);
+            AnimatesBounds(AccClip.ResolveRelativePath(transform), type, propertyName);
 
         public BoundsSettingCurve AnimatesBounds(Component component, string property) =>
-            AnimatesBounds(ACCClip.ResolveRelativePath(component.transform), component.GetType(), property);
+            AnimatesBounds(AccClip.ResolveRelativePath(component.transform), component.GetType(), property);
 
         public BoundsSettingCurve Animates<TComponent>(TComponent component, Expression<Func<TComponent, Bounds>> property)
             where TComponent : Component =>
@@ -1470,10 +1470,10 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
         }
 
         public BoundsIntSettingCurve AnimatesBoundsInt(Transform transform, Type type, string propertyName) =>
-            AnimatesBoundsInt(ACCClip.ResolveRelativePath(transform), type, propertyName);
+            AnimatesBoundsInt(AccClip.ResolveRelativePath(transform), type, propertyName);
 
         public BoundsIntSettingCurve AnimatesBoundsInt(Component component, string property) =>
-            AnimatesBoundsInt(ACCClip.ResolveRelativePath(component.transform), component.GetType(), property);
+            AnimatesBoundsInt(AccClip.ResolveRelativePath(component.transform), component.GetType(), property);
 
         public BoundsIntSettingCurve Animates<TComponent>(TComponent component, Expression<Func<TComponent, BoundsInt>> property)
             where TComponent : Component =>
@@ -1481,5 +1481,5 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
 
     }
 
-    #endregion ACCEditClip Animates function
+    #endregion AccEditClip Animates function
 }

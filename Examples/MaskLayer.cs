@@ -10,7 +10,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Examples
         // optional: GetType().Name by default
         protected override string GeneratorName => "MaskLayer";
 
-        protected override void Generate(ACC acc)
+        protected override void Generate(Acc acc)
         {
             acc.AddMainLayer().WithMask(mask);
         }

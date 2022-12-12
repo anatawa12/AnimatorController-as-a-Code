@@ -25,7 +25,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
         /// Generates Animator Layers.
         /// </summary>
         /// <param name="acc">Animator As A Code entrypoint object</param>
-        protected internal abstract void Generate(ACC acc);
+        protected internal abstract void Generate(Acc acc);
 
         private void OnEnable()
         {

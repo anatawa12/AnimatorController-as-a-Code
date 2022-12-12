@@ -2,40 +2,40 @@ using UnityEditor.Animations;
 
 namespace Anatawa12.AnimatorControllerAsACode.Framework
 {
-    public abstract class ACCTransitionBase<T>
+    public abstract class AccTransitionBase<T>
         where T : AnimatorTransitionBase
     {
         private protected readonly T Transition;
-        private protected readonly ACCStateMachine StateMachine;
+        private protected readonly AccStateMachine StateMachine;
 
-        private protected ACCTransitionBase(T transition, ACCStateMachine stateMachine)
+        private protected AccTransitionBase(T transition, AccStateMachine stateMachine)
         {
             Transition = transition;
             StateMachine = stateMachine;
         }
     }
 
-    public class ACCTransition : ACCTransitionBase<AnimatorStateTransition>
+    public class AccTransition : AccTransitionBase<AnimatorStateTransition>
     {
-        internal ACCTransition(AnimatorStateTransition transition, ACCStateMachine stateMachine) : base(transition, stateMachine)
+        internal AccTransition(AnimatorStateTransition transition, AccStateMachine stateMachine) : base(transition, stateMachine)
         {
         }
 
-        public ACCTransition WithTransitionDurationSeconds(float seconds)
+        public AccTransition WithTransitionDurationSeconds(float seconds)
         {
             Transition.duration = seconds;
             return this;
         }
 
         // TODO: continuation
-        public void When(ACCParameterCondition condition)
+        public void When(AccParameterCondition condition)
         {
             condition.ApplyTo(Transition);
         }
     }
 
-    public class ACCEntryTransition : ACCTransitionBase<AnimatorTransition>
+    public class AccEntryTransition : AccTransitionBase<AnimatorTransition>
     {
-        public ACCEntryTransition(AnimatorTransition transition, ACCStateMachine stateMachine) : base(transition, stateMachine) {}
+        public AccEntryTransition(AnimatorTransition transition, AccStateMachine stateMachine) : base(transition, stateMachine) {}
     }
 }

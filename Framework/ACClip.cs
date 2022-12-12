@@ -5,16 +5,16 @@ using UnityEngine;
 
 namespace Anatawa12.AnimatorControllerAsACode.Framework
 {
-    public class ACCClip
+    public class AccClip
     {
         internal readonly AnimationClip Clip;
 
-        public ACCClip(AnimationClip clip)
+        public AccClip(AnimationClip clip)
         {
             Clip = clip;
         }
 
-        public ACCClip Toggling(GameObject gameObject, bool value)
+        public AccClip Toggling(GameObject gameObject, bool value)
         {
             var binding = Binding(gameObject.transform, typeof(GameObject), "m_IsActive");
             AnimationUtility.SetEditorCurve(Clip, binding, OneFrame(value ? 1f : 0f));
@@ -49,19 +49,19 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
         internal static AnimationCurve ConstantSeconds(float seconds, float desiredValue) =>
             AnimationCurve.Constant(0f, seconds, desiredValue);
 
-        public ACCClip Animating(Action<ACCEditClip> action)
+        public AccClip Animating(Action<AccEditClip> action)
         {
-            action.Invoke(new ACCEditClip(Clip));
+            action.Invoke(new AccEditClip(Clip));
             return this;
         }
     }
 
 
-    public readonly partial struct ACCEditClip
+    public readonly partial struct AccEditClip
     {
         private readonly AnimationClip _clip;
 
-        public ACCEditClip(AnimationClip clip)
+        public AccEditClip(AnimationClip clip)
         {
             _clip = clip;
         }
@@ -69,25 +69,25 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
         public BoolSettingCurve Animates(GameObject gameObject) =>
             AnimatesBool(gameObject.transform, typeof(GameObject), "m_IsActive");
 
-        private EditorCurveBinding AnimatorBinding<T>(ACCParameter<T> floatParameter) => new EditorCurveBinding
+        private EditorCurveBinding AnimatorBinding<T>(AccParameter<T> floatParameter) => new EditorCurveBinding
         {
             path = "",
             type = typeof(Animator),
             propertyName = floatParameter.Name
         };
 
-        public BoolSettingCurve AnimatesAnimator(ACCParameter<bool> parameter) => new BoolSettingCurve(_clip, AnimatorBinding(parameter));
-        public FloatSettingCurve AnimatesAnimator(ACCParameter<float> parameter) => new FloatSettingCurve(_clip, AnimatorBinding(parameter));
-        public IntSettingCurve AnimatesAnimator(ACCParameter<int> parameter) => new IntSettingCurve(_clip, AnimatorBinding(parameter));
-        public EnumSettingCurve<T> AnimatesAnimator<T>(ACCParameter<T> parameter)
+        public BoolSettingCurve AnimatesAnimator(AccParameter<bool> parameter) => new BoolSettingCurve(_clip, AnimatorBinding(parameter));
+        public FloatSettingCurve AnimatesAnimator(AccParameter<float> parameter) => new FloatSettingCurve(_clip, AnimatorBinding(parameter));
+        public IntSettingCurve AnimatesAnimator(AccParameter<int> parameter) => new IntSettingCurve(_clip, AnimatorBinding(parameter));
+        public EnumSettingCurve<T> AnimatesAnimator<T>(AccParameter<T> parameter)
             where T : Enum
             => new EnumSettingCurve<T>(_clip, AnimatorBinding(parameter));
 
         public EditorCurveBinding BindingFromComponent(Component anyComponent, string propertyName) => 
-            ACCClip.Binding(anyComponent.transform, anyComponent.GetType(), propertyName);
+            AccClip.Binding(anyComponent.transform, anyComponent.GetType(), propertyName);
     }
 
-    public enum ACCUnit
+    public enum AccUnit
     {
         Seconds,
         Frames
