@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using Anatawa12.AnimatorControllerAsACode.Framework;
+using JetBrains.Annotations;
 using UnityEditor;
 using UnityEditor.Animations;
 using UnityEngine;
@@ -67,6 +68,15 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
         public GeneratorLayerBase[] generators;
 
         private AnimatorController _targetResolved;
+
+        [CanBeNull] public AnimatorController TargetResolved
+        {
+            get
+            {
+                TryLoadController(); 
+                return _targetResolved;
+            }
+        }
 
         public ImmutableHashSet<Object> WatchingObjects => generators.SelectMany(x => x.WatchingObjects).ToImmutableHashSet();
 

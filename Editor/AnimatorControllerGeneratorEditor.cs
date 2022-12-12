@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Anatawa12.AnimatorControllerAsACode.Framework;
 using UnityEditor;
+using UnityEditor.Animations;
 using UnityEditor.Compilation;
 using UnityEngine;
 using Assembly = System.Reflection.Assembly;
@@ -29,6 +30,27 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
             {
                 target.generators = target.generators.Where(x => x).ToArray();
                 EditorUtility.SetDirty(target);
+            }
+
+            // General information
+            GUILayout.BeginHorizontal();
+            GUILayout.Label("Generator for ", EditorStyles.label);
+            using (new EditorGUI.DisabledScope(true))
+            {
+                EditorGUILayout.ObjectField(target.TargetResolved, typeof(AnimatorController), false);
+            }
+            GUILayout.EndHorizontal();
+
+            GUILayout.BeginHorizontal();
+            GUILayout.Label("Generates for ", EditorStyles.label);
+            target.target = (Transform) EditorGUILayout.ObjectField(target.target, typeof(Transform), false);
+            GUILayout.EndHorizontal();
+            if (!target.target)
+            {
+                GUIStyle style  = new GUIStyle();
+                style.normal.textColor  = Color.yellow;
+                style.focused.textColor = Color.yellow;
+                GUILayout.Label("Generate target GameObject is not specified! this may produce broken animation", style);
             }
 
             var generators = target.generators;
