@@ -89,7 +89,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
         {
             var importedGuids = importedAssets.Select(Utils.AssetPathToGUID).ToArray();
             var movedGuids = movedAssets.Select(Utils.AssetPathToGUID).ToArray();
-            var deletedGuids = deletedAssets.Select(Utils.AssetPathToGUID).ToArray();
+            var deletedGuids = deletedAssets.Select(path => GUID.TryParse(AssetDatabase.AssetPathToGUID(path), out var guid) ? guid : default).ToArray();
 
             // if generator is imported, it's modified
             var modifiedGenerators = new HashSet<GUID>(importedGuids);
