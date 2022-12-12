@@ -28,14 +28,8 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework.Clip
         public int Length => 1;
         public T this[int i]
         {
-            get => Helper.At(ref this, i);
-            set => Helper.At(ref this, i) = value;
-        }
-
-        private static class Helper
-        {
-            internal static unsafe Span<T> AsSpan(ref Fixed1<T> array) => new Span<T>(Unsafe.AsPointer(ref array._item0), 1);
-            internal static ref T At(ref Fixed1<T> array, int i) => ref AsSpan(ref array)[i];
+            get => Utils.CheckedIndexing<T>(ref _item0, i, 1);
+            set => Utils.CheckedIndexing<T>(ref _item0, i, 1) = value;
         }
     }
 
@@ -53,14 +47,8 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework.Clip
         public int Length => 2;
         public T this[int i]
         {
-            get => Helper.At(ref this, i);
-            set => Helper.At(ref this, i) = value;
-        }
-
-        private static class Helper
-        {
-            internal static unsafe Span<T> AsSpan(ref Fixed2<T> array) => new Span<T>(Unsafe.AsPointer(ref array._item0), 2);
-            internal static ref T At(ref Fixed2<T> array, int i) => ref AsSpan(ref array)[i];
+            get => Utils.CheckedIndexing<T>(ref _item0, i, 2);
+            set => Utils.CheckedIndexing<T>(ref _item0, i, 2) = value;
         }
     }
 
@@ -79,14 +67,8 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework.Clip
         public int Length => 3;
         public T this[int i]
         {
-            get => Helper.At(ref this, i);
-            set => Helper.At(ref this, i) = value;
-        }
-
-        private static class Helper
-        {
-            internal static unsafe Span<T> AsSpan(ref Fixed3<T> array) => new Span<T>(Unsafe.AsPointer(ref array._item0), 3);
-            internal static ref T At(ref Fixed3<T> array, int i) => ref AsSpan(ref array)[i];
+            get => Utils.CheckedIndexing<T>(ref _item0, i, 3);
+            set => Utils.CheckedIndexing<T>(ref _item0, i, 3) = value;
         }
     }
 
@@ -106,14 +88,8 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework.Clip
         public int Length => 4;
         public T this[int i]
         {
-            get => Helper.At(ref this, i);
-            set => Helper.At(ref this, i) = value;
-        }
-
-        private static class Helper
-        {
-            internal static unsafe Span<T> AsSpan(ref Fixed4<T> array) => new Span<T>(Unsafe.AsPointer(ref array._item0), 4);
-            internal static ref T At(ref Fixed4<T> array, int i) => ref AsSpan(ref array)[i];
+            get => Utils.CheckedIndexing<T>(ref _item0, i, 4);
+            set => Utils.CheckedIndexing<T>(ref _item0, i, 4) = value;
         }
     }
 
@@ -134,14 +110,8 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework.Clip
         public int Length => 5;
         public T this[int i]
         {
-            get => Helper.At(ref this, i);
-            set => Helper.At(ref this, i) = value;
-        }
-
-        private static class Helper
-        {
-            internal static unsafe Span<T> AsSpan(ref Fixed5<T> array) => new Span<T>(Unsafe.AsPointer(ref array._item0), 5);
-            internal static ref T At(ref Fixed5<T> array, int i) => ref AsSpan(ref array)[i];
+            get => Utils.CheckedIndexing<T>(ref _item0, i, 5);
+            set => Utils.CheckedIndexing<T>(ref _item0, i, 5) = value;
         }
     }
 
@@ -163,14 +133,8 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework.Clip
         public int Length => 6;
         public T this[int i]
         {
-            get => Helper.At(ref this, i);
-            set => Helper.At(ref this, i) = value;
-        }
-
-        private static class Helper
-        {
-            internal static unsafe Span<T> AsSpan(ref Fixed6<T> array) => new Span<T>(Unsafe.AsPointer(ref array._item0), 6);
-            internal static ref T At(ref Fixed6<T> array, int i) => ref AsSpan(ref array)[i];
+            get => Utils.CheckedIndexing<T>(ref _item0, i, 6);
+            set => Utils.CheckedIndexing<T>(ref _item0, i, 6) = value;
         }
     }
 

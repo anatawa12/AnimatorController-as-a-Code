@@ -26,6 +26,25 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
             throw new ArgumentException("UnderlyingType of T is not int. Animating such a field is not supported.",
                 nameof(T));
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ref T CheckedIndexing<T>(ref T first, int index, int len)
+        {
+            CheckIndex(index, len);
+            return ref Unsafe.Add(ref first, index);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static void CheckIndex(int index, int len)
+        {
+            if (index < 0) ThrowIndexError();
+            if (index >= len) ThrowIndexError();
+        }
+
+        private static void ThrowIndexError()
+        {
+            throw new IndexOutOfRangeException("index out of bounds");
+        }
+
         private static class EnumToFloatHelper<T>
             where T : unmanaged, Enum
         {
