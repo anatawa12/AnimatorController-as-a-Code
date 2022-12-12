@@ -21,6 +21,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
             var animatorState = new AnimatorState
             {
                 hideFlags = HideFlags.HideInHierarchy,
+                writeDefaultValues = false,
                 name = name
             };
             Utils.AddToFile(StateMachine, animatorState);
