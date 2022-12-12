@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq.Expressions;
 using UnityEditor;
 using UnityEngine;
 
@@ -58,7 +57,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
     }
 
 
-    public readonly struct ACCEditClip
+    public readonly partial struct ACCEditClip
     {
         private readonly AnimationClip _clip;
 
@@ -67,50 +66,30 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
             _clip = clip;
         }
 
-        public ACCSettingCurve<T> Animates<T>(string path, Type type, string propertyName)
-            where T : struct
+        public BoolSettingCurve Animates(GameObject gameObject) =>
+            AnimatesBool(gameObject.transform, typeof(GameObject), "m_IsActive");
+
+        private EditorCurveBinding AnimatorBinding<T>(ACCParameter<T> floatParameter) => new EditorCurveBinding
         {
-            var binding = new EditorCurveBinding
-            {
-                path = path,
-                type = type,
-                propertyName = propertyName
-            };
-            return new ACCSettingCurve<T>(_clip, binding);
-        }
+            path = "",
+            type = typeof(Animator),
+            propertyName = floatParameter.Name
+        };
 
-        public ACCSettingCurve<T> Animates<T>(Transform transform, Type type, string propertyName)
-            where T : struct =>
-            Animates<T>(ACCClip.ResolveRelativePath(transform), type, propertyName);
+        public BoolSettingCurve AnimatesAnimator(ACCParameter<bool> parameter) => new BoolSettingCurve(_clip, AnimatorBinding(parameter));
+        public FloatSettingCurve AnimatesAnimator(ACCParameter<float> parameter) => new FloatSettingCurve(_clip, AnimatorBinding(parameter));
+        public IntSettingCurve AnimatesAnimator(ACCParameter<int> parameter) => new IntSettingCurve(_clip, AnimatorBinding(parameter));
+        public EnumSettingCurve<T> AnimatesAnimator<T>(ACCParameter<T> parameter)
+            where T : Enum
+            => new EnumSettingCurve<T>(_clip, AnimatorBinding(parameter));
 
-        public ACCSettingCurve<bool> Animates(GameObject gameObject) =>
-            Animates<bool>(gameObject.transform, typeof(GameObject), "m_IsActive");
+        public EditorCurveBinding BindingFromComponent(Component anyComponent, string propertyName) => 
+            ACCClip.Binding(anyComponent.transform, anyComponent.GetType(), propertyName);
+    }
 
-        public ACCSettingCurve<T> Animates<T>(Component component, string property)
-            where T : struct =>
-            Animates<T>(ACCClip.ResolveRelativePath(component.transform), component.GetType(), property);
-
-        public ACCSettingCurve<T> Animates<TComponent, T>(TComponent component,
-            Expression<Func<TComponent, T>> property)
-            where TComponent : Component
-            where T : struct =>
-            Animates<T>(component, ClipExpressionSupport.CreatePath(component, property));
-
-        public ACCSettingCurve<T> AnimatesAnimator<T>(ACCParameter<T> floatParameter)
-            where T : struct
-        {
-            var binding = new EditorCurveBinding
-            {
-                path = "",
-                type = typeof(Animator),
-                propertyName = floatParameter.Name
-            };
-            return new ACCSettingCurve<T>(_clip, binding);
-        }
-
-        public EditorCurveBinding BindingFromComponent(Component anyComponent, string propertyName)
-        {
-            return ACCClip.Binding(anyComponent.transform, anyComponent.GetType(), propertyName);
-        }
+    public enum ACCUnit
+    {
+        Seconds,
+        Frames
     }
 }

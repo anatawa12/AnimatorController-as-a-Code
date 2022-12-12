@@ -3,282 +3,103 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Animations;
 using Debug = System.Diagnostics.Debug;
 
-namespace Anatawa12.AnimatorControllerAsACode.Framework
+namespace Anatawa12.AnimatorControllerAsACode.Framework.Clip
 {
-    internal static class ACCSettingCurveGenericsSupport<T> where T : struct
-    {
-        public static EditorCurveBinding[] CreateBindings(EditorCurveBinding binding)
-        {
-            if (typeof(T) == typeof(int) || typeof(T) == typeof(bool) || typeof(T) == typeof(float) ||
-                typeof(T) == typeof(Enum))
-                return new[] { binding };
-            if (typeof(T) == typeof(Color))
-                return new[]
-                {
-                    ACCSettingCurveGenericsSupportUtils.SubBinding(binding, "r"),
-                    ACCSettingCurveGenericsSupportUtils.SubBinding(binding, "g"),
-                    ACCSettingCurveGenericsSupportUtils.SubBinding(binding, "b"),
-                    ACCSettingCurveGenericsSupportUtils.SubBinding(binding, "a"),
-                };
-            if (typeof(T) == typeof(Vector2) || typeof(T) == typeof(Vector2Int))
-                return new[]
-                {
-                    ACCSettingCurveGenericsSupportUtils.SubBinding(binding, "x"),
-                    ACCSettingCurveGenericsSupportUtils.SubBinding(binding, "y"),
-                };
-            if (typeof(T) == typeof(Vector3) || typeof(T) == typeof(Vector3Int))
-                return new[]
-                {
-                    ACCSettingCurveGenericsSupportUtils.SubBinding(binding, "x"),
-                    ACCSettingCurveGenericsSupportUtils.SubBinding(binding, "y"),
-                    ACCSettingCurveGenericsSupportUtils.SubBinding(binding, "z"),
-                };
-            if (typeof(T) == typeof(Vector4) || typeof(T) == typeof(Quaternion))
-                return new[]
-                {
-                    ACCSettingCurveGenericsSupportUtils.SubBinding(binding, "x"),
-                    ACCSettingCurveGenericsSupportUtils.SubBinding(binding, "y"),
-                    ACCSettingCurveGenericsSupportUtils.SubBinding(binding, "z"),
-                    ACCSettingCurveGenericsSupportUtils.SubBinding(binding, "w"),
-                };
-            if (typeof(T) == typeof(Rect) || typeof(T) == typeof(RectInt))
-                return new[]
-                {
-                    ACCSettingCurveGenericsSupportUtils.SubBinding(binding, "x"),
-                    ACCSettingCurveGenericsSupportUtils.SubBinding(binding, "y"),
-                    ACCSettingCurveGenericsSupportUtils.SubBinding(binding, "height"),
-                    ACCSettingCurveGenericsSupportUtils.SubBinding(binding, "width"),
-                };
-            if (typeof(T) == typeof(Bounds))
-                return new[]
-                {
-                    ACCSettingCurveGenericsSupportUtils.SubBinding(binding, "m_Center.x"),
-                    ACCSettingCurveGenericsSupportUtils.SubBinding(binding, "m_Center.y"),
-                    ACCSettingCurveGenericsSupportUtils.SubBinding(binding, "m_Center.z"),
-                    ACCSettingCurveGenericsSupportUtils.SubBinding(binding, "m_Extent.x"),
-                    ACCSettingCurveGenericsSupportUtils.SubBinding(binding, "m_Extent.y"),
-                    ACCSettingCurveGenericsSupportUtils.SubBinding(binding, "m_Extent.z"),
-                };
-            if (typeof(T) == typeof(BoundsInt))
-                return new[]
-                {
-                    ACCSettingCurveGenericsSupportUtils.SubBinding(binding, "m_Position.x"),
-                    ACCSettingCurveGenericsSupportUtils.SubBinding(binding, "m_Position.y"),
-                    ACCSettingCurveGenericsSupportUtils.SubBinding(binding, "m_Position.z"),
-                    ACCSettingCurveGenericsSupportUtils.SubBinding(binding, "m_Size.x"),
-                    ACCSettingCurveGenericsSupportUtils.SubBinding(binding, "m_Size.y"),
-                    ACCSettingCurveGenericsSupportUtils.SubBinding(binding, "m_Size.z"),
-                };
-
-            ThrowInvalidValueType();
-            return Array.Empty<EditorCurveBinding>();
-        }
-
-        public static float[] ToFloats(T value)
-        {
-            if (typeof(T) == typeof(int))
-                return new float[] { Unsafe.As<T, int>(ref value) };
-            if (typeof(T) == typeof(bool))
-                return new[] { Unsafe.As<T, bool>(ref value) ? 1f : 0f };
-            if (typeof(T) == typeof(float))
-                return new[] { Unsafe.As<T, float>(ref value) };
-            if (typeof(T) == typeof(Enum))
-                return new float[] { Unsafe.As<T, int>(ref value) };
-            if (typeof(T) == typeof(Color))
-            {
-                var color = Unsafe.As<T, Color>(ref value);
-                return new[] { color.r, color.g, color.b, color.a, };
-            }
-
-            if (typeof(T) == typeof(Vector2))
-            {
-                var vector2 = Unsafe.As<T, Vector2>(ref value);
-                return new[] { vector2.x, vector2.y };
-            }
-
-            if (typeof(T) == typeof(Vector2Int))
-            {
-                var vector2Int = Unsafe.As<T, Vector2Int>(ref value);
-                return new float[] { vector2Int.x, vector2Int.y };
-            }
-
-            if (typeof(T) == typeof(Vector3))
-            {
-                var vector3 = Unsafe.As<T, Vector3>(ref value);
-                return new[] { vector3.x, vector3.y, vector3.z };
-            }
-
-            if (typeof(T) == typeof(Vector3Int))
-            {
-                var vector3Int = Unsafe.As<T, Vector3Int>(ref value);
-                return new float[] { vector3Int.x, vector3Int.y, vector3Int.z };
-            }
-
-            if (typeof(T) == typeof(Vector3Int))
-            {
-                var vector4 = Unsafe.As<T, Vector4>(ref value);
-                return new[] { vector4.x, vector4.y, vector4.z, vector4.w };
-            }
-
-            if (typeof(T) == typeof(Quaternion))
-            {
-                var quaternion = Unsafe.As<T, Quaternion>(ref value);
-                return new[] { quaternion.x, quaternion.y, quaternion.z, quaternion.w };
-            }
-
-            if (typeof(T) == typeof(Rect))
-            {
-                var rect = Unsafe.As<T, Rect>(ref value);
-                return new[] { rect.x, rect.y, rect.width, rect.height };
-            }
-
-            if (typeof(T) == typeof(RectInt))
-            {
-                var rectInt = Unsafe.As<T, RectInt>(ref value);
-                return new float[] { rectInt.x, rectInt.y, rectInt.width, rectInt.height };
-            }
-
-            if (typeof(T) == typeof(Bounds))
-            {
-                var bounds = Unsafe.As<T, Bounds>(ref value);
-                return new[]
-                {
-                    bounds.center.x, bounds.center.y, bounds.center.z,
-                    bounds.extents.x, bounds.extents.y, bounds.extents.z,
-                };
-            }
-
-            if (typeof(T) == typeof(BoundsInt))
-            {
-                var boundsInt = Unsafe.As<T, BoundsInt>(ref value);
-                return new float[]
-                {
-                    boundsInt.position.x, boundsInt.position.y, boundsInt.position.z,
-                    boundsInt.size.x, boundsInt.size.y, boundsInt.size.z,
-                };
-            }
-
-            ThrowInvalidValueType();
-            return Array.Empty<float>();
-        }
-
-        private static void ThrowInvalidValueType()
-        {
-            throw new ArgumentException(typeof(T).Name + " is not valid animator value type.");
-        }
-    }
-
-    internal class ACCSettingCurveGenericsSupportUtils
-    {
-        public static EditorCurveBinding SubBinding(EditorCurveBinding binding, string prop)
-        {
-            return new EditorCurveBinding
-            {
-                path = binding.path,
-                type = binding.type,
-                propertyName = binding.propertyName + "." + prop,
-            };
-        }
-    }
-
-    public sealed class ACCSettingCurve<T> where T : struct
+    internal readonly struct SettingCurveImpl<T, TInfo, TBindingArray, TFloatArray, TKeyframeListArray> 
+        where TInfo: struct, ISettingCurveTypeInfo<T, TBindingArray, TFloatArray, TKeyframeListArray>
+        where TBindingArray: struct, IFixedArray<EditorCurveBinding>
+        where TFloatArray: struct, IFixedArray<float>
+        where TKeyframeListArray: struct, IFixedArray<List<Keyframe>>
     {
         private readonly AnimationClip _clip;
-        private readonly EditorCurveBinding[] _bindings;
+        private readonly TBindingArray _bindings;
 
-        public ACCSettingCurve(AnimationClip clip, EditorCurveBinding binding)
+        internal SettingCurveImpl(AnimationClip clip, EditorCurveBinding binding)
         {
             _clip = clip;
-            _bindings = ACCSettingCurveGenericsSupport<T>.CreateBindings(binding);
+            _bindings = default(TInfo).CreateBindings(binding);
         }
 
-        public void WithOneFrame(T desiredValue)
+        internal void WithOneFrame(T desiredValue)
         {
-            var floats = ACCSettingCurveGenericsSupport<T>.ToFloats(desiredValue);
+            var floats = default(TInfo).ToFloats(desiredValue);
             for (var i = 0; i < _bindings.Length; i++)
                 AnimationUtility.SetEditorCurve(_clip, _bindings[i], ACCClip.OneFrame(floats[i]));
         }
 
-        public void WithFixedSeconds(float seconds, T desiredValue)
+        internal void WithFixedSeconds(float seconds, T desiredValue)
         {
-            var floats = ACCSettingCurveGenericsSupport<T>.ToFloats(desiredValue);
+            var floats = default(TInfo).ToFloats(desiredValue);
             for (var i = 0; i < _bindings.Length; i++)
                 AnimationUtility.SetEditorCurve(_clip, _bindings[i], ACCClip.ConstantSeconds(seconds, floats[i]));
         }
 
-        public void WithSecondsUnit(Action<ACCSettingKeyframes<T>> action)
+        internal void WithSecondsUnit(Action<SettingKeyframesImpl<T, TInfo, TBindingArray, TFloatArray, TKeyframeListArray>> action)
         {
             InternalWithUnit(ACCUnit.Seconds, action);
         }
 
-        public void WithFrameCountUnit(Action<ACCSettingKeyframes<T>> action)
+        internal void WithFrameCountUnit(Action<SettingKeyframesImpl<T, TInfo, TBindingArray, TFloatArray, TKeyframeListArray>> action)
         {
             InternalWithUnit(ACCUnit.Frames, action);
         }
 
-        public void WithUnit(ACCUnit unit, Action<ACCSettingKeyframes<T>> action)
+        internal void WithUnit(ACCUnit unit, Action<SettingKeyframesImpl<T, TInfo, TBindingArray, TFloatArray, TKeyframeListArray>> action)
         {
             InternalWithUnit(unit, action);
         }
 
-        private void InternalWithUnit(ACCUnit unit, Action<ACCSettingKeyframes<T>> action)
+        private void InternalWithUnit(ACCUnit unit, Action<SettingKeyframesImpl<T, TInfo, TBindingArray, TFloatArray, TKeyframeListArray>> action)
         {
-            var mutatedKeyframes = new List<Keyframe>[_bindings.Length];
-            for (var i = 0; i < mutatedKeyframes.Length; i++)
-                mutatedKeyframes[i] = new List<Keyframe>();
-            var builder = new ACCSettingKeyframes<T>(unit, mutatedKeyframes);
+            var mutatedKeyframes = default(TInfo).CreateKeyframeLists();
+            var builder = new SettingKeyframesImpl<T, TInfo, TBindingArray, TFloatArray, TKeyframeListArray>(unit, mutatedKeyframes);
             action(builder);
             for (var i = 0; i < _bindings.Length; i++)
                 AnimationUtility.SetEditorCurve(_clip, _bindings[i], new AnimationCurve(mutatedKeyframes[i].ToArray()));
         }
     }
 
-    public enum ACCUnit
-    {
-        Seconds,
-        Frames
-    }
-
-    public sealed class ACCSettingKeyframes<T> where T : struct
+    internal readonly struct SettingKeyframesImpl<T, TInfo, TBindingArray, TFloatArray, TKeyframeListArray>
+        where TInfo: struct, ISettingCurveTypeInfo<T, TBindingArray, TFloatArray, TKeyframeListArray>
+        where TBindingArray: struct, IFixedArray<EditorCurveBinding>
+        where TFloatArray: struct, IFixedArray<float>
+        where TKeyframeListArray: struct, IFixedArray<List<Keyframe>>
     {
         private readonly ACCUnit _unit;
-        private readonly List<Keyframe>[] _mutatedKeyframes;
+        private readonly TKeyframeListArray _mutatedKeyframes;
 
-        public ACCSettingKeyframes(ACCUnit unit, List<Keyframe>[] mutatedKeyframes)
+        internal SettingKeyframesImpl(ACCUnit unit, TKeyframeListArray mutatedKeyframes)
         {
             _unit = unit;
             _mutatedKeyframes = mutatedKeyframes;
         }
 
-        public ACCSettingKeyframes<T> Easing(float timeInUnit, T value)
+        internal void Easing(float timeInUnit, T value)
         {
-            var floats = ACCSettingCurveGenericsSupport<T>.ToFloats(value);
+            var floats = default(TInfo).ToFloats(value);
             for (var i = 0; i < _mutatedKeyframes.Length; i++)
                 _mutatedKeyframes[i].Add(new Keyframe(AsSeconds(timeInUnit), floats[i], 0, 0));
-            return this;
         }
 
-        public ACCSettingKeyframes<T> Constant(float timeInUnit, T value)
+        internal void Constant(float timeInUnit, T value)
         {
-            var floats = ACCSettingCurveGenericsSupport<T>.ToFloats(value);
+            var floats = default(TInfo).ToFloats(value);
             for (var i = 0; i < _mutatedKeyframes.Length; i++)
                 _mutatedKeyframes[i].Add(new Keyframe(AsSeconds(timeInUnit), floats[i], 0, float.PositiveInfinity));
 
-            return this;
         }
 
-        public ACCSettingKeyframes<T> Linear(float timeInUnit, T value)
+        internal void Linear(float timeInUnit, T value)
         {
             var timeEnd = AsSeconds(timeInUnit);
             var timeStart = _mutatedKeyframes[0].Count == 0 ? timeEnd : _mutatedKeyframes[0].Last().time;
 
-            var floats = ACCSettingCurveGenericsSupport<T>.ToFloats(value);
+            var floats = default(TInfo).ToFloats(value);
             for (var i = 0; i < _mutatedKeyframes.Length; i++)
             {
                 var mutatedKeyframes = _mutatedKeyframes[i];
@@ -303,8 +124,6 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
 
                 mutatedKeyframes.Add(new Keyframe(AsSeconds(timeInUnit), valueEnd, num, 0.0f));
             }
-
-            return this;
         }
 
         private float AsSeconds(float timeInUnit)
@@ -338,7 +157,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
             [PropertyInfo<GameObject>(x => x.activeSelf)] = "m_IsActive",
         };
 
-        public static string CreatePath(UnityEngine.Object obj, LambdaExpression expression)
+        internal static string CreatePath(UnityEngine.Object obj, LambdaExpression expression)
         {
             var param = expression.Parameters[0];
             var memberInfoPath = CollectMemberInfoPath(expression.Body, param);

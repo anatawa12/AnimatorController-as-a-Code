@@ -38,5 +38,15 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
                 return null;
             }
         }
+
+        public static EditorCurveBinding SubBinding(EditorCurveBinding binding, string prop)
+        {
+            return new EditorCurveBinding
+            {
+                path = binding.path,
+                type = binding.type,
+                propertyName = binding.propertyName + "." + prop,
+            };
+        }
     }
 }
