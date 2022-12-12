@@ -9,8 +9,8 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
 {
     public sealed class AccState
     {
-        private static readonly Vector2 Grid = new Vector2(250, 70);
         private readonly AccStateMachine _stateMachine;
+        private readonly AccConfig _config;
         internal readonly AnimatorState State;
 
         private Vector3 Positon
@@ -35,9 +35,10 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
             }
         }
 
-        public AccState([NotNull] AccStateMachine accStateMachine, AnimatorState state)
+        public AccState([NotNull] AccStateMachine accStateMachine, AnimatorState state, AccConfig config)
         {
             _stateMachine = accStateMachine;
+            _config = config;
             State = state;
         }
 
@@ -96,8 +97,15 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
 
         public AccState Offset(AccState of, int offsetX, int offsetY)
         {
-            var position = of?.Positon ?? _stateMachine.LastState?.Positon ?? Vector3.zero;
-            Positon = position + new Vector3(offsetX * Grid.x, offsetY * Grid.y, 0);
+            var position = of?.Positon ?? _stateMachine.LastState?.Positon;
+            if (position.HasValue)
+            {
+                Positon = position.Value + new Vector3(offsetX * _config.StateOffset.x, offsetY * _config.StateOffset.y, 0);
+            }
+            else
+            {
+                Positon = _config.FirstStateAt;
+            }
             return this;
         }
         #endregion

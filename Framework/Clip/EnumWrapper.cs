@@ -101,10 +101,10 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
         }
 
         public EnumSettingCurve<T> AnimatesEnum<T>(Transform transform, Type type, string propertyName)
-            where T : Enum => AnimatesEnum<T>(AccClip.ResolveRelativePath(transform), type, propertyName);
+            where T : Enum => AnimatesEnum<T>(_config.ResolveRelativePath(transform), type, propertyName);
 
         public EnumSettingCurve<T> AnimatesEnum<T>(Component component, string property)
-            where T : Enum => AnimatesEnum<T>(AccClip.ResolveRelativePath(component.transform), component.GetType(),
+            where T : Enum => AnimatesEnum<T>(_config.ResolveRelativePath(component.transform), component.GetType(),
             property);
 
         public EnumSettingCurve<T> Animates<TComponent, T>(TComponent component, Expression<Func<TComponent, int>> property)

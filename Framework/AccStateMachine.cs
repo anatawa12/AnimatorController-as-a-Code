@@ -8,12 +8,14 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
     public sealed class AccStateMachine : IACCStateMachine
     {
         private AccState _currentState;
+        private readonly AccConfig _config;
         [CanBeNull] internal AccState LastState;
         internal readonly AnimatorStateMachine StateMachine;
 
-        internal AccStateMachine(AnimatorStateMachine stateMachine)
+        internal AccStateMachine(AnimatorStateMachine stateMachine, AccConfig config)
         {
             StateMachine = stateMachine;
+            _config = config;
         }
 
         public AccState NewState(string name)
@@ -35,7 +37,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
             StateMachine.states = states;
 
             LastState = _currentState;
-            return _currentState = new AccState(this, animatorState).Under();
+            return _currentState = new AccState(this, animatorState, _config).Under();
         }
 
         public AccEntryTransition EntryTransitionsTo(AccState state)

@@ -13,7 +13,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
         internal AccLayer(AnimatorControllerLayer layer, Acc acc)
         {
             Layer = layer;
-            _machine = new AccStateMachine(layer.stateMachine);
+            _machine = new AccStateMachine(layer.stateMachine, acc.Config);
             _acc = acc;
         }
 

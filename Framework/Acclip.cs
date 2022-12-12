@@ -8,40 +8,19 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
     public class AccClip
     {
         internal readonly AnimationClip Clip;
+        private readonly AccConfig _config;
 
-        public AccClip(AnimationClip clip)
+        internal AccClip(AnimationClip clip, AccConfig config)
         {
             Clip = clip;
+            _config = config;
         }
 
         public AccClip Toggling(GameObject gameObject, bool value)
         {
-            var binding = Binding(gameObject.transform, typeof(GameObject), "m_IsActive");
+            var binding = _config.Binding(gameObject.transform, typeof(GameObject), "m_IsActive");
             AnimationUtility.SetEditorCurve(Clip, binding, OneFrame(value ? 1f : 0f));
             return this;
-        }
-
-        internal static EditorCurveBinding Binding(Transform transform, Type type, string propertyName) =>
-            new EditorCurveBinding
-            {
-                path = ResolveRelativePath(transform),
-                type = type,
-                propertyName = propertyName,
-            };
-
-        internal static string ResolveRelativePath(Transform transform)
-        {
-            var elements = new List<string>();
-            for (;;)
-            {
-                elements.Add(transform.name);
-                transform = transform.parent;
-                if (transform == null) break;
-                //TODO: if (transform == root.transform) break;
-            }
-
-            elements.Reverse();
-            return string.Join("/", elements);
         }
 
         internal static AnimationCurve OneFrame(float value) => ConstantSeconds(1 / 60f, value);
@@ -51,7 +30,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
 
         public AccClip Animating(Action<AccEditClip> action)
         {
-            action.Invoke(new AccEditClip(Clip));
+            action.Invoke(new AccEditClip(Clip, _config));
             return this;
         }
     }
@@ -60,10 +39,12 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
     public readonly partial struct AccEditClip
     {
         private readonly AnimationClip _clip;
+        private readonly AccConfig _config;
 
-        public AccEditClip(AnimationClip clip)
+        internal AccEditClip(AnimationClip clip, AccConfig config)
         {
             _clip = clip;
+            _config = config;
         }
 
         public BoolSettingCurve Animates(GameObject gameObject) =>
@@ -84,7 +65,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
             => new EnumSettingCurve<T>(_clip, AnimatorBinding(parameter));
 
         public EditorCurveBinding BindingFromComponent(Component anyComponent, string propertyName) => 
-            AccClip.Binding(anyComponent.transform, anyComponent.GetType(), propertyName);
+            _config.Binding(anyComponent.transform, anyComponent.GetType(), propertyName);
     }
 
     public enum AccUnit

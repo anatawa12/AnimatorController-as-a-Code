@@ -9,11 +9,13 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
     public sealed class Acc : IACCParameterHolder
     {
         private readonly string _layerBaseName;
+        internal readonly AccConfig Config;
         public readonly AnimatorController Controller;
 
-        internal Acc(string layerBaseName, AnimatorController controller)
+        internal Acc(string layerBaseName, AnimatorController controller, AccConfig config)
         {
             _layerBaseName = layerBaseName;
+            Config = config;
             Controller = controller;
         }
 
@@ -76,7 +78,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
 
             Utils.AddToFile(Controller, clip);
 
-            return new AccClip(clip);
+            return new AccClip(clip, Config);
         }
     }
 

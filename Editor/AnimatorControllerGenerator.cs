@@ -25,6 +25,8 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
         [SerializeField]
         private string targetPath;
 
+        public Transform target;
+
         private string ThisAssetPath
         {
             get
@@ -96,7 +98,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
 
             foreach (var generator in generators)
             {
-                generator.Generate(new Acc(generator.GeneratorName, _targetResolved));
+                generator.Generate(new Acc(generator.GeneratorName, _targetResolved, new AccConfig(target)));
             }
             EditorUtility.SetDirty(_targetResolved);
         }
