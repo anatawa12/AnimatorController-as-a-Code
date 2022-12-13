@@ -118,7 +118,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
                 GUILayout.Label("The Class is not subclass of ControllerGeneratorBase.", style);
             }
             
-            if (GUILayout.Button("Do Generate"))
+            if (GUILayout.Button("Manual Generate"))
             {
                 target.DoGenerate();
             }
