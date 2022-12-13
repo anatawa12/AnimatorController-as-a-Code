@@ -125,11 +125,13 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
 
             HorizontalLine();
             
+#if ANATAWA12_ACC_DEBUG_INSPECTOR
             _inspectorToggle = EditorGUILayout.Foldout(_inspectorToggle, "DefaultInspectorForDebug");
             if (_inspectorToggle)
             {
                 base.OnInspectorGUI();
             }
+#endif
         }
 
         private void HorizontalLine()
