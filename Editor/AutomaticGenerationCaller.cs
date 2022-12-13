@@ -229,7 +229,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
             catch (IOException)
             {
                 await Task.Delay(1 * 1000);
-                Debug.Log("Reload assembly with no state json detected! Assume it as Startup: Regenerates all.");
+                Debug.Log("Reload assembly with no state json detected! Assume it as Startup: Regenerating all.");
                 RegenerateAll();
                 return;
             }
