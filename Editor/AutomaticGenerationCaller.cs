@@ -226,9 +226,11 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
                 CompiledAssemblies.UnionWith(state.CompiledAssemblies);
                 CompileErrorAssemblies.UnionWith(state.CompileErrorAssemblies);
             }
-            catch (IOException e)
+            catch (IOException)
             {
-                Debug.LogErrorFormat("Error loading State Json. {0}", e);
+                await Task.Delay(1 * 1000);
+                Debug.Log("Reload assembly with no state json detected! Assume it as Startup: Regenerates all.");
+                RegenerateAll();
                 return;
             }
             catch (JsonException e)
@@ -284,37 +286,49 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
         private static void FindAndGenerate()
         {
             var regenerateAll = AccCoreModules.Any(CompiledAssemblies.Contains);
-            var generators = FindAllAnimatorControllerGenerator();
-            var regeneratedCount = 0;
 
             if (regenerateAll)
             {
                 Debug.Log("Compiling Acc core modules detected! All AnimatorControllers are regenerated.");
                 // any assemblies of Generator type is reloaded
-                foreach (var generator in generators)
+                RegenerateAll();
+            }
+            else
+            {
+                RegenerateIfRecompiled();
+            }
+
+            CompiledAssemblies.Clear();
+        }
+
+        internal static void RegenerateAll()
+        {
+            var generators = FindAllAnimatorControllerGenerator();
+            var regeneratedCount = 0;
+            foreach (var generator in generators)
+            {
+                SaveGeneratorInfoToMap(generator);
+                DoGenerateWithErrorCheck(generator);
+                regeneratedCount++;
+            }
+            Debug.Log($"regenerated {regeneratedCount} assets");
+        }
+
+        internal static void RegenerateIfRecompiled()
+        {
+            var generators = FindAllAnimatorControllerGenerator();
+            var regeneratedCount = 0;
+            foreach (var generator in generators)
+            {
+                SaveGeneratorInfoToMap(generator);
+                // any assemblies of Generator type is reloaded
+                if (generator.generators.Any(x => IsAssemblyCompiled(x.GetType().Assembly)))
                 {
-                    SaveGeneratorInfoToMap(generator);
                     DoGenerateWithErrorCheck(generator);
                     regeneratedCount++;
                 }
             }
-            else
-            {
-                foreach (var generator in generators)
-                {
-                    SaveGeneratorInfoToMap(generator);
-                    // any assemblies of Generator type is reloaded
-                    if (generator.generators.Any(x => IsAssemblyCompiled(x.GetType().Assembly)))
-                    {
-                        DoGenerateWithErrorCheck(generator);
-                        regeneratedCount++;
-                    }
-                }
-            }
-
             Debug.Log($"regenerated {regeneratedCount} assets");
-
-            CompiledAssemblies.Clear();
         }
 
         private static bool IsAssemblyCompiled(Assembly assembly) => CompiledAssemblies.Contains(assembly.GetName().Name);

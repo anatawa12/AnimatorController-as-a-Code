@@ -123,6 +123,11 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
                 target.DoGenerate();
             }
 
+            if (GUILayout.Button("Regenerate All"))
+            {
+                AutomaticGenerationCaller.RegenerateAll();
+            }
+
             HorizontalLine();
             
 #if ANATAWA12_ACC_DEBUG_INSPECTOR
