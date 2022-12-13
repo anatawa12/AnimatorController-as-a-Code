@@ -29,6 +29,8 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
             return new AccParameterCondition(
                 new AccParameterSingleCondition(AnimatorConditionMode.NotEqual, _toFloat(value), Name));
         }
+
+        public float ToFloat(T value) => _toFloat(value);
     }
 
     public static class AccTypeSpecificMethods

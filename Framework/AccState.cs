@@ -85,8 +85,12 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
         }
 
         public T AddOrFindStateMachineBehaviour<T>() where T : StateMachineBehaviour =>
-            (T) State.behaviours.FirstOrDefault(x => x.GetType() == typeof(T)) 
-            ?? State.AddStateMachineBehaviour<T>();
+            FindStateMachineBehaviour<T>(x => true) ?? AddStateMachineBehaviour<T>();
+
+        public T AddStateMachineBehaviour<T>() where T : StateMachineBehaviour => State.AddStateMachineBehaviour<T>();
+
+        public T FindStateMachineBehaviour<T>(Func<T, bool> selector) where T : StateMachineBehaviour =>
+            (T) State.behaviours.FirstOrDefault(x => x.GetType() == typeof(T) && selector((T)x));
 
         #region position
 

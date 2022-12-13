@@ -50,7 +50,172 @@ namespace Anatawa12.AnimatorControllerAsACode.VRCAvatars3
                     throw new ArgumentOutOfRangeException(nameof(element), element, "invalid TrackingElement");
             }
         }
+
+        #region VRCAvatarParameterDriver
+
+        private static void AddAvatarParameterDriverParameter(this AccState self, bool localOnly, VRC_AvatarParameterDriver.Parameter parameter)
+        {
+            var parameterDriver =
+                self.FindStateMachineBehaviour<VRCAvatarParameterDriver>(x => x.localOnly == localOnly)
+                ?? self.AddStateMachineBehaviour<VRCAvatarParameterDriver>();
+            parameterDriver.localOnly = localOnly;
+
+            parameterDriver.parameters.Add(parameter);
+        }
+
+        private static void SetAvatarParameter(this AccState self, bool localOnly, string parameter, float value) =>
+            self.AddAvatarParameterDriverParameter(localOnly, new VRC_AvatarParameterDriver.Parameter
+            {
+                type = VRC_AvatarParameterDriver.ChangeType.Set,
+                name = parameter,
+                value = value,
+            });
+
+        public static void SetAvatarParameter<T>(this AccState self, AccParameter<T> parameter, T value) =>
+            SetAvatarParameter(self, false, parameter.Name, parameter.ToFloat(value));
+
+        public static void SetAvatarParameterLocally<T>(this AccState self, AccParameter<T> parameter, T value) =>
+            SetAvatarParameter(self, true, parameter.Name, parameter.ToFloat(value));
+
+        private static void AddAvatarParameter(this AccState self, bool localOnly, string parameter, float value) =>
+            self.AddAvatarParameterDriverParameter(localOnly, new VRC_AvatarParameterDriver.Parameter
+            {
+                type = VRC_AvatarParameterDriver.ChangeType.Add,
+                name = parameter,
+                value = value,
+            });
+
+        public static void AddAvatarParameter(this AccState self, AccParameter<float> parameter, float value) =>
+            AddAvatarParameter(self, false, parameter.Name, value);
+
+        public static void AddAvatarParameter(this AccState self, AccParameter<int> parameter, int value) =>
+            AddAvatarParameter(self, false, parameter.Name, value);
+
+        public static void AddAvatarParameterLocally(this AccState self, AccParameter<float> parameter, float value) =>
+            AddAvatarParameter(self, true, parameter.Name, value);
+
+        public static void AddAvatarParameterLocally(this AccState self, AccParameter<int> parameter, int value) =>
+            AddAvatarParameter(self, true, parameter.Name, value);
+
+        private static void SetAvatarParameterToRandom(this AccState self, bool localOnly, string parameter, float min, float max) =>
+            self.AddAvatarParameterDriverParameter(localOnly, new VRC_AvatarParameterDriver.Parameter
+            {
+                type = VRC_AvatarParameterDriver.ChangeType.Random,
+                name = parameter,
+                valueMin = min,
+                valueMax = max,
+            });
+
+        private static void SetAvatarParameterToRandomBool(this AccState self, bool localOnly, string parameter, float chance) =>
+            self.AddAvatarParameterDriverParameter(localOnly, new VRC_AvatarParameterDriver.Parameter
+            {
+                type = VRC_AvatarParameterDriver.ChangeType.Random,
+                name = parameter,
+                chance = chance,
+            });
+
+        [Obsolete("Because generated random value is different among clients, It's not recommended to use local & sync. " 
+            + "If you actually want to generate random value in each client, use SetAvatarParameterToRandomOnEachClient")]
+        public static void SetAvatarParameterToRandom(this AccState self, AccParameter<float> parameter, float min, float max) =>
+            SetAvatarParameterToRandomOnEachClient(self, parameter, min, max);
+
+        [Obsolete("Because generated random value is different among clients, It's not recommended to use local & sync. " 
+                  + "If you actually want to generate random value in each client, use SetAvatarParameterToRandomOnEachClient")]
+        public static void SetAvatarParameterToRandom(this AccState self, AccParameter<int> parameter, int min, int max) =>
+            SetAvatarParameterToRandomOnEachClient(self, parameter, min, max);
+
+        /// <param name="self">this object</param>
+        /// <param name="parameter">the bool parameter</param>
+        /// <param name="chance">the chance of true. (1-chance) of chane for false.</param>
+        [Obsolete("Because generated random value is different among clients, It's not recommended to use local & sync. " 
+                  + "If you actually want to generate random value in each client, use SetAvatarParameterToRandomOnEachClient")]
+        public static void SetAvatarParameterToRandom(this AccState self, AccParameter<bool> parameter, float chance) =>
+            SetAvatarParameterToRandomOnEachClient(self, parameter, chance);
+
+        public static void SetAvatarParameterToRandomOnEachClient(this AccState self, AccParameter<float> parameter, float min, float max) =>
+            SetAvatarParameterToRandom(self, false, parameter.Name, min, max);
+
+        public static void SetAvatarParameterToRandomOnEachClient(this AccState self, AccParameter<int> parameter, int min, int max) =>
+            SetAvatarParameterToRandom(self, false, parameter.Name, min, max);
+
+        /// <param name="self">this object</param>
+        /// <param name="parameter">the bool parameter</param>
+        /// <param name="chance">the chance of true. (1-chance) of chane for false.</param>
+        public static void SetAvatarParameterToRandomOnEachClient(this AccState self, AccParameter<bool> parameter, float chance) =>
+            SetAvatarParameterToRandomBool(self, false, parameter.Name, chance);
+
+        public static void SetAvatarParameterToRandomLocally(this AccState self, AccParameter<float> parameter, float min, float max) =>
+            SetAvatarParameterToRandom(self, true, parameter.Name, min, max);
+
+        public static void SetAvatarParameterToRandomLocally(this AccState self, AccParameter<int> parameter, int min, int max) =>
+            SetAvatarParameterToRandom(self, true, parameter.Name, min, max);
+
+        /// <param name="self">this object</param>
+        /// <param name="parameter">the bool parameter</param>
+        /// <param name="chance">the chance of true. (1-chance) of chane for false.</param>
+        public static void SetAvatarParameterToRandomLocally(this AccState self, AccParameter<bool> parameter, float chance) =>
+            SetAvatarParameterToRandomBool(self, true, parameter.Name, chance);
+
+        private static void CopyAvatarParameter(this AccState self, bool localOnly, string source, string dest) =>
+            self.AddAvatarParameterDriverParameter(localOnly, new VRC_AvatarParameterDriver.Parameter
+            {
+                type = VRC_AvatarParameterDriver.ChangeType.Random,
+                source = source,
+                name = dest,
+            });
+
+        public static void CopyAvatarParameter<T1, T2>(this AccState self, bool localOnly, AccParameter<T1> source, AccParameter<T2> dest) =>
+            CopyAvatarParameter(self, localOnly, source.Name, dest.Name);
+
+        private static void CopyAvatarParameter(this AccState self, bool localOnly, 
+            string source, float sourceMin, float sourceMax, 
+            string dest,　float destMin, float destMax) =>
+            self.AddAvatarParameterDriverParameter(localOnly, new VRC_AvatarParameterDriver.Parameter
+            {
+                type = VRC_AvatarParameterDriver.ChangeType.Random,
+                source = source,
+                name = dest,
+                convertRange = true,
+                sourceMin = sourceMin,
+                sourceMax = sourceMax,
+                destMin = destMin,
+                destMax = destMax,
+            });
+
+        // between numeric: just a mapping
+        public static void CopyAvatarParameter(this AccState self, bool localOnly, 
+            AccParameter<float> source, float sourceMin, float sourceMax, 
+            AccParameter<float> dest,　float destMin, float destMax) =>
+            CopyAvatarParameter(self, localOnly, source.Name, sourceMin, sourceMax, dest.Name, destMin, destMax);
+
+        public static void CopyAvatarParameter(this AccState self, bool localOnly, 
+            AccParameter<float> source, float sourceMin, float sourceMax, 
+            AccParameter<int> dest,　int destMin, int destMax) =>
+            CopyAvatarParameter(self, localOnly, source.Name, sourceMin, sourceMax, dest.Name, destMin, destMax);
+
+        public static void CopyAvatarParameter(this AccState self, bool localOnly,
+            AccParameter<int> source,　int sourceMin, int sourceMax,
+            AccParameter<float> dest,　float destMin, float destMax) =>
+            CopyAvatarParameter(self, localOnly, source.Name, sourceMin, sourceMax, dest.Name, destMin, destMax);
+
+        public static void CopyAvatarParameter(this AccState self, bool localOnly,
+            AccParameter<int> source,　int sourceMin, int sourceMax,
+            AccParameter<int> dest,　int destMin, int destMax) =>
+            CopyAvatarParameter(self, localOnly, source.Name, sourceMin, sourceMax, dest.Name, destMin, destMax);
+
+        // bool -> numeric
+        public static void ToggleAvatarParameter(this AccState self, bool localOnly, 
+            AccParameter<bool> source, AccParameter<float> dest,    float ifFalse, float ifTrue) =>
+            CopyAvatarParameter(self, localOnly, source.Name, 0f, 1f, dest.Name, ifFalse, ifTrue);
+
+        public static void ToggleAvatarParameter(this AccState self, bool localOnly, 
+            AccParameter<bool> source, AccParameter<int> dest,    int ifFalse, int ifTrue) =>
+            CopyAvatarParameter(self, localOnly, source.Name, 0f, 1f, dest.Name, ifFalse, ifTrue);
+
+        // numeric -> bool is too small range of usage so I don't want to support it
         
+        #endregion VRCAvatarParameterDriver
+
         // ReSharper disable once BitwiseOperatorOnEnumWithoutFlags
         public static Hand Opposite(this Hand hand) => hand ^ (Hand)1;
     }
