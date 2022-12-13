@@ -96,27 +96,10 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
             }
                 
             HorizontalLine();
-            //DrawChildObject(serializedObject);
-            
-            bool validScriptClass;
-            GUILayout.BeginHorizontal();
-            {
-                _script = (MonoScript)EditorGUILayout.ObjectField(_script, typeof(MonoScript), false);
-                validScriptClass = _script && (_script.GetClass()?.IsSubclassOf(typeof(GeneratorLayerBase)) ?? false);
-                
-                using (new EditorGUI.DisabledScope(!validScriptClass))
-                {
-                    if (GUILayout.Button("Add Generator"))
-                    {
-                        var generator = (GeneratorLayerBase)CreateInstance(_script.GetClass());
-                        AssetDatabase.AddObjectToAsset(generator, target);
-                        ArrayUtility.Add(ref target.generators, generator);
-                        ArrayUtility.Add(ref _editors, null);
-                        EditorUtility.SetDirty(target);
-                    }
-                }
-            }
-            GUILayout.EndHorizontal();
+
+            _script = (MonoScript)EditorGUILayout.ObjectField(_script, typeof(MonoScript), false);
+            var validScriptClass = _script && (_script.GetClass()?.IsSubclassOf(typeof(GeneratorLayerBase)) ?? false);
+
             if (_script && !validScriptClass)
             {
                 GUIStyle style  = new GUIStyle();
@@ -124,6 +107,28 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
                 style.focused.textColor = Color.red;
                 GUILayout.Label("The Class is not subclass of ControllerGeneratorBase.", style);
             }
+
+            GUILayout.BeginHorizontal();
+            GUILayout.FlexibleSpace();
+            var content = new GUIContent("Add Generator");
+            GUIStyle guiStyle = "AC Button";
+            var rect = GUILayoutUtility.GetRect(content, guiStyle);
+            if (EditorGUI.DropdownButton(rect, content, FocusType.Passive, guiStyle))
+            {
+                if (_script != null)
+                {
+                    if (validScriptClass)
+                        AddLayer(_script.GetClass());
+                }
+                else
+                {
+                    FindGeneratorLayerWindow.Show(rect, this);
+                }
+            }
+            GUILayout.FlexibleSpace();
+            GUILayout.EndHorizontal();
+
+            HorizontalLine();
             
             if (GUILayout.Button("Manual Generate"))
             {
@@ -146,6 +151,17 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
 #endif
         }
 
+        public void AddLayer(Type type)
+        {
+            // ReSharper disable once LocalVariableHidesMember
+            var target = (AnimatorControllerGenerator)this.target;
+            var generator = (GeneratorLayerBase)CreateInstance(type);
+            AssetDatabase.AddObjectToAsset(generator, target);
+            ArrayUtility.Add(ref target.generators, generator);
+            ArrayUtility.Add(ref _editors, null);
+            EditorUtility.SetDirty(target);
+        }
+
         private void HorizontalLine()
         {
             var rect = GUILayoutUtility.GetRect(
@@ -154,20 +170,6 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
             rect.y += rect.height / 2 - 0.5f;
             rect.height = 1;
             EditorGUI.DrawRect(rect, new Color(0.5f, 0.5f, 0.5f, 1));
-        }
-
-        internal static class SubclassHolder
-        {
-            public static List<Type> TestAssetSubclasses = FindSubclasses();
-
-            private static List<Type> FindSubclasses() =>
-                CompilationPipeline.GetAssemblies().SelectMany(a => Assembly.Load(a.name).ExportedTypes)
-                    .Where(t => t.IsSubclassOf(typeof(GeneratorLayerBase))).ToList();
-
-            static SubclassHolder()
-            {
-                CompilationPipeline.compilationFinished += _ => TestAssetSubclasses = FindSubclasses();
-            }
         }
     }
 }
