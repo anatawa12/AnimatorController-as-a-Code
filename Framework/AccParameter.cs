@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.CompilerServices;
 using UnityEditor;
 using UnityEditor.Animations;
 using UnityEngine;
@@ -20,15 +21,23 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
 
         public AccParameterCondition IsEqualTo(T value)
         {
+            if (typeof(T) == typeof(bool))
+                return BoolCondition(Unsafe.As<T, bool>(ref value));
             return new AccParameterCondition(
                 new AccParameterSingleCondition(AnimatorConditionMode.Equals, _toFloat(value), Name));
         }
 
         public AccParameterCondition IsNotEqualTo(T value)
         {
+            if (typeof(T) == typeof(bool))
+                return BoolCondition(!Unsafe.As<T, bool>(ref value));
             return new AccParameterCondition(
                 new AccParameterSingleCondition(AnimatorConditionMode.NotEqual, _toFloat(value), Name));
         }
+
+        private AccParameterCondition BoolCondition(bool flg) =>
+            new AccParameterCondition(
+                new AccParameterSingleCondition(flg ? AnimatorConditionMode.If : AnimatorConditionMode.IfNot, 0, Name));
 
         public float ToFloat(T value) => _toFloat(value);
     }
