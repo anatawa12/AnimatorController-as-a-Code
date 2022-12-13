@@ -17,6 +17,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
         private bool _openingSelector;
         private Vector2 _selectorScroll = Vector2.zero;
         private MonoScript _script;
+        private UnityEditor.Editor[] _editors;
 
         private void OnDestroy() => AssetDatabase.SaveAssets();
 
@@ -54,6 +55,8 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
             }
 
             var generators = target.generators;
+            if (_editors?.Length != generators.Length)
+                _editors = new UnityEditor.Editor[generators.Length];
             for (var i = 0; i < generators.Length; i++)
             {
                 var generator = generators[i];
@@ -67,17 +70,20 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
                     if (GUILayout.Button("Move UP"))
                     {
                         (generators[i], generators[i - 1]) = (generators[i - 1], generators[i]);
+                        (_editors[i], _editors[i - 1]) = (_editors[i - 1], _editors[i]);
                         EditorUtility.SetDirty(target);
                     }
                 using (new EditorGUI.DisabledScope(i + 1 == generators.Length))
                     if (GUILayout.Button("Move Down"))
                     {
                         (generators[i], generators[i + 1]) = (generators[i + 1], generators[i]);
+                        (_editors[i], _editors[i + 1]) = (_editors[i + 1], _editors[i]);
                         EditorUtility.SetDirty(target);
                     }
                 if (GUILayout.Button("Remove"))
                 {
                     ArrayUtility.RemoveAt(ref target.generators, i);
+                    ArrayUtility.RemoveAt(ref _editors, i);
                     DestroyImmediate(generator, true);
                     generators = target.generators;
                     i--;
@@ -85,8 +91,8 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
                 }
                 GUILayout.EndHorizontal();
 
-                var editor = CreateEditor(generator);
-                editor.OnInspectorGUI();
+                CreateCachedEditor(generator, null, ref _editors[i]);
+                _editors[i]?.OnInspectorGUI();
             }
                 
             HorizontalLine();
@@ -105,6 +111,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
                         var generator = (GeneratorLayerBase)CreateInstance(_script.GetClass());
                         AssetDatabase.AddObjectToAsset(generator, target);
                         ArrayUtility.Add(ref target.generators, generator);
+                        ArrayUtility.Add(ref _editors, null);
                         EditorUtility.SetDirty(target);
                     }
                 }
