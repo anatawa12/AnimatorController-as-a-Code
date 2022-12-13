@@ -167,7 +167,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
                     var targetPath = generator.TargetPath;
                     RunNextUpdate.Enqueue(() =>
                     {
-                        AssetDatabase.MoveAsset(AssetDatabase.GUIDToAssetPath(generator.targetGuid.ToString()), targetPath);
+                        AssetDatabase.MoveAsset(AssetDatabase.GUIDToAssetPath(generator.TargetGUID.ToString()), targetPath);
                         AssetDatabase.Refresh();
                     });
                 }
@@ -280,7 +280,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
                 GeneratorToWatchingMap[guid] = watchingTarget;
             }
 
-            GeneratedToGeneratorMap[generator.targetGuid] = guid;
+            GeneratedToGeneratorMap[generator.TargetGUID] = guid;
         }
 
         private static void FindAndGenerate()

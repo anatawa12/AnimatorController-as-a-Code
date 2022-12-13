@@ -16,7 +16,10 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
     public sealed class AnimatorControllerGenerator : ScriptableObject
     {
         // target information
-        public GUID targetGuid;
+        [SerializeField]
+        private string targetGuid;
+
+        private GUID _targetGuidCache;
 
         /// <summary>
         /// The path to target asset. Relative to this asset if not starting with '/' and
@@ -27,6 +30,12 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
         private string targetPath;
 
         public Transform target;
+
+        public GUID TargetGUID
+        {
+            get => new GUID(targetGuid);
+            set => targetGuid = value.ToString();
+        }
 
         private string ThisAssetPath
         {
@@ -84,8 +93,8 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
 
         private void OnEnable()
         {
-            if (targetGuid.Empty())
-                targetGuid = GUID.Generate();
+            if (TargetGUID.Empty())
+                TargetGUID = GUID.Generate();
             if (generators == null)
                 generators = Array.Empty<GeneratorLayerBase>();
         }
@@ -143,8 +152,8 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
 
         private void CreateControllerAtPath()
         {
-            if (targetGuid.Empty()) {
-                targetGuid = GUID.Generate();
+            if (TargetGUID.Empty()) {
+                TargetGUID = GUID.Generate();
                 EditorUtility.SetDirty(this);
             }
             var assetPath = TargetPath;
