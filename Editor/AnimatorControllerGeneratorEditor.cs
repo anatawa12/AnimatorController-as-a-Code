@@ -27,6 +27,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
             var target = (AnimatorControllerGenerator)this.target;
 
             // clear nulls
+            // TODO: instead clearing, keep & warn
             if (target.generators.Any(x => !x))
             {
                 target.generators = target.generators.Where(x => x).ToArray();
@@ -61,6 +62,8 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
             {
                 var generator = generators[i];
                 GUILayout.BeginHorizontal();
+                // removed above
+                // ReSharper disable once PossibleNullReferenceException
                 GUILayout.Label(generator.GeneratorName, EditorStyles.label);
                 HorizontalLine();
                 GUILayout.EndHorizontal();

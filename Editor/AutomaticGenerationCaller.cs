@@ -322,7 +322,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
             {
                 SaveGeneratorInfoToMap(generator);
                 // any assemblies of Generator type is reloaded
-                if (generator.generators.Any(x => IsAssemblyCompiled(x.GetType().Assembly)))
+                if (generator.generators.Any(x => x != null && IsAssemblyCompiled(x.GetType().Assembly)))
                 {
                     DoGenerateWithErrorCheck(generator);
                     regeneratedCount++;

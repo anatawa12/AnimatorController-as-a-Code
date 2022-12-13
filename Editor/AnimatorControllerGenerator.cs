@@ -65,7 +65,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
         }
 
         // generator information
-        public GeneratorLayerBase[] generators;
+        [ItemCanBeNull] public GeneratorLayerBase[] generators;
 
         private AnimatorController _targetResolved;
 
@@ -78,7 +78,9 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
             }
         }
 
-        public ImmutableHashSet<Object> WatchingObjects => generators.SelectMany(x => x.WatchingObjects).ToImmutableHashSet();
+        public ImmutableHashSet<Object> WatchingObjects => generators
+            .SelectMany(x => x != null ? x.WatchingObjects ?? Array.Empty<Object>() : Array.Empty<Object>())
+            .ToImmutableHashSet();
 
         private void OnEnable()
         {
@@ -90,6 +92,11 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
 
         public void DoGenerate()
         {
+            if (generators.Any(x => x == null))
+            {
+                Debug.LogError($"Generator {name} contains some null generator! skipping");
+                return;
+            }
             if (!TryLoadController())
             {
                 CreateControllerAtPath();
@@ -108,6 +115,8 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
 
             foreach (var generator in generators)
             {
+                // checked null above
+                // ReSharper disable once PossibleNullReferenceException
                 generator.Generate(new Acc(generator.GeneratorName, _targetResolved, new AccConfig(target)));
             }
             EditorUtility.SetDirty(_targetResolved);
