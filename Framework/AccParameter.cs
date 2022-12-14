@@ -91,7 +91,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
             return new AccParameterCondition(result);
         }
 
-        public void ApplyTo(AnimatorStateTransition transition)
+        public void ApplyTo(AnimatorTransitionBase transition)
         {
             if (_conditions == null) return;
 

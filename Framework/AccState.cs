@@ -7,18 +7,17 @@ using UnityEngine;
 
 namespace Anatawa12.AnimatorControllerAsACode.Framework
 {
-    public sealed class AccState
+    public sealed class AccState : AccStateMachineMember
     {
-        private readonly AccStateMachine _stateMachine;
         private readonly AccConfig _config;
         internal readonly AnimatorState State;
 
-        private Vector3 Positon
+        private protected override Vector3 Positon
         {
-            get => _stateMachine.StateMachine.states.First(x => x.state == State).position;
+            get => ParentMachine.StateMachine.states.First(x => x.state == State).position;
             set
             {
-                var states = _stateMachine.StateMachine.states;
+                var states = ParentMachine.StateMachine.states;
                 for (var i = 0; i < states.Length; i++)
                 {
                     if (states[i].state == State)
@@ -26,7 +25,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
                         var state = states[i];
                         state.position = value;
                         states[i] = state;
-                        _stateMachine.StateMachine.states = states;
+                        ParentMachine.StateMachine.states = states;
                         return;
                     }
                 }
@@ -35,9 +34,8 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
             }
         }
 
-        public AccState([NotNull] AccStateMachine accStateMachine, AnimatorState state, AccConfig config)
+        internal AccState([NotNull] AccStateMachineBase accParentMachine, AnimatorState state, AccConfig config) : base(accParentMachine, config)
         {
-            _stateMachine = accStateMachine;
             _config = config;
             State = state;
         }
@@ -92,26 +90,14 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
         public T FindStateMachineBehaviour<T>(Func<T, bool> selector) where T : StateMachineBehaviour =>
             (T) State.behaviours.FirstOrDefault(x => x.GetType() == typeof(T) && selector((T)x));
 
+        internal override void SetTransitionTarget(AnimatorTransitionBase transition) => transition.destinationState = State;
+
         #region position
-
-        public AccState LeftOf(AccState of = null) => Offset(of, -1, 0);
-        public AccState RightOf(AccState of = null) => Offset(of, 1, 0);
-        public AccState Over(AccState of = null) => Offset(of, 0, -1);
-        public AccState Under(AccState of = null) => Offset(of, 0, 1);
-
-        public AccState Offset(AccState of, float offsetX, float offsetY)
-        {
-            var position = of?.Positon ?? _stateMachine.LastState?.Positon;
-            if (position.HasValue)
-            {
-                Positon = position.Value + new Vector3(offsetX * _config.StateOffset.x, offsetY * _config.StateOffset.y, 0);
-            }
-            else
-            {
-                Positon = _config.FirstStateAt;
-            }
-            return this;
-        }
+        public new AccState LeftOf(AccStateMachineMember of = null) => (AccState)base.LeftOf(of);
+        public new AccState RightOf(AccStateMachineMember of = null) => (AccState)base.RightOf(of);
+        public new AccState Over(AccStateMachineMember of = null) => (AccState)base.Over(of);
+        public new AccState Under(AccStateMachineMember of = null) => (AccState)base.Under(of);
+        public new AccState Offset(AccStateMachineMember of, float offsetX, float offsetY) => (AccState)base.Offset(of, offsetX, offsetY);
         #endregion
 
         public AccState MotionTime(AccParameter<float> weight)
@@ -121,6 +107,18 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
             return this;
         }
 
-        public AccTransition TransitionsTo(AccState target) => new AccTransition(State.AddTransition(target.State), _stateMachine);
+        public AccTransition TransitionsTo(AccStateMachineMember target)
+        {
+            var transition = new AnimatorStateTransition
+            {
+                hasExitTime = false,
+                hasFixedDuration = true,
+                hideFlags = HideFlags.HideInHierarchy,
+            };
+            Utils.AddToFile(State, transition);
+            target.SetTransitionTarget(transition);
+            State.AddTransition(transition);
+            return new AccTransition(transition, ParentMachine);
+        }
     }
 }

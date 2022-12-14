@@ -4,16 +4,16 @@ using UnityEngine;
 
 namespace Anatawa12.AnimatorControllerAsACode.Framework
 {
-    public sealed class AccLayer : IACCStateMachine, IACCParameterHolder
+    public sealed class AccLayer : IAccStateMachine, IACCParameterHolder
     {
         public readonly AnimatorControllerLayer Layer;
-        private readonly AccStateMachine _machine;
+        private readonly AccStateMachineBase _machine;
         private readonly Acc _acc;
 
         internal AccLayer(AnimatorControllerLayer layer, Acc acc)
         {
             Layer = layer;
-            _machine = new AccStateMachine(layer.stateMachine, acc.Config);
+            _machine = new AccStateMachineBase(layer.stateMachine, acc.Config);
             _acc = acc;
         }
 
@@ -25,8 +25,9 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
 
         #region IACCStateMachine delegateion
         public AccState NewState(string name) => _machine.NewState(name);
-        public AccEntryTransition EntryTransitionsTo(AccState state) => _machine.EntryTransitionsTo(state);
-        public AccTransition AnyTransitionsTo(AccState state) => _machine.AnyTransitionsTo(state);
+        public AccStateMachine NewSubStateMachine(string name) => _machine.NewSubStateMachine(name);
+        public AccEntryTransition EntryTransitionsTo(AccStateMachineMember state) => _machine.EntryTransitionsTo(state);
+        public AccTransition AnyTransitionsTo(AccStateMachineMember state) => _machine.AnyTransitionsTo(state);
         #endregion
 
         public AccParameter<float> FloatParameter(string name) => _acc.FloatParameter(name);
