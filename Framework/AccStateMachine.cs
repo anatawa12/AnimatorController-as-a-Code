@@ -43,6 +43,10 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
             return new AccStateMachineTransition(transition, ParentMachine);
         }
 
+        public AccStateMachineTransition TransitionsToExit() =>
+            new AccStateMachineTransition(
+                ParentMachine.StateMachine.AddStateMachineExitTransition(StateMachine), ParentMachine);
+
         private protected override Vector3 Positon
         {
             get => ParentMachine.StateMachine.stateMachines.First(x => x.stateMachine == StateMachine).position;

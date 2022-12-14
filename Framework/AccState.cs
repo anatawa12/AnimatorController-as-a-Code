@@ -121,5 +121,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
             State.AddTransition(transition);
             return new AccTransition(transition, ParentMachine);
         }
+
+        public AccTransition TransitionsToExit() => new AccTransition(State.AddExitTransition(), ParentMachine);
     }
 }
