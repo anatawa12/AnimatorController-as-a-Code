@@ -31,6 +31,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
         public new AccStateMachine Over(AccStateMachineMember of = null) => (AccStateMachine)base.Over(of);
         public new AccStateMachine Under(AccStateMachineMember of = null) => (AccStateMachine)base.Under(of);
         public new AccStateMachine Offset(AccStateMachineMember of, float offsetX, float offsetY) => (AccStateMachine)base.Offset(of, offsetX, offsetY);
+        public new AccStateMachine OnGridAt(float offsetX, float offsetY) => (AccStateMachine)base.OnGridAt(offsetX, offsetY);
         #endregion
 
         public AccStateMachineTransition TransitionsTo(AccStateMachineMember target)
@@ -115,7 +116,10 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
             };
             StateMachine.AddStateMachine(animatorStateMachine, Vector3.zero);
             Utils.AddToFile(StateMachine, animatorStateMachine);
-            return new AccStateMachine(animatorStateMachine, _config, this);
+            var machine = new AccStateMachine(animatorStateMachine, _config, this).Under();
+            LastMember = _currentMember;
+            _currentMember = machine;
+            return machine;
         }
 
         public AccEntryTransition EntryTransitionsTo(AccStateMachineMember state)

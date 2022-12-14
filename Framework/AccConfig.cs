@@ -8,7 +8,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
     public class AccConfig
     {
         public Vector2 StateOffset = new Vector2(250, 70);
-        public Vector2 FirstStateAt = new Vector2(250, 70);
+        public Vector2 FirstStateAt = new Vector2(1, 1);
         public Transform RootTransform;
 
         public AccConfig(Transform rootTransform)

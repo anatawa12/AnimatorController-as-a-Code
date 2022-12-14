@@ -36,8 +36,14 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
             }
             else
             {
-                Positon = Config.FirstStateAt;
+                Positon = Config.FirstStateAt * Config.StateOffset;
             }
+            return this;
+        }
+
+        protected AccStateMachineMember OnGridAt(float offsetX, float offsetY)
+        {
+            Positon = new Vector3(offsetX * Config.StateOffset.x, offsetY * Config.StateOffset.y, 0);
             return this;
         }
         #endregion

@@ -98,6 +98,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
         public new AccState Over(AccStateMachineMember of = null) => (AccState)base.Over(of);
         public new AccState Under(AccStateMachineMember of = null) => (AccState)base.Under(of);
         public new AccState Offset(AccStateMachineMember of, float offsetX, float offsetY) => (AccState)base.Offset(of, offsetX, offsetY);
+        public new AccState OnGridAt(float offsetX, float offsetY) => (AccState)base.OnGridAt(offsetX, offsetY);
         #endregion
 
         public AccState MotionTime(AccParameter<float> weight)
