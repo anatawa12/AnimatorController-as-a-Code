@@ -229,6 +229,14 @@ namespace Anatawa12.AnimatorControllerAsACode.VRCAvatars3
             _holder = holder;
         }
 
+        // see https://docs.vrchat.com/docs/animator-parameters
+
+        public AccParameter<bool> IsLocal => _holder.BoolParameter("IsLocal");
+
+        public AccParameter<OculusViseme> OculusViseme => _holder.EnumParameter<OculusViseme>("Viseme");
+        public AccParameter<int> JarViseme => _holder.IntParameter("Viseme");
+        public AccParameter<float> Voice => _holder.FloatParameter("Voice");
+
         public AccParameter<Gesture> GestureLeft => Gesture(Hand.Left);
         public AccParameter<Gesture> GestureRight => Gesture(Hand.Right);
         public AccParameter<Gesture> Gesture(Hand hand) => _holder.EnumParameter<Gesture>($"Gesture{hand}");
@@ -236,6 +244,45 @@ namespace Anatawa12.AnimatorControllerAsACode.VRCAvatars3
         public AccParameter<float> GestureWeightLeft => GestureWeight(Hand.Left);
         public AccParameter<float> GestureWeightRight => GestureWeight(Hand.Right);
         public AccParameter<float> GestureWeight(Hand hand) => _holder.FloatParameter($"Gesture{hand}Weight");
+
+        public AccParameter<float> AngularY => _holder.FloatParameter("AngularY");
+        
+        public AccParameter<float> VelocityX => _holder.FloatParameter("VelocityX");
+        public AccParameter<float> VelocityY => _holder.FloatParameter("VelocityY");
+        public AccParameter<float> VelocityZ => _holder.FloatParameter("VelocityZ");
+
+        public AccParameter<float> Upright => _holder.FloatParameter("Upright");
+        public AccParameter<bool> Grounded => _holder.BoolParameter("Grounded");
+        public AccParameter<bool> Seated => _holder.BoolParameter("Seated");
+        public AccParameter<bool> Afk => _holder.BoolParameter("AFK");
+
+        // Expression{1,16} are not recommended
+
+        // TODO
+        public AccParameter<int> TrackingType => _holder.IntParameter("TrackingType");
+        public AccParameter<VRMode> VRMode => _holder.EnumParameter<VRMode>("VRMode");
+        public AccParameter<bool> MuteSelf => _holder.BoolParameter("MuteSelf");
+        public AccParameter<bool> InStation => _holder.BoolParameter("InStation");
+        public AccParameter<bool> Earmuffs => _holder.BoolParameter("Earmuffs");
+    }
+
+    public enum OculusViseme
+    {
+        Sil = 0,
+        Pp = 1,
+        Ff = 2,
+        Th = 3,
+        Dd = 4,
+        Kk = 5,
+        Ch = 6,
+        Ss = 7,
+        Nn = 8,
+        Rr = 9,
+        Aa = 10,
+        E = 11,
+        I = 12,
+        O = 13,
+        U = 14,
     }
 
     public enum Gesture
@@ -249,6 +296,22 @@ namespace Anatawa12.AnimatorControllerAsACode.VRCAvatars3
         RockNRoll = 5,
         HandGun = 6,
         ThumbsUp = 7
+    }
+
+    public enum TrackingType
+    {
+        Uninitialized = 0,
+        GenericRig = 1,
+        // 2: Hands only tracking but only for AV2
+        HeadAndHand = 3,
+        HeadHandsAndHip = 4,
+        FullBody = 6,
+    }
+
+    public enum VRMode
+    {
+        Desktop = 0,
+        VR = 1,
     }
 
     public enum Hand
