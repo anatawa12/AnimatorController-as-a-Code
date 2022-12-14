@@ -7,7 +7,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
     public abstract class AccStateMachineMember
     {
         [NotNull] internal readonly AccStateMachineBase ParentMachine;
-        private protected abstract Vector3 Positon { get; set; }
+        internal Vector3 Position { get; private set; }
         private protected readonly AccConfig Config;
 
         private protected AccStateMachineMember([NotNull] AccStateMachineBase parentMachine, AccConfig config)
@@ -29,21 +29,17 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
 
         protected AccStateMachineMember Offset(AccStateMachineMember of, float offsetX, float offsetY)
         {
-            var position = of?.Positon ?? ParentMachine.LastMember?.Positon;
+            var position = of?.Position ?? ParentMachine.LastMember?.Position;
             if (position.HasValue)
-            {
-                Positon = position.Value + new Vector3(offsetX * Config.StateOffset.x, offsetY * Config.StateOffset.y, 0);
-            }
+                Position = position.Value + new Vector3(offsetX * Config.StateOffset.x, offsetY * Config.StateOffset.y, 0);
             else
-            {
-                Positon = Config.FirstStateAt * Config.StateOffset;
-            }
+                Position = Config.FirstStateAt * Config.StateOffset;
             return this;
         }
 
         protected AccStateMachineMember OnGridAt(float offsetX, float offsetY)
         {
-            Positon = new Vector3(offsetX * Config.StateOffset.x, offsetY * Config.StateOffset.y, 0);
+            Position = new Vector3(offsetX * Config.StateOffset.x, offsetY * Config.StateOffset.y, 0);
             return this;
         }
         #endregion

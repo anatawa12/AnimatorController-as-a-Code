@@ -5,7 +5,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
     public abstract class AccTransitionBase<T>
         where T : AnimatorTransitionBase
     {
-        private protected readonly T Transition;
+        internal readonly T Transition;
         private protected readonly AccStateMachineBase StateMachine;
 
         private protected AccTransitionBase(T transition, AccStateMachineBase stateMachine)
@@ -19,6 +19,8 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
         {
             condition.ApplyTo(Transition);
         }
+
+        public void SaveToAsset() {}
     }
 
     public class AccTransition : AccTransitionBase<AnimatorStateTransition>

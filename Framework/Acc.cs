@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEditor.Animations;
@@ -11,6 +12,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
         private readonly string _layerBaseName;
         internal readonly AccConfig Config;
         public readonly AnimatorController Controller;
+        private readonly List<AccLayer> _addingLayers = new List<AccLayer>();
 
         internal Acc(string layerBaseName, AnimatorController controller, AccConfig config)
         {
@@ -24,7 +26,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
 
         private AccLayer DoAddLayer(string layerName)
         {
-            var layer = new AnimatorControllerLayer
+            var layer = new AccLayer(new AnimatorControllerLayer
             {
                 name = layerName,
                 stateMachine = new AnimatorStateMachine
@@ -32,12 +34,11 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
                     name = layerName,
                     hideFlags = HideFlags.HideInHierarchy
                 }
-            };
+            }, this);
+            _addingLayers.Add(layer);
+            Utils.AddToFile(Controller, layer.Layer.stateMachine);
 
-            AssetDatabase.AddObjectToAsset(layer.stateMachine, Controller);
-            Controller.AddLayer(layer);
-
-            return new AccLayer(layer, this);
+            return layer;
         }
 
         public AccParameter<float> FloatParameter(string name) => Parameter(name, AnimatorControllerParameterType.Float, Utils.FloatToFloat);
@@ -79,6 +80,12 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
             Utils.AddToFile(Controller, clip);
 
             return new AccClip(clip, Config);
+        }
+
+        public void SaveToAsset()
+        {
+            foreach (var layer in _addingLayers) layer.SaveToAsset();
+            Controller.layers = Utils.JoinArray(Controller.layers, _addingLayers, x => x.Layer);
         }
     }
 

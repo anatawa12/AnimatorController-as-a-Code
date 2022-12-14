@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
 using UnityEditor;
@@ -12,27 +13,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
         private readonly AccConfig _config;
         internal readonly AnimatorState State;
 
-        private protected override Vector3 Positon
-        {
-            get => ParentMachine.StateMachine.states.First(x => x.state == State).position;
-            set
-            {
-                var states = ParentMachine.StateMachine.states;
-                for (var i = 0; i < states.Length; i++)
-                {
-                    if (states[i].state == State)
-                    {
-                        var state = states[i];
-                        state.position = value;
-                        states[i] = state;
-                        ParentMachine.StateMachine.states = states;
-                        return;
-                    }
-                }
-
-                throw new InvalidOperationException("Not found");
-            }
-        }
+        private readonly List<AccTransition> _addingTransitions = new List<AccTransition>();
 
         internal AccState([NotNull] AccStateMachineBase accParentMachine, AnimatorState state, AccConfig config) : base(accParentMachine, config)
         {
@@ -110,18 +91,19 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
 
         public AccTransition TransitionsTo(AccStateMachineMember target)
         {
-            var transition = new AnimatorStateTransition
-            {
-                hasExitTime = false,
-                hasFixedDuration = true,
-                hideFlags = HideFlags.HideInHierarchy,
-            };
-            Utils.AddToFile(State, transition);
-            target.SetTransitionTarget(transition);
-            State.AddTransition(transition);
-            return new AccTransition(transition, ParentMachine);
+            var transition = new AccTransition(new AnimatorStateTransition { hasExitTime = false, hasFixedDuration = true, hideFlags = HideFlags.HideInHierarchy }, ParentMachine);
+            target.SetTransitionTarget(transition.Transition);
+            Utils.AddToFile(State, transition.Transition);
+            _addingTransitions.Add(transition);
+            return transition;
         }
 
         public AccTransition TransitionsToExit() => new AccTransition(State.AddExitTransition(), ParentMachine);
+
+        public void SaveToAsset()
+        {
+            foreach (var transition in _addingTransitions) transition.SaveToAsset();
+            State.transitions = Utils.JoinArray(State.transitions, _addingTransitions, x => x.Transition);
+        }
     }
 }

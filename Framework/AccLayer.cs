@@ -38,5 +38,9 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
             where T : unmanaged, Enum =>
             _acc.EnumParameter<T>(name);
 
+        public void SaveToAsset()
+        {
+            _machine.SaveToAsset();
+        }
     }
 }

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using UnityEditor;
 using Object = UnityEngine.Object;
@@ -7,6 +8,13 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
 {
     internal static class Utils
     {
+        // .NET 4.x which is used in unity doesn't have Deconstruct method so I declare here
+        public static void Deconstruct<TKey, TValue>(this KeyValuePair<TKey, TValue> self, out TKey key, out TValue value)
+        {
+            key = self.Key;
+            value = self.Value;
+        }
+
         public static void AddToFile(Object file, Object obj)
         {
             AssetDatabase.AddObjectToAsset(obj, file);
@@ -66,6 +74,15 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
                 type = binding.type,
                 propertyName = binding.propertyName + "." + prop,
             };
+        }
+
+        public static T[] JoinArray<T, T1>(T[] controllerLayers, List<T1> addingLayers, Func<T1, T> func)
+        {
+            var offset = controllerLayers.Length;
+            Array.Resize(ref controllerLayers, controllerLayers.Length + addingLayers.Count);
+            for (var i = 0; i < addingLayers.Count; i++)
+                controllerLayers[offset + i] = func(addingLayers[i]);
+            return controllerLayers;
         }
     }
 }

@@ -24,7 +24,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Examples
         public string backingParameterPrefix;
 
         // TODO: support up to 24 bit (float-representable maximum) integer?
-        [Range(1, 8)]
+        [Range(1, 24)]
         public int bits = 1;
 
         protected override void Generate(Acc acc)
