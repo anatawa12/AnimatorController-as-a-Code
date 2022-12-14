@@ -46,6 +46,20 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
     {
         public static AccParameterCondition IsFalse(this AccParameter<bool> self) => self.IsEqualTo(false);
         public static AccParameterCondition IsTrue(this AccParameter<bool> self) => self.IsEqualTo(true);
+
+        public static AccParameterCondition IsLessThan(this AccParameter<int> self, int threshold) => 
+            new AccParameterCondition(
+                new AccParameterSingleCondition(AnimatorConditionMode.Less, threshold, self.Name));
+        public static AccParameterCondition IsGraterThan(this AccParameter<int> self, int threshold) => 
+            new AccParameterCondition(
+                new AccParameterSingleCondition(AnimatorConditionMode.Greater, threshold, self.Name));
+        
+        public static AccParameterCondition IsLessThan(this AccParameter<float> self, float threshold) => 
+            new AccParameterCondition(
+                new AccParameterSingleCondition(AnimatorConditionMode.Less, threshold, self.Name));
+        public static AccParameterCondition IsGraterThan(this AccParameter<float> self, float threshold) => 
+            new AccParameterCondition(
+                new AccParameterSingleCondition(AnimatorConditionMode.Greater, threshold, self.Name));
     }
 
     public readonly struct AccParameterCondition
