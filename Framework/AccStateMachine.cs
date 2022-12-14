@@ -105,8 +105,8 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
             ArrayUtility.Add(ref states, childState);
             StateMachine.states = states;
 
-            var state = new AccState(this, animatorState, _config).Under();
             LastMember = _currentMember;
+            var state = new AccState(this, animatorState, _config).Under();
             _currentMember = state;
             return state;
         }
@@ -120,8 +120,8 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
             };
             StateMachine.AddStateMachine(animatorStateMachine, Vector3.zero);
             Utils.AddToFile(StateMachine, animatorStateMachine);
-            var machine = new AccStateMachine(animatorStateMachine, _config, this).Under();
             LastMember = _currentMember;
+            var machine = new AccStateMachine(animatorStateMachine, _config, this).Under();
             _currentMember = machine;
             return machine;
         }
