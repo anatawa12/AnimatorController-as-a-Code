@@ -146,6 +146,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
             var path = AssetDatabase.GUIDToAssetPath(targetGuid.ToString());
             if (string.IsNullOrEmpty(path)) return false;
             var asset = AssetDatabase.LoadMainAssetAtPath(path);
+            if (!asset) return false;
             if (!(asset is AnimatorController controller))
                 throw new InvalidOperationException($"{targetGuid} is not a AnimatorController");
             _targetResolved = controller;
