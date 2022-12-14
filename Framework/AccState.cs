@@ -99,7 +99,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
         public AccState Over(AccState of = null) => Offset(of, 0, -1);
         public AccState Under(AccState of = null) => Offset(of, 0, 1);
 
-        public AccState Offset(AccState of, int offsetX, int offsetY)
+        public AccState Offset(AccState of, float offsetX, float offsetY)
         {
             var position = of?.Positon ?? _stateMachine.LastState?.Positon;
             if (position.HasValue)
