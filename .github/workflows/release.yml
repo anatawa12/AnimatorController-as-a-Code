@@ -98,7 +98,7 @@ jobs:
           git push && git push --tags
 
   publish-vpm:
-    uses: anatawa12/vpm.anatawa12.com/.github/workflows/update-package.yml
+    uses: anatawa12/vpm.anatawa12.com/.github/workflows/update-package.yml@master
     needs: create-release
     if: inputs.publish
     environment:
