@@ -101,10 +101,8 @@ jobs:
     uses: anatawa12/vpm.anatawa12.com/.github/workflows/update-package.yml@master
     needs: create-release
     if: inputs.publish
-    environment:
-      name: vpm.anatawa12.com
-      url: https://vpm.anatawa12.com/
     with:
       version: ${{ needs.create-release.outputs.version }}
+      environment: vpm.anatawa12.com
     secrets:
       TOKEN: ${{ secrets.VPM_GITHUB_PAT }}
