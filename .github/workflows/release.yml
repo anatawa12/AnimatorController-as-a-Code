@@ -7,7 +7,6 @@ on:
         required: false
 
 env:
-  CREATOR_PKG_ROOT: "Packages/com.anatawa12.vpm-package-auto-installer.creator"
   PKG_NAME: com.anatawa12.animator-controller-as-a-code
 
 concurrency:
