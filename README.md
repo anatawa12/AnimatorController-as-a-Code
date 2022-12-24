@@ -34,6 +34,7 @@ With [VPAI] You can include this package with
 
 [vpm-resolver]: https://vcc.docs.vrchat.com/vpm/resolver
 [installer unitypackage]: https://github.com/anatawa12/AnimatorController-as-a-Code/raw/master/.readme/installer.unitypackage
+[VPAI]: https://github.com/anatawa12/VPMPackageAutoInstaller
 
 ## Using add package from git url
 
