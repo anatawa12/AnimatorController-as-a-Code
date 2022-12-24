@@ -44,11 +44,9 @@ See [Installing from a Git URL][upm-gui-giiturl] on Unity Documentation for more
 
 [upm-gui-giiturl]: https://docs.unity3d.com/Manual/upm-ui-giturl.html
 
-<!--
 ## Using OpenUPM
 
 This project is also published on OpenUPM.
 See [Package Page on OpenUPM][openupm-package] for Installation steps.
 
 [openupm-package]: https://openupm.com/packages/com.anatawa12.animator-controller-as-a-code/
--->
