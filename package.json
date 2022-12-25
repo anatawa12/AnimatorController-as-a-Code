@@ -7,5 +7,14 @@
   "author": {
     "name": "anatawa12",
     "email": "anatawa12@icloud.com"
+  },
+  "dependencies": {
+    "com.anatawa12.custom-localization-for-editor-extension": "^0.2.1"
+  },
+  "vpmDependencies": {
+    "com.anatawa12.custom-localization-for-editor-extension": "^0.2.1"
+  },
+  "gitDependencies": {
+    "com.anatawa12.custom-localization-for-editor-extension": "https://github.com/anatawa12/CustomLocalization4EditorExtension.git#v0.2.1"
   }
 }

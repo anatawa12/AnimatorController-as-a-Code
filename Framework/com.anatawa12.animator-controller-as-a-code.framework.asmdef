@@ -8,7 +8,7 @@
     "allowUnsafeCode": false,
     "overrideReferences": true,
     "precompiledReferences": [
-        "System.Runtime.CompilerServices.Unsafe.dll"
+        "com.anatawa12.animator-controller-as-a-code.unsafe.dll"
     ],
     "autoReferenced": true,
     "defineConstraints": [],

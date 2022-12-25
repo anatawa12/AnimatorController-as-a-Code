@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Immutable;
 using System.Linq;
 using Anatawa12.AnimatorControllerAsACode.Framework;
 using UnityEditor;
@@ -13,7 +12,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
     {
         private AnimatorControllerGeneratorEditor _parentEditor;
         private string _searching;
-        private ImmutableList<Type> _types;
+        private Type[] _types;
         private Vector2 _scrollPosition = default;
 
         private void OnGUI()
@@ -40,13 +39,13 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
             GUILayout.EndScrollView();
         }
 
-        private ImmutableList<Type> SearchTypes(string searching)
+        private Type[] SearchTypes(string searching)
         {
             if (string.IsNullOrEmpty(searching))
                 return SubclassHolder.Subclasses;
             return SubclassHolder.Subclasses
                 .Where(x => x.Name.IndexOf(searching, StringComparison.OrdinalIgnoreCase) >= 0)
-                .ToImmutableList();
+                .ToArray();
         }
 
         public static void Show(Rect rect, AnimatorControllerGeneratorEditor parentEditor)
@@ -83,14 +82,14 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
 
     internal static class SubclassHolder
     {
-        public static ImmutableList<Type> Subclasses = FindSubclasses();
+        public static Type[] Subclasses = FindSubclasses();
 
-        private static ImmutableList<Type> FindSubclasses()
+        private static Type[] FindSubclasses()
         {
             var list = CompilationPipeline.GetAssemblies().SelectMany(a => Assembly.Load(a.name).ExportedTypes)
                 .Where(t => t.IsSubclassOf(typeof(GeneratorLayerBase))).ToList();
             list.Sort((a, b) => string.Compare(a.Name, b.Name, StringComparison.Ordinal));
-            return list.ToImmutableList();
+            return list.ToArray();
         }
 
         static SubclassHolder()

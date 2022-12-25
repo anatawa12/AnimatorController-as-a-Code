@@ -1,5 +1,5 @@
 using System;
-using System.Collections.Immutable;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -87,9 +87,8 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
             }
         }
 
-        public ImmutableHashSet<Object> WatchingObjects => generators
-            .SelectMany(x => x != null ? x.WatchingObjects ?? Array.Empty<Object>() : Array.Empty<Object>())
-            .ToImmutableHashSet();
+        public HashSet<Object> WatchingObjects => new HashSet<Object>(generators.SelectMany(x =>
+            x != null ? x.WatchingObjects ?? Array.Empty<Object>() : Array.Empty<Object>()));
 
         private void OnEnable()
         {

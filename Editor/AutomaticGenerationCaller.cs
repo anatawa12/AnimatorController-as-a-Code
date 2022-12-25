@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
@@ -35,12 +34,12 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
         /// <summary>
         /// Key: watching target asset, Value: List of watching generator
         /// </summary>
-        private static readonly Dictionary<GUID, ImmutableHashSet<GUID>> WatchingToGeneratorMap = new Dictionary<GUID, ImmutableHashSet<GUID>>();
+        private static readonly Dictionary<GUID, HashSet<GUID>> WatchingToGeneratorMap = new Dictionary<GUID, HashSet<GUID>>();
 
         /// <summary>
         /// Key: generator, Value: List of watching asset
         /// </summary>
-        private static readonly Dictionary<GUID, ImmutableHashSet<GUID>> GeneratorToWatchingMap = new Dictionary<GUID, ImmutableHashSet<GUID>>();
+        private static readonly Dictionary<GUID, HashSet<GUID>> GeneratorToWatchingMap = new Dictionary<GUID, HashSet<GUID>>();
 
         /// <summary>
         /// Key: generated AnimatorController, Value: generator
@@ -118,7 +117,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
                     {
                         // maybe removed in this foreach so use TryGet
                         if (WatchingToGeneratorMap.TryGetValue(watchingAsset, out var watchingGenerators))
-                            WatchingToGeneratorMap[watchingAsset] = watchingGenerators.Remove(deleted);
+                            watchingGenerators.Remove(deleted);
                     }
                 }
             }
@@ -268,14 +267,17 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
         private static void SaveGeneratorInfoToMap(AnimatorControllerGenerator generator)
         {
             var guid = Utils.GetAssetGUID(generator);
-            var watchingTarget = generator.WatchingObjects.Select(Utils.GetAssetGUID).ToImmutableHashSet();
+            var watchingTarget = new HashSet<GUID>(generator.WatchingObjects.Select(Utils.GetAssetGUID));
             if (watchingTarget.Count != 0)
             {
                 foreach (var target in watchingTarget)
                 {
-                    WatchingToGeneratorMap[target] =
-                        (WatchingToGeneratorMap.GetOrDefault(target) ?? ImmutableHashSet<GUID>.Empty).Add(guid);
+                    if (WatchingToGeneratorMap.TryGetValue(target, out var set))
+                        set.Add(guid);
+                    else
+                        WatchingToGeneratorMap[target] = new HashSet<GUID>(new[] { guid });
                 }
+
                 GeneratorToWatchingMap[guid] = watchingTarget;
             }
 
