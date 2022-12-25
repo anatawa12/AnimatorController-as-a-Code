@@ -13,6 +13,12 @@
     "precompiledReferences": [],
     "autoReferenced": false,
     "defineConstraints": [],
-    "versionDefines": [],
+    "versionDefines": [
+        {
+            "name": "com.vrchat.avatars",
+            "expression": "",
+            "define": "ANATAWA12_VRCSDK_AVATARS"
+        }
+    ],
     "noEngineReferences": false
 }

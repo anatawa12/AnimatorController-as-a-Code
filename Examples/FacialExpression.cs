@@ -1,3 +1,4 @@
+#if ANATAWA12_VRCSDK_AVATARS
 using System.Linq;
 using Anatawa12.AnimatorControllerAsACode.Framework;
 using Anatawa12.AnimatorControllerAsACode.VRCAvatars3;
@@ -105,3 +106,4 @@ namespace Anatawa12.AnimatorControllerAsACode.Examples
         }
     }
 }
+#endif
