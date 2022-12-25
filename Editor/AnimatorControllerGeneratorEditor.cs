@@ -4,9 +4,8 @@ using System.Linq;
 using Anatawa12.AnimatorControllerAsACode.Framework;
 using UnityEditor;
 using UnityEditor.Animations;
-using UnityEditor.Compilation;
 using UnityEngine;
-using Assembly = System.Reflection.Assembly;
+using Debug = System.Diagnostics.Debug;
 
 namespace Anatawa12.AnimatorControllerAsACode.Editor
 {
@@ -61,12 +60,10 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
             for (var i = 0; i < generators.Length; i++)
             {
                 var generator = generators[i];
-                GUILayout.BeginHorizontal();
-                // removed above
-                // ReSharper disable once PossibleNullReferenceException
+                Debug.Assert(generator != null, nameof(generator) + " != null");
+
+                HorizontalLine(marginBottom: false);
                 GUILayout.Label(generator.DefaultName, EditorStyles.label);
-                HorizontalLine();
-                GUILayout.EndHorizontal();
 
                 EditorGUI.BeginChangeCheck();
                 generator.name = EditorGUILayout.TextField("name", generator.name);
@@ -193,12 +190,22 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
             EditorUtility.SetDirty(target);
         }
 
-        private void HorizontalLine()
+        private void HorizontalLine(bool marginTop = true, bool marginBottom = true)
         {
+            const float margin = 17f / 2;
+            var maxHeight = 1f;
+            if (marginTop) maxHeight += margin;
+            if (marginBottom) maxHeight += margin;
+
             var rect = GUILayoutUtility.GetRect(
                 EditorGUIUtility.fieldWidth, float.MaxValue, 
-                1, 18f, GUIStyle.none);
-            rect.y += rect.height / 2 - 0.5f;
+                1, maxHeight, GUIStyle.none);
+            if (marginTop && marginBottom)
+                rect.y += rect.height / 2 - 0.5f;
+            else if (marginTop)
+                rect.y += rect.height - 1f;
+            else if (marginBottom)
+                rect.y += 0;
             rect.height = 1;
             EditorGUI.DrawRect(rect, new Color(0.5f, 0.5f, 0.5f, 1));
         }
