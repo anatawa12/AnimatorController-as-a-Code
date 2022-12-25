@@ -14,7 +14,6 @@ This library is made for vanilla Unity without any libraries.
 This project is also published on OpenUPM.
 See [Package Page on OpenUPM][openupm-package] for Installation steps.
 
-[openupm-package]: https://openupm.com/packages/com.anatawa12.animator-controller-as-a-code/
 
 ## Using add package from git url
 
@@ -22,14 +21,12 @@ You can add `https://github.com/anatawa12/AnimatorController-as-a-Code.git#<vers
 
 See [Installing from a Git URL][upm-gui-giiturl] on Unity Documentation for more details.
 
-[upm-gui-giiturl]: https://docs.unity3d.com/Manual/upm-ui-giturl.html
 
 ## Using VPM CommandLine Interface
 
 You may install this package using [VPM/VCC CLI][vcc-cli].
 This is recommended step for VRChat Avatars/Worlds Projects.
 
-[vcc-cli]: https://vcc.docs.vrchat.com/vpm/cli
 
 ```bash
 # add our vpm repository
@@ -47,6 +44,9 @@ With [VPAI] You can include this package with
 2. Make sure your project contains [`vpm-resolver`][vpm-resolver]. If your project is VRChat Avatars/Worlds project with VCC, It's installed.
 3. Import the unitypackage into your project.
 
+[openupm-package]: https://openupm.com/packages/com.anatawa12.animator-controller-as-a-code/
+[upm-gui-giiturl]: https://docs.unity3d.com/Manual/upm-ui-giturl.html
+[vcc-cli]: https://vcc.docs.vrchat.com/vpm/cli
 [vpm-resolver]: https://vcc.docs.vrchat.com/vpm/resolver
 [installer unitypackage]: https://github.com/anatawa12/AnimatorController-as-a-Code/raw/master/.readme/installer.unitypackage
 [VPAI]: https://github.com/anatawa12/VPMPackageAutoInstaller
