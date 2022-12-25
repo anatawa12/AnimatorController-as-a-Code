@@ -7,8 +7,5 @@
   "author": {
     "name": "anatawa12",
     "email": "anatawa12@icloud.com"
-  },
-  "dependencies": {
-    "com.unity.nuget.newtonsoft-json": "2.0.0"
   }
 }

@@ -5,8 +5,8 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Text;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 using UnityEditor;
 using UnityEditor.Compilation;
 using UnityEngine;
@@ -53,7 +53,8 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
         private static readonly Queue<Action> RunNextUpdate = new Queue<Action>();
 
         private static State _state = State.Initialized;
-        private const string StateJsonPath = "Temp/com.anatawa12.animator-as-a-code.state.json";
+        private const string SessionKeyPrefix = "com.anatawa12.animator-controller-as-a-code.";
+
 
         /// <summary>
         /// List name of Acc core modules. If those modules are reloaded, All AnimatorController will be regenerated.
@@ -204,40 +205,38 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
                 CompileErrorAssemblies.Remove(assemblyName);
         }
 
+        private const char Separator = '\x1F'; // Information Separator One
+
+        private static IEnumerable<string> GetStringsSessionState(string key) =>
+            SessionState.GetString(SessionKeyPrefix + key, "")
+                .Split(Separator)
+                .Skip(1);
+
+        private static void SetStringsSessionState(string key, IEnumerable<string> value)
+        {
+            var builder = new StringBuilder();
+            foreach (var element in value) builder.Append(Separator).Append(element);
+            SessionState.SetString(SessionKeyPrefix + key, builder.ToString());
+        }
+
         private static void BeforeAssemblyReload()
         {
-            // save data to file
-            File.WriteAllText(StateJsonPath, JsonConvert.SerializeObject(new JsonState
-            {
-                CompiledAssemblies = CompiledAssemblies,
-                CompileErrorAssemblies = CompileErrorAssemblies,
-            }));
+            SessionState.SetBool(SessionKeyPrefix + "AssemblyReload", true);
+            SetStringsSessionState(nameof(CompiledAssemblies), CompiledAssemblies);
+            SetStringsSessionState(nameof(CompileErrorAssemblies), CompileErrorAssemblies);
         }
 
         static async void AfterAssemblyReload()
         {
-            // load data from file
-            try
-            {
-                var json = File.ReadAllText(StateJsonPath);
-                File.Delete(StateJsonPath);
-                var state = JsonConvert.DeserializeObject<JsonState>(json);
-                state.CompileErrorAssemblies.RemoveWhere(CompiledAssemblies.Contains);
-                CompiledAssemblies.UnionWith(state.CompiledAssemblies);
-                CompileErrorAssemblies.UnionWith(state.CompileErrorAssemblies);
-            }
-            catch (IOException)
+            if (!SessionState.GetBool(SessionKeyPrefix + "AssemblyReload", false))
             {
                 await Task.Delay(1 * 1000);
-                Debug.Log("Reload assembly with no state json detected! Assume it as Startup: Regenerating all.");
+                Debug.Log("Startup Detected!: Regenerating all");
                 RegenerateAll();
                 return;
             }
-            catch (JsonException e)
-            {
-                Debug.LogErrorFormat("Error loading State Json. {0}", e);
-                return;
-            }
+            CompiledAssemblies.UnionWith(GetStringsSessionState(nameof(CompiledAssemblies)));
+            CompileErrorAssemblies.UnionWith(GetStringsSessionState(nameof(CompileErrorAssemblies)));
 
             if (_state != State.Initialized)
                 return;
@@ -353,15 +352,6 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
             WaitingForAssemblyReload,
             AssemblyReloaded,
         }
-
-        // ReSharper disable MemberHidesStaticFromOuterClass
-        [JsonObject("JsonState")]
-        private class JsonState
-        {
-            [JsonProperty] public HashSet<string> CompiledAssemblies = new HashSet<string>();
-            [JsonProperty] public HashSet<string> CompileErrorAssemblies = new HashSet<string>();
-        }
-        // ReSharper restore MemberHidesStaticFromOuterClass
     }
 
     internal readonly struct Identity
