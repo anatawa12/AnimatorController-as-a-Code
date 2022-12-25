@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -37,7 +36,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
         /// <c>FacialExpression</c> (in example module) do not copies nor uses part of <c>Motion</c>
         /// so It doesn't add motions to <c>WatchingObjects</c>.
         /// </example>
-        protected internal virtual IEnumerable<Object> WatchingObjects => Array.Empty<Object>();
+        protected internal abstract IEnumerable<Object> WatchingObjects { get; }
 
         /// <summary>
         /// Generates Animator Layers.

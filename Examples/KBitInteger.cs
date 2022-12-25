@@ -1,8 +1,11 @@
 #if ANATAWA12_VRCSDK_AVATARS
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using Anatawa12.AnimatorControllerAsACode.Framework;
 using Anatawa12.AnimatorControllerAsACode.VRCAvatars3;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace Anatawa12.AnimatorControllerAsACode.Examples
 {
@@ -23,6 +26,8 @@ namespace Anatawa12.AnimatorControllerAsACode.Examples
     {
         public string intParameter;
         public string backingParameterPrefix;
+
+        protected override IEnumerable<Object> WatchingObjects => Array.Empty<Object>();
 
         // TODO: support up to 24 bit (float-representable maximum) integer?
         [Range(1, 24)]

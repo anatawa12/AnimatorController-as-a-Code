@@ -1,5 +1,8 @@
+using System;
+using System.Collections.Generic;
 using Anatawa12.AnimatorControllerAsACode.Framework;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace Anatawa12.AnimatorControllerAsACode.Examples
 {
@@ -9,6 +12,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Examples
 
         // optional: GetType().Name by default
         protected override string GeneratorName => "MaskLayer";
+        protected override IEnumerable<Object> WatchingObjects => Array.Empty<Object>();
 
         protected override void Generate(Acc acc)
         {

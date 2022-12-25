@@ -1,9 +1,12 @@
 #if ANATAWA12_VRCSDK_AVATARS
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using Anatawa12.AnimatorControllerAsACode.Framework;
 using Anatawa12.AnimatorControllerAsACode.VRCAvatars3;
 using UnityEngine;
 using VRC.SDKBase;
+using Object = UnityEngine.Object;
 
 namespace Anatawa12.AnimatorControllerAsACode.Examples
 {
@@ -18,6 +21,8 @@ namespace Anatawa12.AnimatorControllerAsACode.Examples
         public Motion gun;
         public Motion thumbsUp;
         public Hand prior;
+
+        protected override IEnumerable<Object> WatchingObjects => Array.Empty<Object>();
 
         protected override void Generate(Acc acc)
         {
