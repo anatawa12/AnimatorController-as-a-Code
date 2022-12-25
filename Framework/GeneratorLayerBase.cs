@@ -16,9 +16,27 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
 
         /// <summary>
         /// The list of watching objects.
-        /// This list should not be modified unless user input is changed.
         /// </summary>
-        // TODO: better limitation on modification. something like SetDirty can be used.
+        /// <remarks>
+        /// Don't forget to add some assets to this list.
+        /// If you forget, auto regeneration do not work as expected.
+        /// If you added too many assets to this list, It's OK.
+        /// it will make more regeneration than required but nothing will be broken.
+        ///
+        /// If your implementation <b>copies</b> or <b>uses</b> some part of asset to AnimatorController,
+        /// You <b>must</b> include the asset to this list. If you forget, automatic generation will not work as expect
+        ///
+        /// If your implementation just make generated AnimatorController <b>reference</b> some asset,
+        /// You <b>don't have to </b> include the asset to this list.
+        /// </remarks>
+        /// <example>
+        /// <c>CopyFromOtherControllerLayer</c> (in example module) copies some part of <c>controller.layers</c>
+        /// so it adds <c>controller</c> to <c>WatchingObjects</c>.
+        /// </example>
+        /// <example>
+        /// <c>FacialExpression</c> (in example module) do not copies nor uses part of <c>Motion</c>
+        /// so It doesn't add motions to <c>WatchingObjects</c>.
+        /// </example>
         protected internal virtual IEnumerable<Object> WatchingObjects => Array.Empty<Object>();
 
         /// <summary>
