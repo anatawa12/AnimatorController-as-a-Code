@@ -1,5 +1,22 @@
 # AnimatorController as a Code
 
+[![openupm][shields-openupm]][openupm-package]
+[![GitHub release][shields-latest-release]](https://github.com/anatawa12/AnimatorController-as-a-Code/releases/latest)
+[![GitHub deployments][shields-deployment-master]](https://github.com/anatawa12/AnimatorController-as-a-Code/releases/latest)
+[![GitHub deployments][shields-deployment-vpm]][vpm-repository]
+
+<!-- 
+If it's rejected from shields owners, I'll use custom endpoints.
+If it going to be accepted, I'll use the new endpoint. https://github.com/badges/shields/issues/8752
+[![VPM release][shields-vpm]][vpm-repository
+[shields-vpm]: https://img.shields.io/endpoint?url=https://vpm.anatawa12.com/animator-controller-as-a-code/shields.json
+-->
+
+[shields-openupm]: https://img.shields.io/npm/v/com.anatawa12.animator-controller-as-a-code?label=openupm&registry_uri=https://package.openupm.com
+[shields-latest-release]: https://img.shields.io/github/v/release/anatawa12/AnimatorController-as-a-Code?display_name=tag&sort=semver
+[shields-deployment-vpm]: https://img.shields.io/github/deployments/anatawa12/AnimatorController-as-a-Code/vpm.anatawa12.com?label=VPM%20Deployment
+[shields-deployment-master]: https://img.shields.io/github/deployments/anatawa12/AnimatorController-as-a-Code/master%20branch?label=Deployment
+
 A small Unity Editor Library to generate AnimatorController with C# Code.
 
 Inspired by [AV3 Animator as Code] but it depends on VRChat SDK. 
@@ -50,3 +67,4 @@ With [VPAI] You can include this package with
 [vpm-resolver]: https://vcc.docs.vrchat.com/vpm/resolver
 [installer unitypackage]: https://github.com/anatawa12/AnimatorController-as-a-Code/raw/master/.readme/installer.unitypackage
 [VPAI]: https://github.com/anatawa12/VPMPackageAutoInstaller
+[vpm-repository]: https://vpm.anatawa12.com/vpm.json
