@@ -24,22 +24,22 @@ This library is made for vanilla Unity without any libraries.
 
 [AV3 Animator as Code]: https://github.com/hai-vr/av3-animator-as-code
 
-# Installation
+## Installation
 
-## Using OpenUPM
+### Using OpenUPM
 
 This project is also published on OpenUPM.
 See [Package Page on OpenUPM][openupm-package] for Installation steps.
 
 
-## Using add package from git url
+### Using add package from git url
 
 You can add `https://github.com/anatawa12/AnimatorController-as-a-Code.git#<version>` as git-based UPM dependencies.
 
 See [Installing from a Git URL][upm-gui-giiturl] on Unity Documentation for more details.
 
 
-## Using VPM CommandLine Interface
+### Using VPM CommandLine Interface
 
 You may install this package using [VPM/VCC CLI][vcc-cli].
 This is recommended step for VRChat Avatars/Worlds Projects.
@@ -53,7 +53,7 @@ cd /path/to/your-unity-project
 vpm add package com.anatawa12.animator-controller-as-a-code
 ```
 
-## Using Installer UnityPackage with VPM
+### Using Installer UnityPackage with VPM
 
 With [VPAI] You can include this package with
 
