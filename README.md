@@ -9,6 +9,21 @@ This library is made for vanilla Unity without any libraries.
 
 # Installation
 
+## Using OpenUPM
+
+This project is also published on OpenUPM.
+See [Package Page on OpenUPM][openupm-package] for Installation steps.
+
+[openupm-package]: https://openupm.com/packages/com.anatawa12.animator-controller-as-a-code/
+
+## Using add package from git url
+
+You can add `https://github.com/anatawa12/AnimatorController-as-a-Code.git#<version>` as git-based UPM dependencies.
+
+See [Installing from a Git URL][upm-gui-giiturl] on Unity Documentation for more details.
+
+[upm-gui-giiturl]: https://docs.unity3d.com/Manual/upm-ui-giturl.html
+
 ## Using VPM CommandLine Interface
 
 You may install this package using [VPM/VCC CLI][vcc-cli].
@@ -35,18 +50,3 @@ With [VPAI] You can include this package with
 [vpm-resolver]: https://vcc.docs.vrchat.com/vpm/resolver
 [installer unitypackage]: https://github.com/anatawa12/AnimatorController-as-a-Code/raw/master/.readme/installer.unitypackage
 [VPAI]: https://github.com/anatawa12/VPMPackageAutoInstaller
-
-## Using add package from git url
-
-You can add `https://github.com/anatawa12/AnimatorController-as-a-Code.git#<version>` as git-based UPM dependencies.
-
-See [Installing from a Git URL][upm-gui-giiturl] on Unity Documentation for more details.
-
-[upm-gui-giiturl]: https://docs.unity3d.com/Manual/upm-ui-giturl.html
-
-## Using OpenUPM
-
-This project is also published on OpenUPM.
-See [Package Page on OpenUPM][openupm-package] for Installation steps.
-
-[openupm-package]: https://openupm.com/packages/com.anatawa12.animator-controller-as-a-code/
