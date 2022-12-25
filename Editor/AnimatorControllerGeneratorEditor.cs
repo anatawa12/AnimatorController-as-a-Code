@@ -64,9 +64,29 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
                 GUILayout.BeginHorizontal();
                 // removed above
                 // ReSharper disable once PossibleNullReferenceException
-                GUILayout.Label(generator.name, EditorStyles.label);
+                GUILayout.Label(generator.DefaultName, EditorStyles.label);
                 HorizontalLine();
                 GUILayout.EndHorizontal();
+
+                EditorGUI.BeginChangeCheck();
+                generator.name = EditorGUILayout.TextField("name", generator.name);
+                if (EditorGUI.EndChangeCheck()) EditorUtility.SetDirty(target);
+
+                if (generator.name.Contains('_'))
+                {
+                    var style = new GUIStyle();
+                    style.normal.textColor  = Color.yellow;
+                    style.focused.textColor = Color.yellow;
+                    GUILayout.Label("Name should not contain '_'!", style);
+                }
+
+                if (generator.name.Length == 0)
+                {
+                    var style = new GUIStyle();
+                    style.normal.textColor  = Color.yellow;
+                    style.focused.textColor = Color.yellow;
+                    GUILayout.Label("Name should not be empty!", style);
+                }
 
                 GUILayout.BeginHorizontal();
                 using (new EditorGUI.DisabledScope(i == 0))
@@ -160,6 +180,13 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
             var target = (AnimatorControllerGenerator)this.target;
             var generator = (GeneratorLayerBase)CreateInstance(type);
             generator.name = generator.DefaultName;
+            if (target.generators.Any(x => x != null && x.name == generator.name))
+            {
+                var append = 1;
+                while (target.generators.Any(x => x != null && x.name == $"{generator.name}{append}")) append++;
+                generator.name = $"{generator.name}{append}";
+            }
+
             AssetDatabase.AddObjectToAsset(generator, target);
             ArrayUtility.Add(ref target.generators, generator);
             ArrayUtility.Add(ref _editors, null);
