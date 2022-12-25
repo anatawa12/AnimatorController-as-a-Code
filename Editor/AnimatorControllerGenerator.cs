@@ -126,7 +126,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
             {
                 // checked null above
                 // ReSharper disable once PossibleNullReferenceException
-                var acc = new Acc(generator.GeneratorName, _targetResolved, new AccConfig(target));
+                var acc = new Acc(generator.name, _targetResolved, new AccConfig(target));
                 generator.Generate(acc);
                 acc.SaveToAsset();
             }

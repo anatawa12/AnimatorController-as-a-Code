@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -11,7 +12,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
         /// By default, name of class is used.
         /// This name should not contain '_' to avoid conflict.
         /// </summary>
-        protected internal virtual string GeneratorName => GetType().Name;
+        protected internal virtual string DefaultName => NormalizeGeneratorDefaultName(GetType().Name);
 
         /// <summary>
         /// The list of watching objects.
@@ -43,6 +44,15 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
         /// </summary>
         /// <param name="acc">Animator As A Code entrypoint object</param>
         protected internal abstract void Generate(Acc acc);
+
+        public static string NormalizeGeneratorDefaultName(string name)
+        {
+            name = name.Replace("_", "");
+            if (name.Length != 0 && '0' <= name[name.Length - 1] && name[name.Length - 1] <= '9')
+                name = name.Substring(0, name.Length - 1);
+            if (name.Length == 0) name = "unnamed";
+            return name;
+        }
 
         private void OnEnable()
         {

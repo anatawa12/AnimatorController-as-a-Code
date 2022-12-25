@@ -11,7 +11,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Examples
         public AvatarMask mask;
 
         // optional: GetType().Name by default
-        protected override string GeneratorName => "MaskLayer";
+        protected override string DefaultName => "MaskLayer";
         protected override IEnumerable<Object> WatchingObjects => Array.Empty<Object>();
 
         protected override void Generate(Acc acc)

@@ -64,7 +64,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
                 GUILayout.BeginHorizontal();
                 // removed above
                 // ReSharper disable once PossibleNullReferenceException
-                GUILayout.Label(generator.GeneratorName, EditorStyles.label);
+                GUILayout.Label(generator.name, EditorStyles.label);
                 HorizontalLine();
                 GUILayout.EndHorizontal();
 
@@ -159,6 +159,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
             // ReSharper disable once LocalVariableHidesMember
             var target = (AnimatorControllerGenerator)this.target;
             var generator = (GeneratorLayerBase)CreateInstance(type);
+            generator.name = generator.DefaultName;
             AssetDatabase.AddObjectToAsset(generator, target);
             ArrayUtility.Add(ref target.generators, generator);
             ArrayUtility.Add(ref _editors, null);
