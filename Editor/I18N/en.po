@@ -1,0 +1,33 @@
+msgid ""
+msgstr ""
+"Language: en\n"
+
+msgid "locale:en"
+msgstr "English"
+
+msgid "editor:generator-for"
+msgstr "Generator for"
+
+msgid "editor:generates-for"
+msgstr "Generates for"
+
+msgid "editor:no-target-object"
+msgstr "Generate target GameObject is not specified! this may produce broken animation"
+
+msgid "editor:layer-name-_"
+msgstr "Name should not contain '_'!"
+
+msgid "editor:layer-name-empty"
+msgstr "Name should not be empty!"
+
+msgid "editor:invalid-class"
+msgstr "The Class is not subclass of ControllerGeneratorBase."
+
+msgid "editor:add-generator"
+msgstr "Add Generator"
+
+msgid "editor:manual-generate"
+msgstr "Manual Generate"
+
+msgid "editor:regenerate-all"
+msgstr "Regenerate All"

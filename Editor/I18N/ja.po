@@ -1,0 +1,33 @@
+msgid ""
+msgstr ""
+"Language: ja\n"
+
+msgid "locale:ja"
+msgstr "日本語"
+
+msgid "editor:generator-for"
+msgstr "生成先:"
+
+msgid "editor:generates-for"
+msgstr "生成対象:"
+
+msgid "editor:no-target-object"
+msgstr "生成対象のゲームオブジェクトが指定されてません！壊れたアニメーションが生成される可能性があります！"
+
+msgid "editor:layer-name-_"
+msgstr "名前に'_'が含まれてしまっています!"
+
+msgid "editor:layer-name-empty"
+msgstr "名前が空です！"
+
+msgid "editor:invalid-class"
+msgstr "そのクラスはControllerGeneratorBaseの小クラスではないです"
+
+msgid "editor:add-generator"
+msgstr "ジェネレーターを追加"
+
+msgid "editor:manual-generate"
+msgstr "手動生成"
+
+msgid "editor:regenerate-all"
+msgstr "すべてを再生成する"

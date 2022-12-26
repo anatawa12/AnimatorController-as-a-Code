@@ -33,9 +33,12 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
                 EditorUtility.SetDirty(target);
             }
 
+            // Localization
+            I18N.DrawLanguagePicker();
+
             // General information
             GUILayout.BeginHorizontal();
-            GUILayout.Label("Generator for ", EditorStyles.label);
+            GUILayout.Label(I18N.Tr("editor:generator-for"), EditorStyles.label);
             using (new EditorGUI.DisabledScope(true))
             {
                 EditorGUILayout.ObjectField(target.TargetResolved, typeof(AnimatorController), false);
@@ -43,7 +46,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
-            GUILayout.Label("Generates for ", EditorStyles.label);
+            GUILayout.Label(I18N.Tr("editor:generates-for"), EditorStyles.label);
             target.target = (Transform) EditorGUILayout.ObjectField(target.target, typeof(Transform), false);
             GUILayout.EndHorizontal();
             if (!target.target)
@@ -51,7 +54,8 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
                 GUIStyle style  = new GUIStyle();
                 style.normal.textColor  = Color.yellow;
                 style.focused.textColor = Color.yellow;
-                GUILayout.Label("Generate target GameObject is not specified! this may produce broken animation", style);
+                style.wordWrap = true;
+                GUILayout.Label(I18N.Tr("editor:no-target-object"), style);
             }
 
             var generators = target.generators;
@@ -74,7 +78,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
                     var style = new GUIStyle();
                     style.normal.textColor  = Color.yellow;
                     style.focused.textColor = Color.yellow;
-                    GUILayout.Label("Name should not contain '_'!", style);
+                    GUILayout.Label(I18N.Tr("editor:layer-name-_"), style);
                 }
 
                 if (generator.name.Length == 0)
@@ -82,7 +86,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
                     var style = new GUIStyle();
                     style.normal.textColor  = Color.yellow;
                     style.focused.textColor = Color.yellow;
-                    GUILayout.Label("Name should not be empty!", style);
+                    GUILayout.Label(I18N.Tr("editor:layer-name-empty"), style);
                 }
 
                 GUILayout.BeginHorizontal();
@@ -125,12 +129,12 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
                 GUIStyle style  = new GUIStyle();
                 style.normal.textColor  = Color.red;
                 style.focused.textColor = Color.red;
-                GUILayout.Label("The Class is not subclass of ControllerGeneratorBase.", style);
+                GUILayout.Label(I18N.Tr("editor:invalid-class"), style);
             }
 
             GUILayout.BeginHorizontal();
             GUILayout.FlexibleSpace();
-            var content = new GUIContent("Add Generator");
+            var content = new GUIContent(I18N.Tr("editor:add-generator"));
             GUIStyle guiStyle = "AC Button";
             var rect = GUILayoutUtility.GetRect(content, guiStyle);
             if (EditorGUI.DropdownButton(rect, content, FocusType.Passive, guiStyle))
@@ -150,12 +154,12 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
 
             HorizontalLine();
             
-            if (GUILayout.Button("Manual Generate"))
+            if (GUILayout.Button(I18N.Tr("editor:manual-generate")))
             {
                 target.DoGenerate();
             }
 
-            if (GUILayout.Button("Regenerate All"))
+            if (GUILayout.Button(I18N.Tr("editor:regenerate-all")))
             {
                 AutomaticGenerationCaller.RegenerateAll();
             }
