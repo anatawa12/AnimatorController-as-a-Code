@@ -35,13 +35,24 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
             return this;
         }
 
+#if DOC_LANG_JA
         /// <summary>
-        /// Find or add StateMachineBehaviour with type T and run action with it.
-        /// This may not add StateMachineBehaviour. To add new one, use  <see cref="WithNewBehaviour{T}"/>..
+        /// <see cref="T"/>型の<see cref="StateMachineBehaviour"/>を検索または追加してそれを引数に<see cref="action"/>を実行する。
+        /// これはすでに追加されてる場合に<see cref="StateMachineBehaviour"/>を追加しません。
+        /// 常に新たに追加するためには<see cref="WithNewBehaviour{T}"/>を使用してください。
         /// </summary>
-        /// <param name="action">The action run with the StateMachineBehaviour</param>
-        /// <typeparam name="T">The type of StateMachineBehaviour</typeparam>
-        /// <returns></returns>
+        /// <param name="action"><see cref="StateMachineBehaviour"/>を渡されるアクション</param>
+        /// <typeparam name="T"><see cref="StateMachineBehaviour"/>の型</typeparam>
+        /// <returns><c>this</c></returns>
+#else
+        /// <summary>
+        /// Find or add <see cref="StateMachineBehaviour"/> with type <see cref="T"/> and run action with it.
+        /// This may not add <see cref="StateMachineBehaviour"/>. To add new one, use  <see cref="WithNewBehaviour{T}"/>..
+        /// </summary>
+        /// <param name="action">The action run with the <see cref="StateMachineBehaviour"/></param>
+        /// <typeparam name="T">The type of <see cref="StateMachineBehaviour"/></typeparam>
+        /// <returns><c>this</c></returns>
+#endif
         public AccState WithBehaviour<T>(Action<T> action)
             where T : StateMachineBehaviour
         {
@@ -49,13 +60,25 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
             return this;
         }
 
+#if DOC_LANG_JA
         /// <summary>
-        /// Add StateMachineBehaviour with type T and run action with it.
-        /// This always not add StateMachineBehaviour. To reuse already added one, use <see cref="WithBehaviour{T}"/>.
+        /// 新規に<see cref="T"/>型の<see cref="StateMachineBehaviour"/>を追加して、それを引数に<see cref="action"/>を実行する。
+        /// これは<see cref="StateMachineBehaviour"/>を常に追加します。
+        /// すでに追加されてる<see cref="StateMachineBehaviour"/>を使用するには<see cref="WithBehaviour{T}"/>を使用してください。
         /// </summary>
         /// <param name="action">The action run with the StateMachineBehaviour</param>
         /// <typeparam name="T">The type of StateMachineBehaviour</typeparam>
-        /// <returns></returns>
+        /// <returns><c>this</c></returns>
+#else
+        /// <summary>
+        /// Add <see cref="StateMachineBehaviour"/> with type <see cref="T"/> and run action with it.
+        /// This always adds <see cref="StateMachineBehaviour"/>.
+        /// To reuse already added one, use <see cref="WithBehaviour{T}"/>.
+        /// </summary>
+        /// <param name="action">The action run with the <see cref="StateMachineBehaviour"/></param>
+        /// <typeparam name="T">The type of <see cref="StateMachineBehaviour"/></typeparam>
+        /// <returns><c>this</c></returns>
+#endif
         public AccState WithNewBehaviour<T>(Action<T> action)
             where T : StateMachineBehaviour
         {
