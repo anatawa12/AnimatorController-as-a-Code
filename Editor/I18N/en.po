@@ -27,7 +27,7 @@ msgid "editor:add-generator"
 msgstr "Add Generator"
 
 msgid "editor:manual-generate"
-msgstr "Generate　Manually"
+msgstr "Generate Manually"
 
 msgid "editor:regenerate-all"
 msgstr "Regenerate All"
