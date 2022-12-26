@@ -31,3 +31,12 @@ msgstr "手動生成"
 
 msgid "editor:regenerate-all"
 msgstr "すべてを再生成する"
+
+msgid "editor:move-up"
+msgstr "上に移動"
+
+msgid "editor:move-down"
+msgstr "下に移動"
+
+msgid "editor:remove"
+msgstr "削除"

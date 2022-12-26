@@ -91,20 +91,20 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
 
                 GUILayout.BeginHorizontal();
                 using (new EditorGUI.DisabledScope(i == 0))
-                    if (GUILayout.Button("Move UP"))
+                    if (GUILayout.Button(I18N.Tr("editor:move-up")))
                     {
                         (generators[i], generators[i - 1]) = (generators[i - 1], generators[i]);
                         (_editors[i], _editors[i - 1]) = (_editors[i - 1], _editors[i]);
                         EditorUtility.SetDirty(target);
                     }
                 using (new EditorGUI.DisabledScope(i + 1 == generators.Length))
-                    if (GUILayout.Button("Move Down"))
+                    if (GUILayout.Button(I18N.Tr("editor:move-down")))
                     {
                         (generators[i], generators[i + 1]) = (generators[i + 1], generators[i]);
                         (_editors[i], _editors[i + 1]) = (_editors[i + 1], _editors[i]);
                         EditorUtility.SetDirty(target);
                     }
-                if (GUILayout.Button("Remove"))
+                if (GUILayout.Button(I18N.Tr("editor:remove")))
                 {
                     ArrayUtility.RemoveAt(ref target.generators, i);
                     ArrayUtility.RemoveAt(ref _editors, i);

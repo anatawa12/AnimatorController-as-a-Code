@@ -31,3 +31,12 @@ msgstr "Generate Manually"
 
 msgid "editor:regenerate-all"
 msgstr "Regenerate All"
+
+msgid "editor:move-up"
+msgstr "Move UP"
+
+msgid "editor:move-down"
+msgstr "Move Down"
+
+msgid "editor:remove"
+msgstr "Remove"
