@@ -4,18 +4,13 @@
 [![GitHub release][shields-latest-release]](https://github.com/anatawa12/AnimatorController-as-a-Code/releases/latest)
 [![GitHub deployments][shields-deployment-master]](https://github.com/anatawa12/AnimatorController-as-a-Code/releases/latest)
 [![GitHub deployments][shields-deployment-vpm]][vpm-repository]
-
-<!-- 
-If it's rejected from shields owners, I'll use custom endpoints.
-If it going to be accepted, I'll use the new endpoint. https://github.com/badges/shields/issues/8752
-[![VPM release][shields-vpm]][vpm-repository
-[shields-vpm]: https://img.shields.io/endpoint?url=https://vpm.anatawa12.com/animator-controller-as-a-code/shields.json
--->
+[![VPM release][shields-vpm]][vpm-repository]
 
 [shields-openupm]: https://img.shields.io/npm/v/com.anatawa12.animator-controller-as-a-code?label=openupm&registry_uri=https://package.openupm.com
 [shields-latest-release]: https://img.shields.io/github/v/release/anatawa12/AnimatorController-as-a-Code?display_name=tag&sort=semver
 [shields-deployment-vpm]: https://img.shields.io/github/deployments/anatawa12/AnimatorController-as-a-Code/vpm.anatawa12.com?label=VPM%20Deployment
 [shields-deployment-master]: https://img.shields.io/github/deployments/anatawa12/AnimatorController-as-a-Code/master%20branch?label=Deployment
+[shields-vpm]: https://img.shields.io/vpm/v/com.anatawa12.vpm-package-auto-installer.creator?repository_url=https%3A%2F%2Fvpm.anatawa12.com%2Fvpm.json
 
 #ACaaC: A small Unity Editor Library to generate AnimatorController with C# Code.
 
