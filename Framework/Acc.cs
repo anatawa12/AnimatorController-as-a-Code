@@ -29,6 +29,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
             var layer = new AccLayer(new AnimatorControllerLayer
             {
                 name = layerName,
+                defaultWeight = 1,
                 stateMachine = new AnimatorStateMachine
                 {
                     name = layerName,
