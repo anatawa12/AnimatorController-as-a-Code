@@ -19,6 +19,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
         {
             _config = config;
             State = state;
+            State.motion = Utils.GetEmptyClip();
         }
 
         public AccState WithAnimation(Motion motion)
