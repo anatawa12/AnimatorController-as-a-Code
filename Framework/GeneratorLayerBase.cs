@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEditor.Animations;
 using UnityEngine;
@@ -72,6 +73,12 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
         /// </example>
 #endif
         protected internal abstract IEnumerable<Object> WatchingObjects { get; }
+
+        // backing field of Generator reference
+        [SerializeField]
+        [HideInInspector]
+        [Obsolete("you should not access this field directly", true)]
+        internal Object generator;
 
         /// <summary>
         /// Generates Animator Layers.

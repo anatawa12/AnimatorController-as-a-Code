@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Anatawa12.AnimatorControllerAsACode.Framework;
 using JetBrains.Annotations;
 using UnityEditor;
 using Object = UnityEngine.Object;
@@ -36,5 +37,20 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
         }
         // ReSharper restore InconsistentNaming
 
+        // to access error obsolete property. it's error obsolete because disallow accessing without those methods.
+        // we cannot disable CS0019 so replace it with CS0018 using those warning obsolete methods
+        [Obsolete]
+        private static AnimatorControllerGenerator GetGenerator1(GeneratorLayerBase layer) =>
+            layer.generator as AnimatorControllerGenerator;
+        [Obsolete]
+        private static void SetGenerator1(GeneratorLayerBase layer, AnimatorControllerGenerator generator) =>
+            layer.generator = generator;
+
+#pragma warning disable CS0612
+        public static AnimatorControllerGenerator GetGenerator(this GeneratorLayerBase layer) =>
+            GetGenerator1(layer);
+        public static void SetGenerator(this GeneratorLayerBase layer, AnimatorControllerGenerator generator) =>
+            SetGenerator1(layer, generator);
+#pragma warning restore CS0612
     }
 }

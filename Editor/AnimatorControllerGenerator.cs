@@ -96,6 +96,8 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
                 TargetGUID = GUID.Generate();
             if (generators == null)
                 generators = Array.Empty<GeneratorLayerBase>();
+            foreach (var layer in generators)
+                layer.SetGenerator(this);
         }
 
         public void DoGenerate()

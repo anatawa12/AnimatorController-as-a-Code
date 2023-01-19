@@ -181,6 +181,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
             var target = (AnimatorControllerGenerator)this.target;
             var generator = (GeneratorLayerBase)CreateInstance(type);
             generator.name = generator.DefaultName;
+            generator.SetGenerator(target);
             if (target.generators.Any(x => x != null && x.name == generator.name))
             {
                 var append = 1;
