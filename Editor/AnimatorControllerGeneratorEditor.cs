@@ -62,6 +62,15 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
                 style.wordWrap = true;
                 GUILayout.Label(I18N.Tr("editor:no-target-object"), style);
             }
+            else if (!PrefabUtility.IsPartOfAnyPrefab(target.target)
+                     || !PrefabUtility.IsOutermostPrefabInstanceRoot(target.target.gameObject))
+            {
+                GUIStyle style  = new GUIStyle();
+                style.normal.textColor  = Color.yellow;
+                style.focused.textColor = Color.yellow;
+                style.wordWrap = true;
+                GUILayout.Label(I18N.Tr("editor:target-non-prefab-root"), style);
+            }
 
             var generators = target.generators;
             if (_editors?.Length != generators.Length)

@@ -14,6 +14,9 @@ msgstr "生成対象:"
 msgid "editor:no-target-object"
 msgstr "生成対象のゲームオブジェクトが指定されてません！壊れたアニメーションが生成される可能性があります！"
 
+msgid "editor:target-non-prefab-root"
+msgstr "生成対象のゲームオブジェクトがプレハブの親ではありません！壊れたアニメーションが生成される可能性があります！"
+
 msgid "editor:layer-name-_"
 msgstr "名前に'_'が含まれてしまっています!"
 
@@ -40,3 +43,6 @@ msgstr "下に移動"
 
 msgid "editor:remove"
 msgstr "削除"
+
+msgid "editor:in-prefab:multi-editing"
+msgstr "複数選択編集は対応してません"

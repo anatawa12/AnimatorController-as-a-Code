@@ -14,6 +14,9 @@ msgstr "Generates for"
 msgid "editor:no-target-object"
 msgstr "Generate target GameObject is not specified! this may produce broken animation"
 
+msgid "editor:target-non-prefab-root"
+msgstr "Generate target GameObject is not root of Prefab! This is not supported!"
+
 msgid "editor:layer-name-_"
 msgstr "Name should not contain '_'!"
 
@@ -40,3 +43,6 @@ msgstr "Move Down"
 
 msgid "editor:remove"
 msgstr "Remove"
+
+msgid "editor:in-prefab:multi-editing"
+msgstr "Multi editing not supported"

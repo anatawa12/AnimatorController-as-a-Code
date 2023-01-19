@@ -20,14 +20,14 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
             var targetObject = property.serializedObject.targetObjects[0];
             if (!(targetObject is GeneratorLayerBase layer))
             {
-                EditorGUI.LabelField(position, label, Styles.GeneratorLayer, EditorStyles.boldLabel);
+                EditorGUI.ObjectField(position, property, label);
                 return;
             }
 
             var generator = layer.GetGenerator();
             if (!generator)
             {
-                EditorGUI.LabelField(position, label, Styles.NoGenerator, EditorStyles.boldLabel);
+                EditorGUI.ObjectField(position, property, label);
                 return;
             }
 
@@ -35,7 +35,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
 
             if (!targetGameObject || !PrefabUtility.IsPartOfPrefabAsset(targetGameObject))
             {
-                EditorGUI.LabelField(position, label, Styles.InvalidGenerator, EditorStyles.boldLabel);
+                EditorGUI.ObjectField(position, property, label);
                 return;
             }
 
@@ -114,10 +114,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
         
         private static class Styles
         {
-            public static readonly GUIContent MultiEditing = new GUIContent("Multi Editing not supported");
-            public static readonly GUIContent GeneratorLayer = new GUIContent("PrefabReference must be on GeneratorLayer");
-            public static readonly GUIContent NoGenerator = new GUIContent("Not belongs to Generator");
-            public static readonly GUIContent InvalidGenerator = new GUIContent("Belongs to invalid Generator");
+            public static readonly GUIContent MultiEditing = new GUIContent(I18N.Tr("editor:in-prefab:multi-editing"));
         }
     }
 }
