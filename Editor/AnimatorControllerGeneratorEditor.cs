@@ -47,7 +47,12 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
 
             GUILayout.BeginHorizontal();
             GUILayout.Label(I18N.Tr("editor:generates-for"), EditorStyles.label);
-            target.target = (Transform) EditorGUILayout.ObjectField(target.target, typeof(Transform), false);
+            var selected = (Transform) EditorGUILayout.ObjectField(target.target, typeof(Transform), false);
+            if (!selected)
+                target.target = selected;
+            else if (PrefabUtility.IsPartOfAnyPrefab(selected) 
+                     && PrefabUtility.IsOutermostPrefabInstanceRoot(selected.gameObject))
+                target.target = selected;
             GUILayout.EndHorizontal();
             if (!target.target)
             {

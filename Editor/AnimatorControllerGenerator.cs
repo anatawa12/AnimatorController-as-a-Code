@@ -29,6 +29,10 @@ namespace Anatawa12.AnimatorControllerAsACode.Editor
         [SerializeField]
         private string targetPath;
 
+        /// <summary>
+        /// This value must be prefab root
+        /// </summary>
+        [Tooltip("This must be prefab root")]
         public Transform target;
 
         public GUID TargetGUID
