@@ -1,7 +1,7 @@
 {
   "name": "com.anatawa12.animator-controller-as-a-code",
   "displayName": "AnimatorController as a Code",
-  "version": "0.2.6",
+  "version": "0.2.7-SNAPSHOT",
   "unity": "2019.4",
   "description": "A small Unity Editor Library to generate AnimatorController with C# Code",
   "author": {
