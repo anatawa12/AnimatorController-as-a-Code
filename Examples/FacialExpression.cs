@@ -26,10 +26,11 @@ namespace Anatawa12.AnimatorControllerAsACode.Examples
 
         protected override void Generate(Acc acc)
         {
+            var lockedWeight = acc.FloatParameter("FacialExpressionLockedWeight$" + Guid.NewGuid());
             CreateResetFaceAlways(acc);
-            CreateGestureLayer(acc, prior.Opposite());
+            CreateGestureLayer(acc, prior.Opposite(), lockedWeight);
             CreateResetFaceIfGesture(acc, prior);
-            CreateGestureLayer(acc, prior);
+            CreateGestureLayer(acc, prior, lockedWeight);
         }
 
         private void CreateResetFaceAlways(Acc acc)
@@ -53,7 +54,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Examples
             resetState.TransitionsTo(nopState).When(gesture.IsEqualTo(0).And(lockFace.IsFalse()));
         }
 
-        private void CreateGestureLayer(Acc acc, Hand side)
+        private void CreateGestureLayer(Acc acc, Hand side, AccParameter<float> lockedWeight)
         {
             var layer = acc.AddLayer($"{side}Hand");
             var lockFace = layer.BoolParameter("LockFace");
@@ -61,7 +62,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Examples
             var weight = layer.Av3().GestureWeight(side);
 
             var stateIdle = layer.NewState("Idle");
-            var stateFist = layer.NewState("Fist").RightOf();
+            var stateFist = layer.NewState("Fist");
             var stateOpen = layer.NewState("Open");
             var statePoint = layer.NewState("Point");
             var statePeace = layer.NewState("Peace");
@@ -98,13 +99,18 @@ namespace Anatawa12.AnimatorControllerAsACode.Examples
             }
 
             // set transitions
-            layer.EntryTransitionsTo(stateIdle);
-
             for (var i = 0; i < states.Length; i++)
             {
-                layer.AnyTransitionsTo(states[i])
-                    .WithTransitionDurationSeconds(0.1f)
-                    .When(gesture.IsEqualTo((Gesture)i).And(lockFace.IsFalse()));
+                layer.EntryTransitionsTo(states[i]).When(gesture.IsEqualTo((Gesture)i));
+                states[i].TransitionsToExit().When(gesture.IsNotEqualTo((Gesture)i));
+                var lockedState = layer.NewState($"{states[i].Name}Locked")
+                    .RightOf(states[i])
+                    .WithAnimation(states[i].Motion)
+                    .MotionTime(lockedWeight);
+                lockedState.CopyAvatarParameter(false, weight, lockedWeight);
+
+                states[i].TransitionsTo(lockedState).When(lockFace.IsTrue());
+                lockedState.TransitionsTo(states[i]).When(lockFace.IsFalse());
             }
         }
     }
