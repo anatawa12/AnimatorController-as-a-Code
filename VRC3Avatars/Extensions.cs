@@ -159,7 +159,7 @@ namespace Anatawa12.AnimatorControllerAsACode.VRCAvatars3
         private static void CopyAvatarParameter(this AccState self, bool localOnly, string source, string dest) =>
             self.AddAvatarParameterDriverParameter(localOnly, new VRC_AvatarParameterDriver.Parameter
             {
-                type = VRC_AvatarParameterDriver.ChangeType.Random,
+                type = VRC_AvatarParameterDriver.ChangeType.Copy,
                 source = source,
                 name = dest,
             });
@@ -172,7 +172,7 @@ namespace Anatawa12.AnimatorControllerAsACode.VRCAvatars3
             string dest,　float destMin, float destMax) =>
             self.AddAvatarParameterDriverParameter(localOnly, new VRC_AvatarParameterDriver.Parameter
             {
-                type = VRC_AvatarParameterDriver.ChangeType.Random,
+                type = VRC_AvatarParameterDriver.ChangeType.Copy,
                 source = source,
                 name = dest,
                 convertRange = true,
