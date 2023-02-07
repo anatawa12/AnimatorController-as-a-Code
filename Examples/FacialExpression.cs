@@ -49,10 +49,8 @@ namespace Anatawa12.AnimatorControllerAsACode.Examples
             var resetState = layer.NewState("Reset").WithAnimation(reset);
 
             layer.EntryTransitionsTo(nopState);
-            nopState.TransitionsTo(resetState).When(gesture.IsNotEqualTo(Gesture.Neutral));
-            resetState.TransitionsTo(nopState).When(gesture.IsEqualTo(Gesture.Neutral));
-            nopState.TransitionsTo(resetState).When(gesture.IsNotEqualTo(0).And(lockFace.IsTrue()));
-            resetState.TransitionsTo(nopState).When(gesture.IsEqualTo(0).And(lockFace.IsTrue()));
+            nopState.TransitionsTo(resetState).When(gesture.IsNotEqualTo(0).And(lockFace.IsFalse()));
+            resetState.TransitionsTo(nopState).When(gesture.IsEqualTo(0).And(lockFace.IsFalse()));
         }
 
         private void CreateGestureLayer(Acc acc, Hand side)
