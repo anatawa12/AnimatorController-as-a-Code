@@ -71,11 +71,11 @@ namespace Anatawa12.AnimatorControllerAsACode.VRCAvatars3
                 value = value,
             });
 
-        public static void SetAvatarParameter<T>(this AccState self, AccParameter<T> parameter, T value) =>
-            SetAvatarParameter(self, false, parameter.Name, parameter.ToFloat(value));
+        public static void SetAvatarParameter<T>(this AccState self, AccParameter<T> parameter, T value)
+            where T : unmanaged => SetAvatarParameter(self, false, parameter.Name, parameter.ToFloat(value));
 
-        public static void SetAvatarParameterLocally<T>(this AccState self, AccParameter<T> parameter, T value) =>
-            SetAvatarParameter(self, true, parameter.Name, parameter.ToFloat(value));
+        public static void SetAvatarParameterLocally<T>(this AccState self, AccParameter<T> parameter, T value)
+            where T : unmanaged => SetAvatarParameter(self, true, parameter.Name, parameter.ToFloat(value));
 
         private static void AddAvatarParameter(this AccState self, bool localOnly, string parameter, float value) =>
             self.AddAvatarParameterDriverParameter(localOnly, new VRC_AvatarParameterDriver.Parameter
@@ -164,7 +164,8 @@ namespace Anatawa12.AnimatorControllerAsACode.VRCAvatars3
                 name = dest,
             });
 
-        public static void CopyAvatarParameter<T1, T2>(this AccState self, bool localOnly, AccParameter<T1> source, AccParameter<T2> dest) =>
+        public static void CopyAvatarParameter<T1, T2>(this AccState self, bool localOnly, AccParameter<T1> source,
+            AccParameter<T2> dest) where T1 : unmanaged where T2 : unmanaged =>
             CopyAvatarParameter(self, localOnly, source.Name, dest.Name);
 
         private static void CopyAvatarParameter(this AccState self, bool localOnly, 

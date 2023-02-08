@@ -52,7 +52,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
             return this;
         }
 
-        private float ToFloat(T value) => Utils.AnimationParameterToFloat(value);
+        public float ToFloat(T value) => Utils.AnimationParameterToFloat(value);
     }
 
     public static class AccTypeSpecificMethods
