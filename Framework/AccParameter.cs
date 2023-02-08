@@ -10,12 +10,11 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
         where T : unmanaged
     {
         private readonly AnimatorControllerParameter _parameter;
-        private readonly Func<T, float> _toFloat;
 
-        public AccParameter(AnimatorControllerParameter parameter, Func<T, float> toFloat)
+        public AccParameter(AnimatorControllerParameter parameter)
         {
+            Utils.CheckAnimationParameterType<T>();
             _parameter = parameter;
-            _toFloat = toFloat;
         }
 
         public string Name => _parameter.name;
@@ -25,7 +24,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
             if (typeof(T) == typeof(bool))
                 return BoolCondition(Unsafe.As<T, bool>(ref value));
             return new AccParameterCondition(
-                new AccParameterSingleCondition(AnimatorConditionMode.Equals, _toFloat(value), Name));
+                new AccParameterSingleCondition(AnimatorConditionMode.Equals, ToFloat(value), Name));
         }
 
         public AccParameterCondition IsNotEqualTo(T value)
@@ -33,14 +32,14 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
             if (typeof(T) == typeof(bool))
                 return BoolCondition(!Unsafe.As<T, bool>(ref value));
             return new AccParameterCondition(
-                new AccParameterSingleCondition(AnimatorConditionMode.NotEqual, _toFloat(value), Name));
+                new AccParameterSingleCondition(AnimatorConditionMode.NotEqual, ToFloat(value), Name));
         }
 
         private AccParameterCondition BoolCondition(bool flg) =>
             new AccParameterCondition(
                 new AccParameterSingleCondition(flg ? AnimatorConditionMode.If : AnimatorConditionMode.IfNot, 0, Name));
 
-        public float ToFloat(T value) => _toFloat(value);
+        private float ToFloat(T value) => Utils.AnimationParameterToFloat(value);
     }
 
     public static class AccTypeSpecificMethods

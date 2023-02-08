@@ -33,15 +33,28 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
             AssetDatabase.AddObjectToAsset(obj, file);
         }
 
-        public static readonly Func<float, float> FloatToFloat = x => x;
-        public static readonly Func<int, float> IntToFloat = x => x;
-        public static readonly Func<bool, float> BoolToFloat = x => x ? 1f : 0f;
+        // Animation only supports int-based enums.
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static float AnimationParameterToFloat<T>(T value) where T : unmanaged
+        {
+            if (typeof(T) == typeof(float)) return Unsafe.As<T, float>(ref value);
+            if (typeof(T) == typeof(int)) return Unsafe.As<T, int>(ref value);
+            if (typeof(T) == typeof(bool)) return Unsafe.As<T, bool>(ref value) ? 0f : 1f;
+            if (typeof(T).IsEnum && Enum.GetUnderlyingType(typeof(T)) == typeof(int))
+                return Unsafe.As<T, int>(ref value);
+            return ThrowTIsNotValidAnimationParameterType<T>();
+        }
 
         // Animation only supports int-based enums.
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Func<T, float> EnumToFloat<T>()
-            where T : unmanaged, Enum
-            => EnumToFloatHelper<T>.ToFloat ?? ThrowEnumUnderlyingTypeError<T>();
+        public static void CheckAnimationParameterType<T>() where T : unmanaged
+        {
+            // AnimationParameterToFloat will throw error if type is not valid.
+            AnimationParameterToFloat(default(T));
+        }
+
+        private static float ThrowTIsNotValidAnimationParameterType<T>() =>
+            throw new ArgumentException($"T ({typeof(T).Name}) is not valid Animation Parameter Type", nameof(T));
 
         private static Func<T, float> ThrowEnumUnderlyingTypeError<T>() =>
             throw new ArgumentException("UnderlyingType of T is not int. Animating such a field is not supported.",
@@ -64,19 +77,6 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
         private static void ThrowIndexError()
         {
             throw new IndexOutOfRangeException("index out of bounds");
-        }
-
-        private static class EnumToFloatHelper<T>
-            where T : unmanaged, Enum
-        {
-            public static readonly Func<T, float> ToFloat = Create();
-
-            private static Func<T, float> Create()
-            {
-                if (Enum.GetUnderlyingType(typeof(T)) == typeof(int))
-                    return t => Unsafe.As<T, int>(ref t);
-                return null;
-            }
         }
 
         public static EditorCurveBinding SubBinding(EditorCurveBinding binding, string prop)

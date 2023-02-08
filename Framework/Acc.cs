@@ -42,15 +42,15 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
             return layer;
         }
 
-        public AccParameter<float> FloatParameter(string name) => Parameter(name, AnimatorControllerParameterType.Float, Utils.FloatToFloat);
-        public AccParameter<int> IntParameter(string name) => Parameter(name, AnimatorControllerParameterType.Int, Utils.IntToFloat);
-        public AccParameter<bool> BoolParameter(string name) => Parameter(name, AnimatorControllerParameterType.Bool, Utils.BoolToFloat);
+        public AccParameter<float> FloatParameter(string name) => Parameter<float>(name, AnimatorControllerParameterType.Float);
+        public AccParameter<int> IntParameter(string name) => Parameter<int>(name, AnimatorControllerParameterType.Int);
+        public AccParameter<bool> BoolParameter(string name) => Parameter<bool>(name, AnimatorControllerParameterType.Bool);
 
         public AccParameter<T> EnumParameter<T>(string name)
             where T : unmanaged, Enum =>
-            Parameter(name, AnimatorControllerParameterType.Int, Utils.EnumToFloat<T>());
+            Parameter<T>(name, AnimatorControllerParameterType.Int);
 
-        private AccParameter<T> Parameter<T>(string name, AnimatorControllerParameterType type, Func<T, float> toFloat)
+        private AccParameter<T> Parameter<T>(string name, AnimatorControllerParameterType type)
             where T : unmanaged
         {
             var found = Controller.parameters.FirstOrDefault(x => x.name == name);
@@ -59,7 +59,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
                 if (found.type != type)
                     throw new InvalidOperationException(
                         $"Parameter named {name} found but type is {found.type} which is not expected type, {type}");
-                return new AccParameter<T>(found, toFloat);
+                return new AccParameter<T>(found);
             }
 
             // add
@@ -69,7 +69,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
                 type = type
             };
             Controller.AddParameter(parameter);
-            return new AccParameter<T>(parameter, toFloat);
+            return new AccParameter<T>(parameter);
         }
 
         public AccClip NewClip()
