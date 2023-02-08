@@ -7,6 +7,7 @@ using UnityEngine;
 namespace Anatawa12.AnimatorControllerAsACode.Framework
 {
     public class AccParameter<T>
+        where T : unmanaged
     {
         private readonly AnimatorControllerParameter _parameter;
         private readonly Func<T, float> _toFloat;

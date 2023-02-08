@@ -51,6 +51,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
             Parameter(name, AnimatorControllerParameterType.Int, Utils.EnumToFloat<T>());
 
         private AccParameter<T> Parameter<T>(string name, AnimatorControllerParameterType type, Func<T, float> toFloat)
+            where T : unmanaged
         {
             var found = Controller.parameters.FirstOrDefault(x => x.name == name);
             if (found != null)
