@@ -39,6 +39,19 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
             new AccParameterCondition(
                 new AccParameterSingleCondition(flg ? AnimatorConditionMode.If : AnimatorConditionMode.IfNot, 0, Name));
 
+        public AccParameter<T> DefaultValue(T value)
+        {
+            if (typeof(T) == typeof(float))
+                _parameter.defaultFloat = Unsafe.As<T, float>(ref value);
+            else if (typeof(T) == typeof(int))
+                _parameter.defaultInt = Unsafe.As<T, int>(ref value);
+            else if (typeof(T) == typeof(bool))
+                _parameter.defaultBool = Unsafe.As<T, bool>(ref value);
+            else if (typeof(T).IsEnum && Enum.GetUnderlyingType(typeof(T)) == typeof(int))
+                _parameter.defaultInt = Unsafe.As<T, int>(ref value);
+            return this;
+        }
+
         private float ToFloat(T value) => Utils.AnimationParameterToFloat(value);
     }
 
