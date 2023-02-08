@@ -26,7 +26,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Examples
 
         protected override void Generate(Acc acc)
         {
-            var lockedWeight = acc.FloatParameter("FacialExpressionLockedWeight$" + Guid.NewGuid());
+            var lockedWeight = acc.FloatParameter($"LockedWeightConstant1").DefaultValue(1f);
             CreateResetFaceAlways(acc);
             CreateGestureLayer(acc, prior.Opposite(), lockedWeight);
             CreateResetFaceIfGesture(acc, prior);
@@ -107,7 +107,10 @@ namespace Anatawa12.AnimatorControllerAsACode.Examples
                     .RightOf(states[i])
                     .WithAnimation(states[i].Motion)
                     .MotionTime(lockedWeight);
-                lockedState.CopyAvatarParameter(false, weight, lockedWeight);
+                lockedState.SetAvatarParameter(lockedWeight, 1f);
+                // due to VRChat's problem, this doesn't work.
+                // see https://feedback.vrchat.com/avatar-30/p/copy-vrc-exposed-parameters-with-parameter-drivers
+                // lockedState.CopyAvatarParameter(false, weight, lockedWeight);
 
                 states[i].TransitionsTo(lockedState).When(lockFace.IsTrue());
                 lockedState.TransitionsTo(states[i]).When(lockFace.IsFalse());
