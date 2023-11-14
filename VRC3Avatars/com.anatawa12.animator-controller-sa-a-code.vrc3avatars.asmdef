@@ -1,7 +1,7 @@
 {
     "name": "com.anatawa12.animator-controller-sa-a-code.vrc3avatars",
     "references": [
-        "GUID:bb9a3357de324e7d8c642db430362dc3"
+        "com.anatawa12.animator-controller-as-a-code.framework"
     ],
     "includePlatforms": [
         "Editor"
