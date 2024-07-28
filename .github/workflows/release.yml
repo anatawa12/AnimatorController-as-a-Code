@@ -21,10 +21,10 @@ jobs:
     outputs:
       version: ${{ steps.update-version.outputs.version }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           token: ${{ secrets.MASTER_GITHUB_PAT }}
-      - uses: anatawa12/something-releaser@v2
+      - uses: anatawa12/something-releaser@v3
       - uses: snow-actions/git-config-user@v1.0.0
       - name: Check version is Snapshot
         run: |
@@ -36,9 +36,9 @@ jobs:
       - name: Update Version Name
         id: update-version
         run: |
-          set-version "$(version-unsnapshot "$(get-version)")"
-          echo "VERSION=$(get-version)" >> $GITHUB_ENV
-          echo "version=$(get-version)" >> $GITHUB_OUTPUT
+          set-version "$(version-stable "$(get-version)")"
+          echo "VERSION=$(get-version)" >> "$GITHUB_ENV"
+          echo "version=$(get-version)" >> "$GITHUB_OUTPUT"
 
       - name: Commit & tag version
         if: ${{ inputs.publish }}
@@ -56,7 +56,7 @@ jobs:
           package-path: .
           path-prefix: Packages/${{ env.PKG_NAME }}
       - name: Upload unitypackage
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: unitypackage
           path: build/${{ env.PKG_NAME }}-${{ env.VERSION }}.unitypackage
@@ -65,7 +65,7 @@ jobs:
         run: |
           zip -r "build/$PKG_NAME-$VERSION.zip" . -x 'build*' '.*'
       - name: Upload VPM release
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: vpm-package
           path: build/${{ env.PKG_NAME }}-${{ env.VERSION }}.zip
