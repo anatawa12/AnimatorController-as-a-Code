@@ -39,7 +39,7 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
         {
             if (typeof(T) == typeof(float)) return Unsafe.As<T, float>(ref value);
             if (typeof(T) == typeof(int)) return Unsafe.As<T, int>(ref value);
-            if (typeof(T) == typeof(bool)) return Unsafe.As<T, bool>(ref value) ? 0f : 1f;
+            if (typeof(T) == typeof(bool)) return Unsafe.As<T, bool>(ref value) ? 1f : 0f;
             if (typeof(T).IsEnum && Enum.GetUnderlyingType(typeof(T)) == typeof(int))
                 return Unsafe.As<T, int>(ref value);
             return ThrowTIsNotValidAnimationParameterType<T>();
