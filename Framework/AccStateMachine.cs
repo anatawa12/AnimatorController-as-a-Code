@@ -150,13 +150,6 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
             foreach (var stateMachine in _addingStateMachines) stateMachine.SaveToAsset();
             foreach (var entryTransition in _addingEntryTransitions) entryTransition.SaveToAsset();
             foreach (var transition in _addingAnyStateTransitions) transition.SaveToAsset();
-            foreach (var (sourceMachine, list) in _addingStateMachineTransitions)
-            {
-                var machineTransitions = StateMachine.GetStateMachineTransitions(sourceMachine.StateMachine);
-                machineTransitions = Utils.JoinArray(machineTransitions, list, x => x.Transition);
-                StateMachine.SetStateMachineTransitions(sourceMachine.StateMachine, machineTransitions);
-                foreach (var transition in list) transition.SaveToAsset();
-            }
 
             StateMachine.states = Utils.JoinArray(StateMachine.states, _addingStates,
                 x => new ChildAnimatorState { state = x.State, position = x.Position });
@@ -166,7 +159,14 @@ namespace Anatawa12.AnimatorControllerAsACode.Framework
                 _addingEntryTransitions, x => x.Transition);
             StateMachine.anyStateTransitions = Utils.JoinArray(StateMachine.anyStateTransitions,
                 _addingAnyStateTransitions, x => x.Transition);
-            // _addingStateMachineTransitions has been added
+
+            foreach (var (sourceMachine, list) in _addingStateMachineTransitions)
+            {
+                var machineTransitions = StateMachine.GetStateMachineTransitions(sourceMachine.StateMachine);
+                machineTransitions = Utils.JoinArray(machineTransitions, list, x => x.Transition);
+                StateMachine.SetStateMachineTransitions(sourceMachine.StateMachine, machineTransitions);
+                foreach (var transition in list) transition.SaveToAsset();
+            }
         }
     }
 
